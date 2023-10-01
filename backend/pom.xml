@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+			<version>42.5.4</version>
 		</dependency>
 
 		<!-- Swagger -->
@@ -61,6 +61,22 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.1</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>24.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<artifactId>json-patch</artifactId>
+			<groupId>com.github.fge</groupId>
+			<version>1.9</version>
 		</dependency>
 	</dependencies>
 
