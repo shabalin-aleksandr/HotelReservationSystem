@@ -39,10 +39,10 @@ public class UserReadService implements IUserReadService {
     }
 
     @Override
-    public ViewUserDto findUserById(UUID user_id) {
+    public ViewUserDto findUserById(UUID userId) {
         User user = userRepository
-                .findById(user_id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id: " + user_id + " doesn't exist"));
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id: " + userId + " doesn't exist"));
         return UserMapper.toUserResponseDto(user);
     }
 }

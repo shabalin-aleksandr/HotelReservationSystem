@@ -69,10 +69,10 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-    @GetMapping(path= "/{user_id}")
+    @GetMapping(path= "/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewUserDto getUserById(@PathVariable("user_id") UUID user_id) {
-        return userReadService.findUserById(user_id);
+    public ViewUserDto getUserById(@PathVariable("userId") UUID userId) {
+        return userReadService.findUserById(userId);
     }
 
     @Operation(
@@ -115,10 +115,10 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PatchMapping("/update/{user_id}")
+    @PatchMapping("/update/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewUserDto update(@PathVariable UUID user_id, @RequestBody UpdateUserDto updateUserDto) {
-        return userWriteService.editUser(user_id, updateUserDto);
+    public ViewUserDto update(@PathVariable UUID userId, @RequestBody UpdateUserDto updateUserDto) {
+        return userWriteService.editUser(userId, updateUserDto);
     }
 
     @Operation(
@@ -130,9 +130,9 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping(path = "{user_id}")
+    @DeleteMapping(path = "{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(@PathVariable("user_id") UUID user_id) {
-        userDeleteService.removeUserById(user_id);
+    public void deleteUserById(@PathVariable("userId") UUID userId) {
+        userDeleteService.removeUserById(userId);
     }
 }

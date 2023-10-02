@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Reservation;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -15,7 +18,7 @@ import java.util.UUID;
 public class ViewUserDto {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "c3ce9db4-0e90-4cd8-9d60-52013371334b")
-    private UUID user_id;
+    private UUID userId;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "Wick")
     private String name;
@@ -37,4 +40,7 @@ public class ViewUserDto {
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "Zlin")
     private String city;
+
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Set<ViewReservationDto> reservations;
 }

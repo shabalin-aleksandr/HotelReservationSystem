@@ -36,10 +36,10 @@ public class UserWriteService implements IUserWriteService {
     }
 
     @Override
-    public ViewUserDto editUser(UUID user_id, UpdateUserDto updateUserDto) {
+    public ViewUserDto editUser(UUID userId, UpdateUserDto updateUserDto) {
         User existingUser = userRepository
-                .findById(user_id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id: "+ user_id + " not found"));
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id: "+ userId + " not found"));
 
         User patchUser = UserMapper.toUser(updateUserDto);
         User updatedUser = jsonPatch.mergePatch(existingUser, patchUser, User.class);

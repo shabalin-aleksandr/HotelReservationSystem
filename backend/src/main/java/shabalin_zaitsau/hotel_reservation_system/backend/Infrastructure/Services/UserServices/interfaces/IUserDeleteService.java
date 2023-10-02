@@ -3,5 +3,5 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Service
 import java.util.UUID;
 
 public interface IUserDeleteService {
-    void removeUserById(UUID user_id);
+    void removeUserById(UUID userId);
 }

@@ -4,7 +4,11 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.CategoryType;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -14,8 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "room")
-
+@Table(name = "Rooms")
 public class Room {
 
     @Id
@@ -33,14 +36,15 @@ public class Room {
 
     @NotBlank
     @Column(name = "category", nullable = false)
-    public String category;
+    @Enumerated(EnumType.STRING)
+    public CategoryType category;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "resrvation_id", nullable = false)
-    private Reservation reservation;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "reservation_id")
+    private Set<Reservation> reservations;
 
     @NotBlank
     @Column(name = "price_per_night", nullable = false)
     public double pricePerNight;
-
 }

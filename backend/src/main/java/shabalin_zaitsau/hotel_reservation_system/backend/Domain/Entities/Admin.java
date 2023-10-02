@@ -1,9 +1,9 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.AdminType;
 
 import java.util.UUID;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "admin")
+@Table(name = "Admins")
 public class Admin {
 
     @Id
@@ -22,11 +22,12 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID adminId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @NotBlank
-    @Column(name = "amin_type")
-    private String adminType;
+    @Column(name = "admin_type")
+    @Enumerated(EnumType.STRING)
+    private AdminType adminType;
 }

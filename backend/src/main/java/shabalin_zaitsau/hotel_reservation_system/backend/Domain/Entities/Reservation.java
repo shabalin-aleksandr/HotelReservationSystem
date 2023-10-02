@@ -13,21 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "reservation")
+@Table(name = "Reservations")
 public class Reservation {
 
     @Id
     @Column(name = "reservation_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID reservationId;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    // TODO: change to OneToOne annotation, when Room entity is implemented
-    @Column(name = "room_id")
-    private UUID roomId;
 
     @Column(name = "reservation_from")
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,4 +31,12 @@ public class Reservation {
 
     @Column(name = "total_price")
     private double totalPrice;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 }

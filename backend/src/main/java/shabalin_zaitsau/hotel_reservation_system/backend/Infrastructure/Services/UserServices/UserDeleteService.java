@@ -17,13 +17,13 @@ public class UserDeleteService implements IUserDeleteService {
     private final UserRepository userRepository;
 
     @Override
-    public void removeUserById(UUID user_id) {
-        userRepository.findById(user_id);
-        boolean exists = userRepository.existsById(user_id);
+    public void removeUserById(UUID userId) {
+        userRepository.findById(userId);
+        boolean exists = userRepository.existsById(userId);
 
         if (!exists) {
-            throw new EntityNotFoundException("User with id: "+ user_id + " not found");
+            throw new EntityNotFoundException("User with id: "+ userId + " not found");
         }
-        userRepository.deleteById(user_id);
+        userRepository.deleteById(userId);
     }
 }

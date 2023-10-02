@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface IUserWriteService {
     ViewUserDto addUser(CreateUserDto createUserDto);
-    ViewUserDto editUser(UUID user_id, UpdateUserDto updateUserDto);
+    ViewUserDto editUser(UUID userId, UpdateUserDto updateUserDto);
 }

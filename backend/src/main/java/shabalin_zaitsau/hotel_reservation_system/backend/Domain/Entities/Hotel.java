@@ -3,7 +3,10 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -14,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "hotel")
+@Table(name = "Hotels")
 public class Hotel {
 
     @Id
@@ -41,4 +44,9 @@ public class Hotel {
     @NotBlank
     @Column(name = "reception_number", nullable = false)
     private String receptionNumber;
+
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_id")
+    private Set<Room> availableRooms;
 }
