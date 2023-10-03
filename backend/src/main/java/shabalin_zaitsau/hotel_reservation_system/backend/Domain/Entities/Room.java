@@ -32,12 +32,12 @@ public class Room {
 
     @NotBlank
     @Column(name = "room_number", nullable = false)
-    public String roomNumber;
+    private String roomNumber;
 
     @NotBlank
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
-    public CategoryType category;
+    private CategoryType category;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -46,5 +46,5 @@ public class Room {
 
     @NotBlank
     @Column(name = "price_per_night", nullable = false)
-    public double pricePerNight;
+    private double pricePerNight;
 }
