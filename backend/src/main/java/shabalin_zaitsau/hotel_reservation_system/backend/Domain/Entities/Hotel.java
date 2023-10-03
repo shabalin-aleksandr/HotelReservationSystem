@@ -27,19 +27,19 @@ public class Hotel {
 
     @NotBlank
     @Column(name = "hotel_name", nullable = false)
-    public String hotelName;
+    private String hotelName;
 
     @NotBlank
     @Column(name = "country", nullable = false)
-    public String country;
+    private String country;
 
     @NotBlank
     @Column(name = "city", nullable = false)
-    public String city;
+    private String city;
 
     @NotBlank
     @Column(name = "address", nullable = false)
-    public String address;
+    private String address;
 
     @NotBlank
     @Column(name = "reception_number", nullable = false)

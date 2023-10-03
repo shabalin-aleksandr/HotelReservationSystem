@@ -23,10 +23,10 @@ public class Amenity {
 
     @NotBlank
     @Column(name = "name", nullable = false)
-    public String name;
+    private String name;
 
     @Column(name = "description", nullable = false)
-    public String description;
+    private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id", nullable = false)
