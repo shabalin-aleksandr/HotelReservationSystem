@@ -9,6 +9,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Hote
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.UpdateHotelDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.InvalidRatingInputException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.interfaces.IHotelWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.HotelRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.JsonPatch;
@@ -22,7 +23,6 @@ public class HotelWriteService implements IHotelWriteService {
 
     private final HotelRepository hotelRepository;
     private final JsonPatch jsonPatch;
-
 
     @Override
     public ViewHotelDto addHotel(CreateHotelDto createHotelDto) {
@@ -40,5 +40,17 @@ public class HotelWriteService implements IHotelWriteService {
         Hotel updatedHotel = jsonPatch.mergePatch(existingHotel, patchHotel, Hotel.class);
 
         return HotelMapper.toHotelResponseDto(hotelRepository.save(updatedHotel));
+    }
+
+    @Override
+    public double putRate(UUID hotelId, double rate) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new EntityNotFoundException("Hotel with id: " + hotelId + " not found"));
+        if (rate < 0 || rate > 5) {
+            throw new InvalidRatingInputException("Invalid rating input: " + rate);
+        }
+        hotel.calculateRating(rate);
+        return hotel.getRating();
     }
 }

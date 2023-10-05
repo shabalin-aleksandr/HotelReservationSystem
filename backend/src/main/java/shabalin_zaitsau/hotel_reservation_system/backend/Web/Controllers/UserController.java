@@ -41,6 +41,7 @@ public class UserController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
@@ -65,6 +66,7 @@ public class UserController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
@@ -88,6 +90,7 @@ public class UserController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
@@ -111,6 +114,7 @@ public class UserController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
@@ -126,6 +130,7 @@ public class UserController {
             description = "Delete user from database by id",
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }

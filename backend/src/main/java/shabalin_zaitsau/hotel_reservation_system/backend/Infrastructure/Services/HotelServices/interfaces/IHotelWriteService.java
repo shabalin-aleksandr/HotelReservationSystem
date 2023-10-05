@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface IHotelWriteService {
     ViewHotelDto addHotel(CreateHotelDto createHotelDto);
     ViewHotelDto editHotel(UUID hotelId, UpdateHotelDto updateHotelDto);
+    double putRate(UUID placeId, double rate);
 }

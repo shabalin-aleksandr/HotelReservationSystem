@@ -39,6 +39,7 @@ public class ReservationController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
@@ -63,6 +64,7 @@ public class ReservationController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
@@ -86,6 +88,7 @@ public class ReservationController {
                                     )
                             )
                     ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }

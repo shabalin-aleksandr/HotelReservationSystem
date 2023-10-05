@@ -1,6 +1,8 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -45,8 +47,20 @@ public class Hotel {
     @Column(name = "reception_number", nullable = false)
     private String receptionNumber;
 
+    @Min(0)
+    @Max(5)
+    @Column(name = "rating", nullable = false)
+    private double rating;
+    private int count;
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
     private Set<Room> availableRooms;
+
+    public void calculateRating(double newRating) {
+        double result = count*rating;
+        count++;
+        rating = (result + newRating)/count;
+    }
 }

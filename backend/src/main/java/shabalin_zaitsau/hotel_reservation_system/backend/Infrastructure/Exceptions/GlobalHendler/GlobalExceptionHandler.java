@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.InvalidRatingInputException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.UserConflictException;
 
 import java.util.HashMap;
@@ -46,5 +47,26 @@ public class GlobalExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Exception handler method for handling {@link InvalidRatingInputException}.
+     * This method is responsible for processing exceptions of type
+     * {@code InvalidRatingInputException} and returning an appropriate
+     * {@link ResponseEntity} with an error message and a status code indicating
+     * a bad request (HTTP 400).
+     *
+     * @param ex The {@code InvalidRatingInputException} that was thrown.
+     * @return A {@link ResponseEntity} containing an error message and a bad request
+     *         status code.
+     *
+     * @see InvalidRatingInputException
+     */
+    @ExceptionHandler(InvalidRatingInputException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleInvalidRatingInputException(InvalidRatingInputException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

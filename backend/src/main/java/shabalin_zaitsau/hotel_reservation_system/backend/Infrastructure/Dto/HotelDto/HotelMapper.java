@@ -13,7 +13,8 @@ public class HotelMapper {
                 hotel.getCountry(),
                 hotel.getCity(),
                 hotel.getAddress(),
-                hotel.getReceptionNumber()
+                hotel.getReceptionNumber(),
+                hotel.getRating()
         );
     }
 
