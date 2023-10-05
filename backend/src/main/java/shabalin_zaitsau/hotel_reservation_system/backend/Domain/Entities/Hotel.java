@@ -51,6 +51,8 @@ public class Hotel {
     @Max(5)
     @Column(name = "rating", nullable = false)
     private double rating;
+
+    @Transient
     private int count;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
