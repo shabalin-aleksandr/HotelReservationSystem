@@ -54,8 +54,6 @@ public class User {
     @Column(name = "city")
     private String city;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservation_id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<Reservation> reservations;
 }

@@ -18,7 +18,6 @@ public class UserDeleteService implements IUserDeleteService {
 
     @Override
     public void removeUserById(UUID userId) {
-        userRepository.findById(userId);
         boolean exists = userRepository.existsById(userId);
 
         if (!exists) {

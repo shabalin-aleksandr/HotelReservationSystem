@@ -137,7 +137,7 @@ public class HotelController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping(path = "{hotelId}")
+    @DeleteMapping(path = "/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUserById(@PathVariable("hotelId") UUID hotelId) {
         hotelDeleteService.removeHotelById(hotelId);

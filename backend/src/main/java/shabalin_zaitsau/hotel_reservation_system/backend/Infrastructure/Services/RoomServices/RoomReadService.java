@@ -33,7 +33,7 @@ public class RoomReadService implements IRoomReadService {
     public ViewRoomDto findRoomById(UUID roomId){
         Room room = roomRepository
                 .findById(roomId)
-                .orElseThrow(()-> new EntityNotFoundException("Room with id: " + roomId + "doesn't exist"));
+                .orElseThrow(()-> new EntityNotFoundException("Room with id: " + roomId + " doesn't exist"));
         return RoomMapper.toRoomResponseDto(room);
     }
 }

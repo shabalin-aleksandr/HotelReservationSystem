@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     public static ViewUserDto toUserResponseDto(User user) {
-        Set<ViewReservationDto> viewReservations = user.getReservations().stream()
+        Set<ViewReservationDto> viewReservations = user
+                .getReservations()
+                .stream()
                 .map(reservation -> {
                     ViewReservationDto viewReservationDto = new ViewReservationDto();
                     viewReservationDto.setReservationId(reservation.getReservationId());
@@ -34,10 +36,9 @@ public class UserMapper {
                 user.getCountry(),
                 user.getRegion(),
                 user.getCity(),
-                viewReservations // Use the mapped Set<ViewReservationDto>
+                viewReservations
         );
     }
-
 
     public static User toUser(CreateUserDto createUserDto) {
         User user = new User();

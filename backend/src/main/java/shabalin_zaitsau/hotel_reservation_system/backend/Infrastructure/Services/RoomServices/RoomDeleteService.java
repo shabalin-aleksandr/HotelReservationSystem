@@ -17,11 +17,11 @@ public class RoomDeleteService implements IRoomDeleteService {
     private final RoomRepository roomRepository;
 
     @Override
-    public void removeRoomById(UUID roomId){
+    public void removeRoomById(UUID roomId) {
         boolean exists = roomRepository.existsById(roomId);
 
-        if (!exists){
-            throw new EntityNotFoundException("Room with id: " + roomId + "not found");
+        if (!exists) {
+            throw new EntityNotFoundException("Room with id: " + roomId + " not found");
         }
         roomRepository.deleteById(roomId);
     }

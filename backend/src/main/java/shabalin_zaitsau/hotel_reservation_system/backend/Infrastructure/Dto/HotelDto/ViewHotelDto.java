@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -46,5 +49,6 @@ public class ViewHotelDto {
     @NotEmpty
     private double rating;
 
-    // TODO: Add availableRooms
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Set<ShortViewRoomDto> availableRooms;
 }

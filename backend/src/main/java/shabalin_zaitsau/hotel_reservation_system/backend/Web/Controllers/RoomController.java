@@ -8,15 +8,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.CreateRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.UpdateRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomDeleteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomWriteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.RoomRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +71,6 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-
     @GetMapping(path = "{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewRoomDto getRoomById(@PathVariable("roomId") UUID roomId) {
@@ -99,7 +95,6 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-
     @PostMapping("/create/{hotelId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewRoomDto createRoom(
@@ -107,7 +102,7 @@ public class RoomController {
             @RequestBody CreateRoomDto createRoomDto) {
         return roomWriteService.addRoom(hotelId, createRoomDto);
     }
-    // mb it's not correct?
+
     @Operation(
             summary = "Update Room ",
             description = "Update Room for particular hotel",
@@ -126,8 +121,7 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-
-    @PutMapping("/update/{roomId}")
+    @PutMapping("/update/{hotelId}/{roomId}")
     public ViewRoomDto updateRoom(
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
@@ -145,8 +139,8 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-
     @DeleteMapping("/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteRoomById(@PathVariable("roomId") UUID roomId) {
         roomDeleteService.removeRoomById(roomId);
     }

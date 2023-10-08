@@ -27,5 +27,4 @@ public class JsonPatch {
             throw new RuntimeException(e);
         }
     }
-
 }

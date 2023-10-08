@@ -15,9 +15,9 @@ import java.util.UUID;
 public class HotelDeleteService implements IHotelDeleteService {
 
     private final HotelRepository hotelRepository;
+
     @Override
     public void removeHotelById(UUID hotelId) {
-        hotelRepository.findById(hotelId);
         boolean exists = hotelRepository.existsById(hotelId);
 
         if (!exists) {

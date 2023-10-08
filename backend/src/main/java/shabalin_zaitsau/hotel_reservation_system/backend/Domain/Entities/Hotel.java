@@ -1,5 +1,6 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,7 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 import java.util.UUID;
-
 
 @Getter
 @Setter
@@ -55,9 +55,8 @@ public class Hotel {
     @Transient
     private int count;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id")
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "hotel")
     private Set<Room> availableRooms;
 
     public void calculateRating(double newRating) {

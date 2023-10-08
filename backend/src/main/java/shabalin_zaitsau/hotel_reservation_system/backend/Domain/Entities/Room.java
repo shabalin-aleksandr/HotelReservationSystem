@@ -1,6 +1,6 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -26,6 +26,7 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roomId;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
@@ -39,9 +40,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private CategoryType category;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservation_id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "room")
     private Set<Reservation> reservations;
 
     @NotBlank

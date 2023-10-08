@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.InvalidRatingInputException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.RoomAlreadyExistsException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.UserConflictException;
 
 import java.util.HashMap;
@@ -51,10 +52,12 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler method for handling {@link InvalidRatingInputException}.
+     * <p>
      * This method is responsible for processing exceptions of type
      * {@code InvalidRatingInputException} and returning an appropriate
      * {@link ResponseEntity} with an error message and a status code indicating
      * a bad request (HTTP 400).
+     * </p>
      *
      * @param ex The {@code InvalidRatingInputException} that was thrown.
      * @return A {@link ResponseEntity} containing an error message and a bad request
@@ -65,6 +68,31 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidRatingInputException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleInvalidRatingInputException(InvalidRatingInputException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Exception handler method to handle {@link RoomAlreadyExistsException}.
+     *
+     * <p>
+     * This method is invoked when a {@link RoomAlreadyExistsException} is thrown within
+     * the application. It returns a response entity containing an error message and
+     * a status code indicating a bad request (HTTP 400). The error message provides
+     * details about why the room creation failed due to an existing room.
+     * </p>
+     *
+     * @param ex The {@link RoomAlreadyExistsException} that was thrown.
+     * @return A response entity containing an error message and HTTP 400 status code.
+     *
+     * @see RoomAlreadyExistsException
+     * @see ResponseEntity
+     * @see HttpStatus
+     */
+    @ExceptionHandler(RoomAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleRoomAlreadyExistsException(RoomAlreadyExistsException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
