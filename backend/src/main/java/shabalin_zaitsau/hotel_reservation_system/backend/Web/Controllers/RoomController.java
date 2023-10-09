@@ -29,7 +29,7 @@ public class RoomController {
     private final RoomDeleteService roomDeleteService;
 
     @Operation(
-            summary = "Get rooms",
+            summary = "Get all rooms",
             description = "Get all rooms in database",
             responses = {
                     @ApiResponse(
@@ -54,6 +54,31 @@ public class RoomController {
     }
 
     @Operation(
+            summary = "Get rooms by hotel ID",
+            description = "Get all rooms in particular hotel by hotel ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewRoomDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+            }
+    )
+    @GetMapping("/{hotelId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ViewRoomDto> getAllRoomsByHotelId(@PathVariable UUID hotelId) {
+        return roomReadService.findAllRoomsByHotelId(hotelId);
+    }
+
+    @Operation(
             summary = "Get one room",
             description = "Get one room by his own id",
             responses = {
@@ -71,10 +96,10 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-    @GetMapping(path = "{roomId}")
+    @GetMapping(path = "/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewRoomDto getRoomById(@PathVariable("roomId") UUID roomId) {
-        return roomReadService.findRoomById(roomId);
+    public ViewRoomDto getRoomById(@PathVariable("hotelId") UUID hotelId, @PathVariable("roomId") UUID roomId) {
+        return roomReadService.findRoomById(hotelId,roomId);
     }
 
     @Operation(

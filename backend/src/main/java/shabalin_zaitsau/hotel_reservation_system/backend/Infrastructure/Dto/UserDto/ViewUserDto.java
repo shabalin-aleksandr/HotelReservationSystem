@@ -21,10 +21,10 @@ public class ViewUserDto {
     private UUID userId;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "Wick")
-    private String name;
+    private String firstName;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "Wick")
-    private String surname;
+    private String lastName;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "john@wick.com")
     private String email;

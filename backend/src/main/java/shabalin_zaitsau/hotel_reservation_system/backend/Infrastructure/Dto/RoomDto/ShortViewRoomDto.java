@@ -18,10 +18,6 @@ public class ShortViewRoomDto {
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "066167fe-63a2-11ee-8c99-0242ac120002")
     private UUID roomId;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "43fdf06d-deea-46ed-bfab-a0da3a594e62")
-    @NotEmpty
-    private UUID hotelId;
-
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "104")
     @NotEmpty
     private String roomNumber;

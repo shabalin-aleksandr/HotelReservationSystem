@@ -8,6 +8,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Room
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.interfaces.IRoomReadService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.HotelRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.RoomRepository;
 
 import java.util.List;
@@ -20,20 +21,37 @@ import java.util.stream.Collectors;
 public class RoomReadService implements IRoomReadService {
 
     private final RoomRepository roomRepository;
+    private final HotelRepository hotelRepository;
 
     @Override
-    public List<ViewRoomDto> findAllRooms(){
+    public List<ViewRoomDto> findAllRooms() {
         return roomRepository
                 .findAll()
                 .stream()
                 .map(RoomMapper::toRoomResponseDto)
                 .collect(Collectors.toList());
     }
+
     @Override
-    public ViewRoomDto findRoomById(UUID roomId){
+    public List<ViewRoomDto> findAllRoomsByHotelId(UUID hotelId) {
+        if (!hotelRepository.existsById(hotelId)) {
+            throw new EntityNotFoundException("Hotel with id: " + hotelId + " doesn't exist");
+        }
+        return roomRepository
+                .findByHotel_HotelId(hotelId)
+                .stream()
+                .map(RoomMapper::toRoomResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ViewRoomDto findRoomById(UUID hotelId, UUID roomId) {
+        if (!hotelRepository.existsById(hotelId)) {
+            throw new EntityNotFoundException("Hotel with id: " + hotelId + " doesn't exist");
+        }
         Room room = roomRepository
-                .findById(roomId)
-                .orElseThrow(()-> new EntityNotFoundException("Room with id: " + roomId + " doesn't exist"));
+                .findByHotel_HotelIdAndRoomId(hotelId, roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room with id: " + roomId + " doesn't exist"));
         return RoomMapper.toRoomResponseDto(room);
     }
 }

@@ -1,7 +1,9 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 
 import java.util.HashSet;
@@ -15,29 +17,25 @@ public class UserMapper {
         Set<ViewReservationDto> viewReservations = user
                 .getReservations()
                 .stream()
-                .map(reservation -> {
-                    ViewReservationDto viewReservationDto = new ViewReservationDto();
-                    viewReservationDto.setReservationId(reservation.getReservationId());
-                    viewReservationDto.setUserId(user.getUserId());
-                    viewReservationDto.setRoomId(reservation.getRoom().getRoomId());
-                    viewReservationDto.setReservationFrom(reservation.getReservationFrom());
-                    viewReservationDto.setReservationTo(reservation.getReservationTo());
-                    viewReservationDto.setTotalPrice(reservation.getTotalPrice());
-                    return viewReservationDto;
-                })
+                .map(reservation -> MainDtoMapper.mapReservationToViewDto(reservation, user, null))
                 .collect(Collectors.toSet());
 
-        return new ViewUserDto(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getCountry(),
-                user.getRegion(),
-                user.getCity(),
-                viewReservations
-        );
+        return getViewUserDto(user, viewReservations);
+    }
+
+    @NotNull
+    private static ViewUserDto getViewUserDto(User user, Set<ViewReservationDto> viewReservations) {
+        ViewUserDto viewUserDto = new ViewUserDto();
+        viewUserDto.setUserId(user.getUserId());
+        viewUserDto.setFirstName(user.getFirstName());
+        viewUserDto.setLastName(user.getLastName());
+        viewUserDto.setEmail(user.getEmail());
+        viewUserDto.setPhoneNumber(user.getPhoneNumber());
+        viewUserDto.setCountry(user.getCountry());
+        viewUserDto.setRegion(user.getRegion());
+        viewUserDto.setCity(user.getCity());
+        viewUserDto.setReservations(viewReservations);
+        return viewUserDto;
     }
 
     public static User toUser(CreateUserDto createUserDto) {

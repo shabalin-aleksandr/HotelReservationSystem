@@ -50,13 +50,26 @@ public class RoomWriteService implements IRoomWriteService {
         Hotel hotel = hotelRepository
                 .findById(hotelId)
                 .orElseThrow(() -> new EntityNotFoundException("Hotel with Id: " + hotelId + " doesn't exist"));
+
         Room existingRoom = roomRepository
                 .findById(roomId)
                 .orElseThrow(() -> new EntityNotFoundException("Room with id: " + roomId + " not found"));
 
-        Room patchRoom = RoomMapper.toRoom(updateRoomDto, hotel);
-        Room updatedRoom = jsonPatch.mergePatch(existingRoom, patchRoom, Room.class);
+        if (hotel != null && existingRoom != null) {
+            existingRoom.setHotel(hotel);
+            existingRoom.setRoomNumber(updateRoomDto.getRoomNumber());
+            existingRoom.setCategory(updateRoomDto.getCategory());
+            existingRoom.setPricePerNight(updateRoomDto.getPricePerNight());
 
-        return RoomMapper.toRoomResponseDto(roomRepository.save(updatedRoom));
+            Room patchRoom = RoomMapper.toRoom(updateRoomDto, hotel);
+            Room updatedRoom = jsonPatch.mergePatch(existingRoom, patchRoom, Room.class);
+            updatedRoom.setHotel(hotel);
+
+            updatedRoom = roomRepository.save(updatedRoom);
+
+            return RoomMapper.toRoomResponseDto(updatedRoom);
+        } else {
+            throw new EntityNotFoundException("Hotel or Room not found");
+        }
     }
 }

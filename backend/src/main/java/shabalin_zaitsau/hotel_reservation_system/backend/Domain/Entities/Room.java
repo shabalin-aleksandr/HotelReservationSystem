@@ -26,9 +26,9 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roomId;
 
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotel_id", nullable = false)
+    @JsonBackReference
     private Hotel hotel;
 
     @NotBlank

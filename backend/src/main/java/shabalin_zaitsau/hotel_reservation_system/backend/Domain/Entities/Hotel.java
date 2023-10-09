@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 import java.util.UUID;
@@ -55,8 +53,8 @@ public class Hotel {
     @Transient
     private int count;
 
-    @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "hotel")
+    @JsonManagedReference
     private Set<Room> availableRooms;
 
     public void calculateRating(double newRating) {

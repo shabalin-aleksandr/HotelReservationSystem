@@ -1,15 +1,15 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Hotel;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.HotelMapper.toHotelResponseDto;
 
 @Component
 public class RoomMapper {
@@ -18,21 +18,19 @@ public class RoomMapper {
        Set<ViewReservationDto> viewReservations = room
                .getReservations()
                .stream()
-               .map(reservation -> {
-                   ViewReservationDto viewReservationDto = new ViewReservationDto();
-                   viewReservationDto.setReservationId(reservation.getReservationId());
-                   viewReservationDto.setUserId(reservation.getUser().getUserId());
-                   viewReservationDto.setRoomId(reservation.getRoom().getRoomId());
-                   viewReservationDto.setReservationFrom(reservation.getReservationFrom());
-                   viewReservationDto.setReservationTo(reservation.getReservationTo());
-                   viewReservationDto.setTotalPrice(reservation.getTotalPrice());
-                   return viewReservationDto;
-               })
+               .map(reservation -> MainDtoMapper.mapReservationToViewDto(reservation, null, room))
                .collect(Collectors.toSet());
 
+       return getViewRoomDto(room, viewReservations);
+   }
+
+   @NotNull
+   private static ViewRoomDto getViewRoomDto(Room room, Set<ViewReservationDto> viewReservations) {
        ViewRoomDto viewRoomDto = new ViewRoomDto();
        viewRoomDto.setRoomId(room.getRoomId());
-       viewRoomDto.setHotelId(room.getHotel().getHotelId());
+       if (room.getHotel() != null) {
+           viewRoomDto.setHotelId(room.getHotel().getHotelId());
+       }
        viewRoomDto.setRoomNumber(room.getRoomNumber());
        viewRoomDto.setCategory(room.getCategory());
        viewRoomDto.setPricePerNight(room.getPricePerNight());
@@ -40,13 +38,13 @@ public class RoomMapper {
        return viewRoomDto;
    }
 
-   // TODO: Reservation
    public static Room toRoom(CreateRoomDto createRoomDto, Hotel hotel) {
        Room room = new Room();
        room.setRoomNumber(createRoomDto.getRoomNumber());
        room.setCategory(createRoomDto.getCategory());
        room.setPricePerNight(createRoomDto.getPricePerNight());
        room.setHotel(hotel);
+       room.setReservations(new HashSet<>());
        return room;
    }
 }

@@ -7,5 +7,6 @@ import java.util.UUID;
 
 public interface IRoomReadService {
     List<ViewRoomDto> findAllRooms();
-    ViewRoomDto findRoomById(UUID roomId);
+    ViewRoomDto findRoomById(UUID hotelId, UUID roomId);
+    List<ViewRoomDto> findAllRoomsByHotelId(UUID hotelId);
 }
