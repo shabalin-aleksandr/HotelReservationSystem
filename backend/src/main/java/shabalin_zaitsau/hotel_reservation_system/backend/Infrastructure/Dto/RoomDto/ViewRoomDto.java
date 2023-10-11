@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.CategoryType;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 
 import java.util.Set;
 import java.util.UUID;
@@ -38,5 +37,5 @@ public class ViewRoomDto {
     private double pricePerNight;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Set<ViewReservationDto> reservations;
+    private Set<ShortViewReservationDto> reservations;
 }

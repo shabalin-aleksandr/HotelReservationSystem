@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     public static ViewUserDto toUserResponseDto(User user) {
-        Set<ViewReservationDto> viewReservations = user
+        Set<ShortViewReservationDto> viewReservations = user
                 .getReservations()
                 .stream()
                 .map(reservation -> MainDtoMapper.mapReservationToViewDto(reservation, user, null))
@@ -24,7 +24,7 @@ public class UserMapper {
     }
 
     @NotNull
-    private static ViewUserDto getViewUserDto(User user, Set<ViewReservationDto> viewReservations) {
+    private static ViewUserDto getViewUserDto(User user, Set<ShortViewReservationDto> viewReservations) {
         ViewUserDto viewUserDto = new ViewUserDto();
         viewUserDto.setUserId(user.getUserId());
         viewUserDto.setFirstName(user.getFirstName());

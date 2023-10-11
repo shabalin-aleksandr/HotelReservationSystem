@@ -2,10 +2,10 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Roo
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Hotel;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class RoomMapper {
 
    public static ViewRoomDto toRoomResponseDto(Room room) {
-       Set<ViewReservationDto> viewReservations = room
+       Set<ShortViewReservationDto> viewReservations = room
                .getReservations()
                .stream()
                .map(reservation -> MainDtoMapper.mapReservationToViewDto(reservation, null, room))
@@ -25,7 +25,7 @@ public class RoomMapper {
    }
 
    @NotNull
-   private static ViewRoomDto getViewRoomDto(Room room, Set<ViewReservationDto> viewReservations) {
+   private static ViewRoomDto getViewRoomDto(Room room, Set<ShortViewReservationDto> viewReservations) {
        ViewRoomDto viewRoomDto = new ViewRoomDto();
        viewRoomDto.setRoomId(room.getRoomId());
        if (room.getHotel() != null) {

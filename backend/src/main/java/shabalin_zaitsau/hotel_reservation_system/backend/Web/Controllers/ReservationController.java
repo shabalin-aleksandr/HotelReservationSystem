@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.CreateReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.ReservationServices.ReservationReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.ReservationServices.ReservationWriteService;
 
@@ -48,7 +47,7 @@ public class ReservationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ViewReservationDto> getReservations() {
-        return reservationReadService.findAllReservation();
+        return null;
     }
 
     @Operation(
@@ -72,7 +71,7 @@ public class ReservationController {
     @GetMapping(path = "/{reservationId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewReservationDto getReservationById(@PathVariable("reservationId") UUID reservationId) {
-        return reservationReadService.findReservationById(reservationId);
+        return null;
     }
 
     @Operation(

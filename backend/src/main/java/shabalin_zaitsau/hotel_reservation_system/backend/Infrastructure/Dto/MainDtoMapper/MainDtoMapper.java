@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Reservation;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
 
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
 public class MainDtoMapper {
 
     /**
-     * Maps a {@link Reservation}, {@link User}, and {@link Room} to a {@link ViewReservationDto}.
+     * Maps a {@link Reservation}, {@link User}, and {@link Room} to a {@link ShortViewReservationDto}.
      *
      * <p>
      * This method takes a Reservation entity, a User entity, and a Room entity and maps them
@@ -37,18 +38,18 @@ public class MainDtoMapper {
      * @return A ViewReservationDto representing the mapped data.
      *
      * @throws NullPointerException If either the user or room is {@code null}.
-     * @see ViewReservationDto
+     * @see ShortViewReservationDto
      * @see Reservation
      * @see User
      * @see Room
      */
-    public static ViewReservationDto mapReservationToViewDto
+    public static ShortViewReservationDto mapReservationToViewDto
     (
             Reservation reservation,
             @Nullable User user,
             @Nullable Room room
     ) {
-        ViewReservationDto viewReservationDto = new ViewReservationDto();
+        ShortViewReservationDto viewReservationDto = new ShortViewReservationDto();
         viewReservationDto.setReservationId(reservation.getReservationId());
         assert user != null;
         viewReservationDto.setUserId(user.getUserId());
@@ -56,7 +57,6 @@ public class MainDtoMapper {
         viewReservationDto.setRoomId(room.getRoomId());
         viewReservationDto.setReservationFrom(reservation.getReservationFrom());
         viewReservationDto.setReservationTo(reservation.getReservationTo());
-        viewReservationDto.setTotalPrice(reservation.getTotalPrice());
         return viewReservationDto;
     }
 

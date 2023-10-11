@@ -7,6 +7,8 @@ import java.util.UUID;
 
 // TODO: Add Room ID and Hotel ID, separate method by finding reservation in hotels and in particular room
 public interface IReservationReadService {
-    List<ViewReservationDto> findAllReservation();
-    ViewReservationDto findReservationById(UUID reservationId);
+    List<ViewReservationDto> findAllReservationInHotel(UUID hotelId);
+    List<ViewReservationDto> findAllReservationInRoom(UUID hotelId, UUID roomId);
+    List<ViewReservationDto> finaAllReservationForUser(UUID userId);
+    ViewReservationDto findReservationById(UUID hotelId, UUID roomId, UUID reservationId);
 }
