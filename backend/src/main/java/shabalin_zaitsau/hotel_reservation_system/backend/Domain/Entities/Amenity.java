@@ -22,8 +22,8 @@ public class Amenity {
     private UUID amenityId;
 
     @NotBlank
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "amenity_name", nullable = false)
+    private String amenityName;
 
     @Column(name = "description", nullable = false)
     private String description;
