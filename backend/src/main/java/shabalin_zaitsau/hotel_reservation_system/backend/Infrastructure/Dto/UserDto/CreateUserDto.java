@@ -7,12 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.interfaces.IUserCreate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserDto {
+public class CreateUserDto implements IUserCreate {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "John")
     @NotEmpty

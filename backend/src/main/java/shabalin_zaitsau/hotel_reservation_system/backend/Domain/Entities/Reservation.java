@@ -22,21 +22,24 @@ public class Reservation {
     private UUID reservationId;
 
     @Column(name = "reservation_from")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date reservationFrom;
 
     @Column(name = "reservation_to")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date reservationTo;
 
+    @Column(name = "total_days")
+    private int totalDays;
+
     @Column(name = "total_price")
-    private double totalPrice;
+    private Double totalPrice = 0.0;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
+    @JoinColumn(name = "room_id", referencedColumnName = "room_id")
+    private Room reservedRoom;
 }

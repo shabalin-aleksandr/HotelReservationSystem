@@ -11,13 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.CreateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.UpdateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityDeleteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityWriteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomDeleteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomWriteService;
 
 import java.util.List;
 import java.util.UUID;
@@ -154,7 +150,7 @@ public class AmenityController {
     public ViewAmenityDto updateAmenity(
             @PathVariable("roomId") UUID roomId,
             @PathVariable("amenityId") UUID amenityId,
-            @PathVariable UpdateAmenityDto updateAmenityDto){
+            @RequestBody UpdateAmenityDto updateAmenityDto){
         return amenityWriteService.editAmenity(roomId,amenityId,updateAmenityDto);
     }
 

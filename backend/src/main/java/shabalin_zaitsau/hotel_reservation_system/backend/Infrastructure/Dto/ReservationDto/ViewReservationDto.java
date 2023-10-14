@@ -29,13 +29,16 @@ public class ViewReservationDto {
     @NotEmpty
     private UUID roomId;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-10-17")
     @NotEmpty
     private Date reservationFrom;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-10-12")
     @NotEmpty
     private Date reservationTo;
+
+    @Schema(requiredMode =  Schema.RequiredMode.REQUIRED, example = "5")
+    private int totalDays;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "4765.80")
     @NotEmpty

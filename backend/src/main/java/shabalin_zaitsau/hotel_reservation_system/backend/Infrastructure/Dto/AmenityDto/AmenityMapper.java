@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Amenity;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityCreate;
 
 @Component
 public class AmenityMapper {
@@ -20,7 +21,7 @@ public class AmenityMapper {
         return viewAmenityDto;
     }
 
-    public static Amenity toAmenity(CreateAmenityDto createAmenityDto, Room room) {
+    public static Amenity toAmenity(IAmenityCreate createAmenityDto, Room room) {
         Amenity amenity = new Amenity();
         amenity.setAmenityName(createAmenityDto.getAmenityName());
         amenity.setDescription(createAmenityDto.getDescription());

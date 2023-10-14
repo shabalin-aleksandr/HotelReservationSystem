@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.CreateRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.UpdateRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomDeleteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.RoomWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.RoomExternalService;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,9 +22,7 @@ import java.util.UUID;
 @Tag(name = "Rooms", description = "Endpoints for managing room")
 public class RoomController {
 
-    private final RoomReadService roomReadService;
-    private final RoomWriteService roomWriteService;
-    private final RoomDeleteService roomDeleteService;
+    private final RoomExternalService roomExternalService;
 
     @Operation(
             summary = "Get all rooms",
@@ -50,7 +46,7 @@ public class RoomController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ViewRoomDto> getRooms() {
-        return roomReadService.findAllRooms();
+        return roomExternalService.findAllRooms();
     }
 
     @Operation(
@@ -75,7 +71,7 @@ public class RoomController {
     @GetMapping("/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public List<ViewRoomDto> getAllRoomsByHotelId(@PathVariable UUID hotelId) {
-        return roomReadService.findAllRoomsByHotelId(hotelId);
+        return roomExternalService.findAllRoomsByHotelId(hotelId);
     }
 
     @Operation(
@@ -99,7 +95,7 @@ public class RoomController {
     @GetMapping(path = "/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewRoomDto getRoomById(@PathVariable("hotelId") UUID hotelId, @PathVariable("roomId") UUID roomId) {
-        return roomReadService.findRoomById(hotelId,roomId);
+        return roomExternalService.findRoomById(hotelId,roomId);
     }
 
     @Operation(
@@ -125,11 +121,11 @@ public class RoomController {
     public ViewRoomDto createRoom(
             @PathVariable("hotelId") UUID hotelId,
             @RequestBody CreateRoomDto createRoomDto) {
-        return roomWriteService.addRoom(hotelId, createRoomDto);
+        return roomExternalService.addRoom(hotelId, createRoomDto);
     }
 
     @Operation(
-            summary = "Update Room ",
+            summary = "Update Room",
             description = "Update Room for particular hotel",
             responses = {
                     @ApiResponse(
@@ -147,11 +143,12 @@ public class RoomController {
             }
     )
     @PutMapping("/update/{hotelId}/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
     public ViewRoomDto updateRoom(
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
             @RequestBody UpdateRoomDto updateRoomDto) {
-        return roomWriteService.editRoom(hotelId, roomId, updateRoomDto);
+        return roomExternalService.editRoom(hotelId, roomId, updateRoomDto);
     }
 
     @Operation(
@@ -164,9 +161,12 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping("/{roomId}")
+    @DeleteMapping("delete/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteRoomById(@PathVariable("roomId") UUID roomId) {
-        roomDeleteService.removeRoomById(roomId);
+    public void deleteRoomById(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId
+    ) {
+        roomExternalService.removeRoomById(hotelId, roomId);
     }
 }

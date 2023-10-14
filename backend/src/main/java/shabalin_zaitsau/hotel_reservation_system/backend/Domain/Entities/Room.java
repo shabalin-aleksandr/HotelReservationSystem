@@ -39,9 +39,12 @@ public class Room {
     private CategoryType category;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "room")
+    private Set<Amenity> availableAmenities;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "reservedRoom")
     private Set<Reservation> reservations;
 
     @NotBlank
     @Column(name = "price_per_night", nullable = false)
-    private double pricePerNight;
+    private Double pricePerNight;
 }

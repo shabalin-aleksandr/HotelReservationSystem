@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.interfaces.IUserCreate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +18,7 @@ public class UserMapper {
         Set<ShortViewReservationDto> viewReservations = user
                 .getReservations()
                 .stream()
-                .map(reservation -> MainDtoMapper.mapReservationToViewDto(reservation, user, null))
+                .map(MainDtoMapper::mapReservationToViewDto)
                 .collect(Collectors.toSet());
 
         return getViewUserDto(user, viewReservations);
@@ -38,15 +39,15 @@ public class UserMapper {
         return viewUserDto;
     }
 
-    public static User toUser(CreateUserDto createUserDto) {
+    public User toUser(IUserCreate userToCreate) {
         User user = new User();
-        user.setFirstName(createUserDto.getFirstName());
-        user.setLastName(createUserDto.getLastName());
-        user.setEmail(createUserDto.getEmail());
-        user.setPhoneNumber(createUserDto.getPhoneNumber());
-        user.setCountry(createUserDto.getCountry());
-        user.setRegion(createUserDto.getRegion());
-        user.setCity(createUserDto.getCity());
+        user.setFirstName(userToCreate.getFirstName());
+        user.setLastName(userToCreate.getLastName());
+        user.setEmail(userToCreate.getEmail());
+        user.setPhoneNumber(userToCreate.getPhoneNumber());
+        user.setCountry(userToCreate.getCountry());
+        user.setRegion(userToCreate.getRegion());
+        user.setCity(userToCreate.getCity());
         user.setReservations(new HashSet<>());
         return user;
     }

@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.CreateUserDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.UpdateUserDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.UserDeleteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.UserReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.UserWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.UserExternalService;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,9 +22,7 @@ import java.util.UUID;
 @Tag(name = "Users", description = "Endpoints for managing users")
 public class UserController {
 
-    private final UserWriteService userWriteService;
-    private final UserReadService userReadService;
-    private final UserDeleteService userDeleteService;
+    private final UserExternalService userExternalService;
 
     @Operation(
             summary = "Get users",
@@ -50,7 +46,7 @@ public class UserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ViewUserDto> getUsers() {
-        return userReadService.findAllUsers();
+        return userExternalService.findAllUsers();
     }
 
     @Operation(
@@ -74,7 +70,7 @@ public class UserController {
     @GetMapping(path= "/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewUserDto getUserById(@PathVariable("userId") UUID userId) {
-        return userReadService.findUserById(userId);
+        return userExternalService.findUserById(userId);
     }
 
     @Operation(
@@ -98,7 +94,7 @@ public class UserController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewUserDto createUser(@RequestBody CreateUserDto createUserDto) {
-        return userWriteService.addUser(createUserDto);
+        return userExternalService.addUser(createUserDto);
     }
 
     @Operation(
@@ -122,7 +118,7 @@ public class UserController {
     @PatchMapping("/update/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewUserDto update(@PathVariable UUID userId, @RequestBody UpdateUserDto updateUserDto) {
-        return userWriteService.editUser(userId, updateUserDto);
+        return userExternalService.editUser(userId, updateUserDto);
     }
 
     @Operation(
@@ -138,6 +134,6 @@ public class UserController {
     @DeleteMapping(path = "{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUserById(@PathVariable("userId") UUID userId) {
-        userDeleteService.removeUserById(userId);
+        userExternalService.removeUserById(userId);
     }
 }

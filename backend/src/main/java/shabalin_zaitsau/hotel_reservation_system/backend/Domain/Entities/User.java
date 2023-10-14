@@ -3,9 +3,6 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Reservation;
 
 import java.util.Set;
 import java.util.UUID;

@@ -6,12 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.interfaces.IHotelCreate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateHotelDto {
+public class CreateHotelDto implements IHotelCreate {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "Grand Hotel")
     @NotEmpty

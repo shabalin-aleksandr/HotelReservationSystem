@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Amenity;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.AmenityMapper;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.CreateAmenityDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.UpdateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.RoomMapper;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityCreate;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AmenityAlreadyExistsException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.interfaces.IAmenityWriteService;
@@ -30,23 +29,23 @@ public class AmenityWriteService implements IAmenityWriteService {
     private final JsonPatch jsonPatch;
 
     @Override
-    public ViewAmenityDto addAmenity(UUID roomId, CreateAmenityDto createAmenityDto) {
+    public ViewAmenityDto addAmenity(UUID roomId, IAmenityCreate amenityToCreate) {
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(() -> new EntityNotFoundException("Room with Id: " + roomId + " doesn't exist"));
 
-        Optional<Amenity> existingAmenity = amenityRepository.findByRoomAndAmenityName(room, createAmenityDto.getAmenityName());
+        Optional<Amenity> existingAmenity = amenityRepository.findByRoomAndAmenityName(room, amenityToCreate.getAmenityName());
 
         if (existingAmenity.isPresent()) {
             throw new AmenityAlreadyExistsException("A amenity with the same properties already exists.");
         }
 
-        Amenity amenity = AmenityMapper.toAmenity(createAmenityDto, room);
+        Amenity amenity = AmenityMapper.toAmenity(amenityToCreate, room);
         return AmenityMapper.toAmenityResponseDto(amenityRepository.save(amenity));
     }
 
     @Override
-    public ViewAmenityDto editAmenity(UUID roomId, UUID amenityId, UpdateAmenityDto updateAmenityDto) {
+    public ViewAmenityDto editAmenity(UUID roomId, UUID amenityId, IAmenityUpdate amenityToUpdate) {
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(() -> new EntityNotFoundException("Hotel with Id: " + roomId + " doesn't exist"));
@@ -57,10 +56,10 @@ public class AmenityWriteService implements IAmenityWriteService {
 
         if (room != null && existingAmenity != null) {
             existingAmenity.setRoom(room);
-            existingAmenity.setAmenityName(updateAmenityDto.getAmenityName());
-            existingAmenity.setDescription(updateAmenityDto.getDescription());
+            existingAmenity.setAmenityName(amenityToUpdate.getAmenityName());
+            existingAmenity.setDescription(amenityToUpdate.getDescription());
 
-            Amenity patchAmenity = AmenityMapper.toAmenity(updateAmenityDto, room);
+            Amenity patchAmenity = AmenityMapper.toAmenity(amenityToUpdate, room);
             Amenity updatedAmenity = jsonPatch.mergePatch(existingAmenity, patchAmenity, Amenity.class);
             updatedAmenity.setRoom(room);
 

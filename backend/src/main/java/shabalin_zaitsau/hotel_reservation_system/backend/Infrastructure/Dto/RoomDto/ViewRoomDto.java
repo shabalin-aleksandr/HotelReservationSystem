@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.CategoryType;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 
 import java.util.Set;
@@ -38,4 +39,7 @@ public class ViewRoomDto {
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Set<ShortViewReservationDto> reservations;
+
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Set<ViewAmenityDto> amenities;
 }

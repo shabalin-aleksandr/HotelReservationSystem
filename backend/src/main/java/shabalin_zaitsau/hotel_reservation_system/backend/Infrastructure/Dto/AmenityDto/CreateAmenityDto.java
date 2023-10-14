@@ -6,12 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityCreate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateAmenityDto {
+public class CreateAmenityDto implements IAmenityCreate {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "WI-FI connection")
     @NotEmpty

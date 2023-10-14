@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.CreateReservationDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.UpdateReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.ReservationServices.ReservationReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.ReservationServices.ReservationWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.ReservationExternalService;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,12 +22,11 @@ import java.util.UUID;
 @Tag(name = "Reservations", description = "Endpoints for managing reservations")
 public class ReservationController {
 
-    private final ReservationReadService reservationReadService;
-    private final ReservationWriteService reservationWriteService;
+    private final ReservationExternalService reservationExternalService;
 
     @Operation(
-            summary = "Get reservations",
-            description = "Get all reservations in database",
+            summary = "Get all Reservations in Hotel",
+            description = "Get all Reservations in particular Hotel",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -44,15 +43,15 @@ public class ReservationController {
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
             }
     )
-    @GetMapping
+    @GetMapping("/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewReservationDto> getReservations() {
-        return null;
+    public List<ViewReservationDto> getAllReservationsInHotel(@PathVariable("hotelId") UUID hotelId) {
+        return reservationExternalService.findAllReservationInHotel(hotelId);
     }
 
     @Operation(
-            summary = "Get one reservation",
-            description = "Get one reservation by id",
+            summary = "Get all Reservations in Room",
+            description = "Get all Reservations in particular Room",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -66,17 +65,106 @@ public class ReservationController {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
             }
     )
-    @GetMapping(path = "/{reservationId}")
+    @GetMapping("/{hotelId}/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewReservationDto getReservationById(@PathVariable("reservationId") UUID reservationId) {
-        return null;
+    public List<ViewReservationDto> getAllReservationsInRoom(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId) {
+        return reservationExternalService.findAllReservationInRoom(hotelId, roomId);
     }
 
     @Operation(
-            summary = "Create reservation",
-            description = "Create reservation for particular user",
+            summary = "Get all Reservations for User",
+            description = "Get all Reservations for particular User",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewReservationDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+            }
+    )
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ViewReservationDto> getAllReservationsForUser(
+            @PathVariable("userId") UUID userId
+    ) {
+        return reservationExternalService.finaAllReservationForUser(userId);
+    }
+
+    @Operation(
+            summary = "Get single Reservation",
+            description = "Get one Reservation in particular Room",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewReservationDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+            }
+    )
+    @GetMapping("/{hotelId}/rooms/{roomId}/reservations/{reservationId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ViewReservationDto getReservationById(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId,
+            @PathVariable("reservationId") UUID reservationId
+    ) {
+        return reservationExternalService.findReservationById(hotelId, roomId, reservationId);
+    }
+
+    @Operation(
+            summary = "Create Reservation",
+            description = "Create Reservation for User in particular Room",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewReservationDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+            }
+    )
+    @PostMapping("/{hotelId}/rooms/{roomId}/users/{userId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ViewReservationDto addReservationToRoomForUser(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId,
+            @PathVariable("userId") UUID userId,
+            @RequestBody CreateReservationDto createReservationDto
+    ) {
+        return reservationExternalService.addReservation(hotelId, roomId, userId, createReservationDto);
+    }
+
+    @Operation(
+            summary = "Update Reservation ",
+            description = "Update Reservation in particular Hotel in particular Room for particular User",
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -92,11 +180,67 @@ public class ReservationController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PostMapping(path = "/create/{userId}")
-    public ViewReservationDto createReservation(
+    @PutMapping("/{hotelId}/rooms/{roomId}/users/{userId}/reservations/{reservationId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ViewReservationDto editReservationForRoomForUser(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId,
             @PathVariable("userId") UUID userId,
-            @RequestBody CreateReservationDto createReservationDto
-            ) {
-        return reservationWriteService.addReservation(userId, createReservationDto);
+            @PathVariable("reservationId") UUID reservationId,
+            @RequestBody UpdateReservationDto updateReservationDto
+    ) {
+        return reservationExternalService.editReservation(hotelId, roomId, userId, reservationId, updateReservationDto);
+    }
+
+    @Operation(
+            summary = "Delete single Reservation in Room",
+            description = "Delete Reservation in particular Hotel in particular Room",
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @DeleteMapping("/{hotelId}/rooms/{roomId}/reservations/{reservationId}")
+    public void deleteReservationForRoom(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId,
+            @PathVariable("reservationId") UUID reservationId
+    ) {
+        reservationExternalService.removeReservationInRoomById(hotelId, roomId, reservationId);
+    }
+
+    @Operation(
+            summary = "Delete all Reservation in Room",
+            description = "Delete all Reservation in particular Hotel in particular Room",
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @DeleteMapping("/{hotelId}/rooms/{roomId}")
+    public void deleteAllReservationsInRoom(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId
+    ) {
+        reservationExternalService.removeAllReservationInRoom(hotelId, roomId);
+    }
+
+    @Operation(
+            summary = "Delete all Reservation in Hotel",
+            description = "Delete all Reservation in particular Hotel in particular Room",
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @DeleteMapping("/{hotelId}")
+    public void deleteAllReservationInHotel(@PathVariable("hotelId") UUID hotelId) {
+        reservationExternalService.removeAllReservationInHotel(hotelId);
     }
 }

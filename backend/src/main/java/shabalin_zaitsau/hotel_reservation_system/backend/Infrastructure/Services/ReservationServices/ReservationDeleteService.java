@@ -14,19 +14,23 @@ import java.util.UUID;
 public class ReservationDeleteService implements IReservationDeleteService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationReadService reservationReadService;
 
     @Override
     public void removeReservationInRoomById(UUID hotelId, UUID roomId, UUID reservationId) {
-
+        reservationReadService.fetchReservationById(hotelId, roomId, reservationId);
     }
 
     @Override
     public void removeAllReservationForRoom(UUID hotelId, UUID roomId) {
-
+        reservationReadService.validateHotelExists(hotelId);
+        reservationReadService.validateRoomExists(hotelId, roomId);
+        reservationRepository.deleteAllByReservedRoom_RoomId(roomId);
     }
 
     @Override
     public void removeAllReservationInHotel(UUID hotelId) {
-
+        reservationReadService.validateHotelExists(hotelId);
+        reservationRepository.deleteAllByReservedRoom_Hotel_HotelId(hotelId);
     }
 }

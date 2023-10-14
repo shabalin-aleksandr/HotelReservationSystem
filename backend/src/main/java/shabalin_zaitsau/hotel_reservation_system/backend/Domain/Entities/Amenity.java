@@ -29,6 +29,6 @@ public class Amenity {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_id", nullable = false)
+    @JoinColumn(name = "room_id", referencedColumnName = "room_id")
     private Room room;
 }

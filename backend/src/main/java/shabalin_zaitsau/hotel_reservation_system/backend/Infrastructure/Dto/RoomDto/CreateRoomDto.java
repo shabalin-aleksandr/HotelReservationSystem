@@ -7,12 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.CategoryType;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.interfaces.IRoomCreate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRoomDto {
+public class CreateRoomDto implements IRoomCreate {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "104")
     @NotEmpty
@@ -24,5 +25,5 @@ public class CreateRoomDto {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "14000")
     @NotEmpty
-    private double pricePerNight;
+    private Double pricePerNight;
 }

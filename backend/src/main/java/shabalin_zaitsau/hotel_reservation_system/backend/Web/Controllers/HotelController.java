@@ -13,9 +13,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Hote
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.RateRequestDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.UpdateHotelDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.HotelDeleteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.HotelReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.HotelWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.HotelExternalService;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,9 +24,7 @@ import java.util.UUID;
 @Tag(name = "Hotels", description = "Endpoints for managing hotels")
 public class HotelController {
 
-    private final HotelReadService hotelReadService;
-    private final HotelWriteService hotelWriteService;
-    private final HotelDeleteService hotelDeleteService;
+    private final HotelExternalService hotelExternalService;
 
     @Operation(
             summary = "Get hotels",
@@ -52,7 +48,7 @@ public class HotelController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ViewHotelDto> getHotels() {
-        return hotelReadService.findAllHotels();
+        return hotelExternalService.findAllHotels();
     }
 
     @Operation(
@@ -76,7 +72,7 @@ public class HotelController {
     @GetMapping(path = "{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewHotelDto getHotelById(@PathVariable("hotelId") UUID hotelId) {
-        return hotelReadService.findHotelById(hotelId);
+        return hotelExternalService.findHotelById(hotelId);
     }
 
     @Operation(
@@ -100,7 +96,7 @@ public class HotelController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewHotelDto createUser(@RequestBody CreateHotelDto createHotelDto) {
-        return hotelWriteService.addHotel(createHotelDto);
+        return hotelExternalService.addHotel(createHotelDto);
     }
 
     @Operation(
@@ -124,7 +120,7 @@ public class HotelController {
     @PatchMapping("/update/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewHotelDto update(@PathVariable UUID hotelId, @RequestBody UpdateHotelDto updateHotelDto) {
-        return hotelWriteService.editHotel(hotelId, updateHotelDto);
+        return hotelExternalService.editHotel(hotelId, updateHotelDto);
     }
 
     @Operation(
@@ -140,7 +136,7 @@ public class HotelController {
     @DeleteMapping(path = "/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUserById(@PathVariable("hotelId") UUID hotelId) {
-        hotelDeleteService.removeHotelById(hotelId);
+        hotelExternalService.removeHotelById(hotelId);
     }
 
     @Operation(
@@ -165,6 +161,6 @@ public class HotelController {
     @ResponseStatus(HttpStatus.OK)
     public double addRate(@PathVariable UUID hotelId,
                           @Valid @RequestBody RateRequestDto rateRequestDto) {
-        return hotelWriteService.putRate(hotelId, rateRequestDto.getRating());
+        return hotelExternalService.putRate(hotelId, rateRequestDto.getRating());
     }
 }

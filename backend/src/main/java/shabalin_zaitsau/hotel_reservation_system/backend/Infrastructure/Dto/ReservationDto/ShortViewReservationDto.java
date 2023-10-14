@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -28,11 +27,6 @@ public class ShortViewReservationDto {
     @NotEmpty
     private UUID roomId;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty
-    private Date reservationFrom;
-
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty
-    private Date reservationTo;
+    @Schema(requiredMode =  Schema.RequiredMode.REQUIRED, example = "5")
+    private int totalDays;
 }
