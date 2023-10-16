@@ -157,7 +157,7 @@ public class ReservationController {
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
             @PathVariable("userId") UUID userId,
-            @RequestBody CreateReservationDto createReservationDto
+            @RequestBody() CreateReservationDto createReservationDto
     ) {
         return reservationExternalService.addReservation(hotelId, roomId, userId, createReservationDto);
     }

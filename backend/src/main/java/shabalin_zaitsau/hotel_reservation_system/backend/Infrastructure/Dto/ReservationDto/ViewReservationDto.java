@@ -38,6 +38,7 @@ public class ViewReservationDto {
     private Date reservationTo;
 
     @Schema(requiredMode =  Schema.RequiredMode.REQUIRED, example = "5")
+    @NotEmpty
     private int totalDays;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "4765.80")

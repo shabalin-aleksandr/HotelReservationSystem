@@ -53,6 +53,7 @@ public class MainDtoMapper {
             shortViewReservationDto.setRoomId(reservation.getReservedRoom().getRoomId());
         }
         shortViewReservationDto.setTotalDays(reservation.getTotalDays());
+        shortViewReservationDto.setTotalPrice(reservation.getTotalPrice());
         return shortViewReservationDto;
     }
 

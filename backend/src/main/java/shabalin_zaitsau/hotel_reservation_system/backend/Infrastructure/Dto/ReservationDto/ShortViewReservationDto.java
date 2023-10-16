@@ -29,4 +29,8 @@ public class ShortViewReservationDto {
 
     @Schema(requiredMode =  Schema.RequiredMode.REQUIRED, example = "5")
     private int totalDays;
+
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "4765.80")
+    @NotEmpty
+    private double totalPrice;
 }

@@ -12,6 +12,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.interfaces.IReservationCreate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
 
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper.mapRoomToViewDto;
@@ -58,9 +59,18 @@ public class ReservationMapper {
         reservation.setUser(userReference);
         Room roomReference = entityManager.getReference(Room.class, roomId);
         reservation.setReservedRoom(roomReference);
+        long daysDifference = ChronoUnit.DAYS.between(
+                reservationToCreate
+                        .getReservationFrom()
+                        .toInstant(),
+                reservationToCreate
+                        .getReservationTo()
+                        .toInstant());
+        reservation.setTotalDays((int) daysDifference);
+        Double pricePerNight = roomReference.getPricePerNight();
+        reservation.setTotalPrice(pricePerNight * daysDifference);
         reservation.setReservationFrom(reservationToCreate.getReservationFrom());
         reservation.setReservationTo(reservationToCreate.getReservationTo());
-        reservation.setTotalDays(reservation.getTotalDays());
         return reservation;
     }
 }
