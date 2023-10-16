@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapper {
 
-    public static ViewUserDto toUserResponseDto(User user) {
+    @NotNull
+    public static ViewUserDto toUserResponseDto(@NotNull User user) {
         Set<ShortViewReservationDto> viewReservations = user
                 .getReservations()
                 .stream()
@@ -25,7 +26,7 @@ public class UserMapper {
     }
 
     @NotNull
-    private static ViewUserDto getViewUserDto(User user, Set<ShortViewReservationDto> viewReservations) {
+    private static ViewUserDto getViewUserDto(@NotNull User user, Set<ShortViewReservationDto> viewReservations) {
         ViewUserDto viewUserDto = new ViewUserDto();
         viewUserDto.setUserId(user.getUserId());
         viewUserDto.setFirstName(user.getFirstName());
@@ -39,7 +40,7 @@ public class UserMapper {
         return viewUserDto;
     }
 
-    public User toUser(IUserCreate userToCreate) {
+    public User toUser(@NotNull IUserCreate userToCreate) {
         User user = new User();
         user.setFirstName(userToCreate.getFirstName());
         user.setLastName(userToCreate.getLastName());

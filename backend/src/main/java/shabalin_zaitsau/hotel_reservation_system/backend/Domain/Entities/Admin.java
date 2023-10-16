@@ -22,8 +22,9 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID adminId;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User userDetails;
 
     @NotBlank
     @Column(name = "admin_type")

@@ -8,32 +8,32 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.CreateUserDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.UpdateUserDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.UserExternalService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.CreateAdminDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.UpdateAdminDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.AdminExternalService;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
-@Tag(name = "Users", description = "Endpoints for managing users")
-public class UserController {
+@RequestMapping("/api/admins")
+@Tag(name = "Admins", description = "Endpoints for managing admins")
+public class AdminController {
 
-    private final UserExternalService userExternalService;
+    private final AdminExternalService adminExternalService;
 
     @Operation(
-            summary = "Get Users",
-            description = "Get all Users in database",
+            summary = "Get Admins",
+            description = "Get all Admins in database",
             responses = {
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewUserDto.class
+                                    schema = @Schema(implementation = ViewAdminDto.class
                                     )
                             )
                     ),
@@ -45,20 +45,20 @@ public class UserController {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewUserDto> getUsers() {
-        return userExternalService.findAllUsers();
+    public List<ViewAdminDto> getAdmins() {
+        return adminExternalService.findAllAdmins();
     }
 
     @Operation(
-            summary = "Get one User",
-            description = "Get one User by his own id",
+            summary = "Get one Admin",
+            description = "Get one Admin by his own id",
             responses = {
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewUserDto.class
+                                    schema = @Schema(implementation = ViewAdminDto.class
                                     )
                             )
                     ),
@@ -67,22 +67,22 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-    @GetMapping(path= "/{userId}")
+    @GetMapping(path= "/{adminId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewUserDto getUserById(@PathVariable("userId") UUID userId) {
-        return userExternalService.findUserById(userId);
+    public ViewAdminDto getAdminById(@PathVariable("adminId") UUID adminId) {
+        return adminExternalService.findAdminById(adminId);
     }
 
     @Operation(
-            summary = "Create User",
-            description = "Create User in database",
+            summary = "Create Admin",
+            description = "Create Admin in database",
             responses = {
                     @ApiResponse(
                             description = "Created",
                             responseCode = "201",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewUserDto.class
+                                    schema = @Schema(implementation = ViewAdminDto.class
                                     )
                             )
                     ),
@@ -91,22 +91,25 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PostMapping("/create")
+    @PostMapping("/create/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ViewUserDto createUser(@RequestBody CreateUserDto createUserDto) {
-        return userExternalService.addUser(createUserDto);
+    public ViewAdminDto createAdmin(
+            @PathVariable("userId") UUID userId,
+            @RequestBody CreateAdminDto createAdminDto
+    ) {
+        return adminExternalService.addAdmin(userId, createAdminDto);
     }
 
     @Operation(
-            summary = "Update User",
-            description = "Update User's info by id",
+            summary = "Update Admin",
+            description = "Update info about Admin by user id and admin id",
             responses = {
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewUserDto.class
+                                    schema = @Schema(implementation = ViewAdminDto.class
                                     )
                             )
                     ),
@@ -115,18 +118,19 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PatchMapping("/update/{userId}")
+    @PatchMapping("/update/{userId}/{adminId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewUserDto updateUser(
+    public ViewAdminDto updateAdmin(
             @PathVariable("userId") UUID userId,
-            @RequestBody UpdateUserDto updateUserDto
+            @PathVariable("adminId") UUID adminId,
+            @RequestBody UpdateAdminDto updateAdminDto
     ) {
-        return userExternalService.editUser(userId, updateUserDto);
+        return adminExternalService.editAdmin(userId, adminId, updateAdminDto);
     }
 
     @Operation(
-            summary = "Delete User",
-            description = "Delete User from database by id",
+            summary = "Delete Admin",
+            description = "Delete Admin from database by id",
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -134,9 +138,27 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping(path = "{userId}")
+    @DeleteMapping(path = "{adminId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(@PathVariable("userId") UUID userId) {
-        userExternalService.removeUserById(userId);
+    public void deleteUserById(@PathVariable("adminId") UUID adminId) {
+        adminExternalService.removeAdminById(adminId);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

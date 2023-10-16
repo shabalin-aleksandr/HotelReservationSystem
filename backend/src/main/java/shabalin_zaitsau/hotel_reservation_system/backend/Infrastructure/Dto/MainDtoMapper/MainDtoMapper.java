@@ -10,6 +10,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Amen
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ShortViewUserDto;
 
 /**
  * Utility class for mapping entities to Data Transfer Objects (DTOs) in the main application.
@@ -104,5 +105,27 @@ public class MainDtoMapper {
         viewAmenityDto.setAmenityName(amenity.getAmenityName());
         viewAmenityDto.setDescription(amenity.getDescription());
         return viewAmenityDto;
+    }
+
+    /**
+     * Maps a User entity to a ShortViewUserDto for a concise view.
+     *
+     * @param user The User entity to be mapped.
+     * @return A ShortViewUserDto containing a subset of user information for a concise view.
+     *
+     * @throws NullPointerException if the provided user is null.
+     */
+    @NotNull
+    public static ShortViewUserDto mapUserToViewDto(@NotNull User user) {
+        ShortViewUserDto shortViewUserDto = new ShortViewUserDto();
+        shortViewUserDto.setUserId(user.getUserId());
+        shortViewUserDto.setFirstName(user.getFirstName());
+        shortViewUserDto.setLastName(user.getLastName());
+        shortViewUserDto.setEmail(user.getEmail());
+        shortViewUserDto.setPhoneNumber(user.getPhoneNumber());
+        shortViewUserDto.setCountry(user.getCountry());
+        shortViewUserDto.setRegion(user.getRegion());
+        shortViewUserDto.setCity(user.getCity());
+        return shortViewUserDto;
     }
 }

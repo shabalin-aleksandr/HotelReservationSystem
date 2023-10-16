@@ -8,15 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
-import java.util.Set;
 
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-
 public class ViewAmenityDto {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "de4376a5-7757-4b1f-989e-907a38fa8cda")
