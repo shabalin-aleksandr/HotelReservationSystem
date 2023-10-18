@@ -33,7 +33,7 @@ public class RegistrationRequestDto implements IRegistrationRequest {
     @NotEmpty
     private String email;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "qwerty123")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "QwErTy123@")
     @NotNull
     @NotEmpty
     private String password;

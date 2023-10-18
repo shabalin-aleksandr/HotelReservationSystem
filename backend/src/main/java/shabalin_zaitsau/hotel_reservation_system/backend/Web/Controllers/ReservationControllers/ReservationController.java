@@ -1,4 +1,4 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Web.Controllers;
+package shabalin_zaitsau.hotel_reservation_system.backend.Web.Controllers.ReservationControllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

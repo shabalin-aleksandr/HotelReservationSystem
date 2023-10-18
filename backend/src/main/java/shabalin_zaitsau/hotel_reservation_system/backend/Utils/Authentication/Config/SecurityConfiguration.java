@@ -42,17 +42,24 @@ public class SecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
-
         http
                 .cors()
                 .and()
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/swagger-ui/index.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/api-docs").permitAll()
+                .requestMatchers("/api-docs/**").permitAll()
+                .requestMatchers("/swagger-resources/**").permitAll()
+                .requestMatchers("/v2/api-docs").permitAll()
+                .requestMatchers("/v3/api-docs").permitAll()
+                .requestMatchers("/webjars/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/private/**").authenticated()
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/private/**").authenticated()
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -65,7 +72,6 @@ public class SecurityConfiguration {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

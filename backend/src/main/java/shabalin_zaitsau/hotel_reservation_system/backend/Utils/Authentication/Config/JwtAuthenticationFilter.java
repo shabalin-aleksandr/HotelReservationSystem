@@ -58,6 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        if (shouldNotFilter(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // Get Authorization header and extract JWT token
         final String authHeader = request.getHeader("Authorization");
@@ -116,7 +120,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NotNull HttpServletRequest request) {
-        return !jwtAuthenticationRequestMatcher.matches(request);
+        return jwtAuthenticationRequestMatcher.matches(request);
     }
 
     /**
@@ -126,7 +130,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @param response the HTTP servlet response
      * @throws IOException if an I/O error occurs while writing the error message to the output stream
      */
-    private void handleMissingJwtToken(HttpServletResponse response) throws IOException {
+    private void handleMissingJwtToken(@NotNull HttpServletResponse response) throws IOException {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Missing JWT token");
 
@@ -142,7 +146,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @param errorMessage the error message to send
      * @throws IOException if an I/O error occurs while writing the error message to the output stream
      */
-    private void sendErrorResponse(HttpServletResponse response,
+    private void sendErrorResponse(@NotNull HttpServletResponse response,
                                    String errorMessage) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

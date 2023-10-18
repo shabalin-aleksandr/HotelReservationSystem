@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * This class implements the Spring Security RequestMatcher interface
@@ -13,13 +14,20 @@ import java.util.List;
  * JWT authentication.
  */
 public class JwtAuthenticationRequestMatcher implements RequestMatcher {
-
     /**
      * A list of paths that are excluded from JWT authentication.
      */
-    private static final List<String> EXCLUDED_PATHS = List.of(
-            "/api/auth/",
-            "/api/public/"
+    private static final List<Pattern> EXCLUDED_PATHS = List.of(
+            Pattern.compile("/api/auth/.*"),
+            Pattern.compile("/api/public/.*"),
+            Pattern.compile("/swagger-ui/.*"),
+            Pattern.compile("/swagger-ui/index.html/.*"),
+            Pattern.compile("/api-docs/.*"),
+            Pattern.compile("/api-docs"),
+            Pattern.compile("/swagger-resources/.*"),
+            Pattern.compile("/v2/api-docs.*"),
+            Pattern.compile("/v3/api-docs.*"),
+            Pattern.compile("/webjars/.*")
     );
 
     /**
@@ -31,7 +39,6 @@ public class JwtAuthenticationRequestMatcher implements RequestMatcher {
     @Override
     public boolean matches(@NotNull HttpServletRequest request) {
         String requestUrl = request.getRequestURI();
-        return EXCLUDED_PATHS.stream()
-                .noneMatch(requestUrl::startsWith);
+        return EXCLUDED_PATHS.stream().anyMatch(pattern -> pattern.matcher(requestUrl).matches());
     }
 }
