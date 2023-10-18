@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.UserMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EntityLayer.interfaces.IUserReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.UserRepository;
 
@@ -28,12 +28,6 @@ public class UserReadService implements IUserReadService {
                 .stream()
                 .map(UserMapper::toUserResponseDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public ViewUserDto findUserByEmail(String email) {
-        User user = fetchUserByEmail(email);
-        return UserMapper.toUserResponseDto(user);
     }
 
     @Override

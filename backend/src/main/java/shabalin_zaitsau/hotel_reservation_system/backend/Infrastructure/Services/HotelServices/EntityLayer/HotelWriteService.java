@@ -12,7 +12,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Hote
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.interfaces.IHotelCreate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.interfaces.IHotelUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.InvalidRatingInputException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.InvalidRatingInputException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EntityLayer.interfaces.IHotelWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.HotelRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.JsonPatch;

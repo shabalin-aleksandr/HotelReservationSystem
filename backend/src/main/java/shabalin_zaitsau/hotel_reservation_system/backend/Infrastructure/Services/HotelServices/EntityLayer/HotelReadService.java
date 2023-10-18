@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Hotel;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.HotelMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EntityLayer.interfaces.IHotelReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.HotelRepository;
 

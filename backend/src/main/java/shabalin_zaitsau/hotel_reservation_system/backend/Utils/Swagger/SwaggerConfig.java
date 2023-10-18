@@ -1,4 +1,4 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Utils.Config.Swagger;
+package shabalin_zaitsau.hotel_reservation_system.backend.Utils.Swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.AdminMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntityNotFoundException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.interfaces.IAdminReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EventLayer.UserExistCheckEvent;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
