@@ -19,7 +19,8 @@ public class JwtAuthenticationRequestMatcher implements RequestMatcher {
      */
     private static final List<Pattern> EXCLUDED_PATHS = List.of(
             Pattern.compile("/api/auth/.*"),
-            Pattern.compile("/api/public/.*"),
+            Pattern.compile("/api/users"),
+            Pattern.compile("/api/users/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"),
             Pattern.compile("/swagger-ui/.*"),
             Pattern.compile("/swagger-ui/index.html/.*"),
             Pattern.compile("/api-docs/.*"),

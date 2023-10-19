@@ -20,9 +20,9 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(apiInfo())
                 .addSecurityItem(new SecurityRequirement()
-                        .addList("JWT Authorisation"))
+                        .addList("bearerAuth"))
                 .components(new Components().addSecuritySchemes
-                        ("JWT Authorisation", createAPIKeyScheme()));
+                        ("bearerAuth", createAPIKeyScheme()));
     }
 
     private SecurityScheme createAPIKeyScheme() {

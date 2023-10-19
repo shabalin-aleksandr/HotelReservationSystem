@@ -3,7 +3,6 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.interfaces.IUserCreate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.interfaces.IUserUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EntityLayer.UserDeleteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EntityLayer.UserReadService;
@@ -26,10 +25,6 @@ public class UserExternalService {
 
     public ViewUserDto findUserById(UUID userId) {
         return userReadService.findUserById(userId);
-    }
-
-    public ViewUserDto addUser(IUserCreate userToCreate) {
-        return userWriteService.addUser(userToCreate);
     }
 
     public ViewUserDto editUser(UUID userId, IUserUpdate userToUpdate) {

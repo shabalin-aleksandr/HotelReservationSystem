@@ -1,39 +1,41 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Web.Controllers.RoomControllers;
+package shabalin_zaitsau.hotel_reservation_system.backend.Web.Controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.CreateRoomDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.UpdateRoomDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.RoomExternalService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.CreateHotelDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.RateRequestDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.UpdateHotelDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ViewHotelDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.HotelExternalService;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/rooms")
-@Tag(name = "Rooms", description = "Endpoints for managing room")
-public class RoomController {
+@RequestMapping("/api/hotels")
+@Tag(name = "Hotels", description = "Endpoints for managing hotels")
+public class HotelController {
 
-    private final RoomExternalService roomExternalService;
+    private final HotelExternalService hotelExternalService;
 
     @Operation(
-            summary = "Get all rooms",
-            description = "Get all rooms in database",
+            summary = "Get hotels",
+            description = "Get all hotels in database",
             responses = {
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewRoomDto.class
+                                    schema = @Schema(implementation = ViewHotelDto.class
                                     )
                             )
                     ),
@@ -45,45 +47,20 @@ public class RoomController {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewRoomDto> getRooms() {
-        return roomExternalService.findAllRooms();
+    public List<ViewHotelDto> getHotels() {
+        return hotelExternalService.findAllHotels();
     }
 
     @Operation(
-            summary = "Get rooms by hotel ID",
-            description = "Get all rooms in particular hotel by hotel ID",
+            summary = "Get one hotel",
+            description = "Get one hotel by his own id",
             responses = {
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewRoomDto.class
-                                    )
-                            )
-                    ),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
-            }
-    )
-    @GetMapping("/{hotelId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ViewRoomDto> getAllRoomsByHotelId(@PathVariable UUID hotelId) {
-        return roomExternalService.findAllRoomsByHotelId(hotelId);
-    }
-
-    @Operation(
-            summary = "Get one room",
-            description = "Get one room by his own id",
-            responses = {
-                    @ApiResponse(
-                            description = "Success",
-                            responseCode = "200",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewRoomDto.class
+                                    schema = @Schema(implementation = ViewHotelDto.class
                                     )
                             )
                     ),
@@ -92,22 +69,22 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-    @GetMapping(path = "/{hotelId}/{roomId}")
+    @GetMapping(path = "{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewRoomDto getRoomById(@PathVariable("hotelId") UUID hotelId, @PathVariable("roomId") UUID roomId) {
-        return roomExternalService.findRoomById(hotelId,roomId);
+    public ViewHotelDto getHotelById(@PathVariable("hotelId") UUID hotelId) {
+        return hotelExternalService.findHotelById(hotelId);
     }
 
     @Operation(
-            summary = "Create room",
-            description = "Create room in database",
+            summary = "Create hotel",
+            description = "Create hotel in database",
             responses = {
                     @ApiResponse(
                             description = "Created",
                             responseCode = "201",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewRoomDto.class
+                                    schema = @Schema(implementation = ViewHotelDto.class
                                     )
                             )
                     ),
@@ -116,24 +93,22 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PostMapping("/create/{hotelId}")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ViewRoomDto createRoom(
-            @PathVariable("hotelId") UUID hotelId,
-            @RequestBody CreateRoomDto createRoomDto) {
-        return roomExternalService.addRoom(hotelId, createRoomDto);
+    public ViewHotelDto createUser(@RequestBody CreateHotelDto createHotelDto) {
+        return hotelExternalService.addHotel(createHotelDto);
     }
 
     @Operation(
-            summary = "Update Room",
-            description = "Update Room for particular hotel",
+            summary = "Update hotel",
+            description = "Update hotel by id",
             responses = {
                     @ApiResponse(
-                            description = "Created",
-                            responseCode = "201",
+                            description = "Success",
+                            responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewRoomDto.class
+                                    schema = @Schema(implementation = ViewHotelDto.class
                                     )
                             )
                     ),
@@ -142,18 +117,15 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PutMapping("/update/{hotelId}/{roomId}")
+    @PatchMapping("/update/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewRoomDto updateRoom(
-            @PathVariable("hotelId") UUID hotelId,
-            @PathVariable("roomId") UUID roomId,
-            @RequestBody UpdateRoomDto updateRoomDto) {
-        return roomExternalService.editRoom(hotelId, roomId, updateRoomDto);
+    public ViewHotelDto update(@PathVariable UUID hotelId, @RequestBody UpdateHotelDto updateHotelDto) {
+        return hotelExternalService.editHotel(hotelId, updateHotelDto);
     }
 
     @Operation(
-            summary = "Delete room",
-            description = "Delete room from database by id",
+            summary = "Delete hotel",
+            description = "Delete hotel from database by id",
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -161,12 +133,34 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping("delete/{hotelId}/{roomId}")
+    @DeleteMapping(path = "/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteRoomById(
-            @PathVariable("hotelId") UUID hotelId,
-            @PathVariable("roomId") UUID roomId
-    ) {
-        roomExternalService.removeRoomById(hotelId, roomId);
+    public void deleteUserById(@PathVariable("hotelId") UUID hotelId) {
+        hotelExternalService.removeHotelById(hotelId);
+    }
+
+    @Operation(
+            summary = "Add rating for hotel",
+            description = "Rate hotel from 0 to 5",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewHotelDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @PatchMapping("/{hotelId}")
+    @ResponseStatus(HttpStatus.OK)
+    public double addRate(@PathVariable UUID hotelId,
+                          @Valid @RequestBody RateRequestDto rateRequestDto) {
+        return hotelExternalService.putRate(hotelId, rateRequestDto.getRating());
     }
 }
