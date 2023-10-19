@@ -8,8 +8,8 @@ import java.util.UUID;
 
 public interface IAmenityReadService {
 
-    List<ViewAmenityDto> findAllAmenities();
-    ViewAmenityDto findAmenityById(UUID roomId,UUID amenityId);
-    List<ViewAmenityDto> findAllAmenitiesByRoomId(UUID roomId);
+    List<ViewAmenityDto> findAllAmenity();
+    ViewAmenityDto findAmenityById(UUID hotelI, UUID roomId,UUID amenityId);
+    List<ViewAmenityDto> findAllAmenityByRoomId(UUID hotelId,UUID roomId);
 
 }
