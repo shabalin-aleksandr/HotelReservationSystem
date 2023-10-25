@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.AdminType;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.AdminMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
@@ -13,6 +15,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,5 +54,10 @@ public class AdminReadService implements IAdminReadService {
         if (!event.isUserExists()) {
             throw new EntityNotFoundException("User with id: " + userId + " doesn't exist");
         }
+    }
+
+    public boolean isAdminType(User user, AdminType type) {
+        Optional<Admin> adminOptional = adminRepository.findByUserDetails(user);
+        return adminOptional.isPresent() && adminOptional.get().getAdminType() == type;
     }
 }

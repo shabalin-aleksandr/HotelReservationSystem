@@ -12,8 +12,6 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Amen
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.interfaces.IAmenityWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AmenityRepository;
 
-
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,7 +27,7 @@ public class AmenityWriteService implements IAmenityWriteService {
     public ViewAmenityDto addAmenity(
             UUID hotelId,
             UUID roomId,
-             IAmenityCreate amenityToCreate
+            IAmenityCreate amenityToCreate
     ) {
         amenityReadService.validateHotelExists(hotelId);
         amenityReadService.validateRoomExists(hotelId, roomId);
@@ -37,6 +35,7 @@ public class AmenityWriteService implements IAmenityWriteService {
         return AmenityMapper.toAmenityResponseDto(amenityRepository.save(amenity));
 
     }
+
     @Override
     public ViewAmenityDto editAmenity(
             UUID hotelId,
@@ -46,9 +45,9 @@ public class AmenityWriteService implements IAmenityWriteService {
     ) {
         Amenity existingAmenity = amenityReadService
                 .fetchAmenityById(hotelId, roomId, amenityId);
-        amenityReadService.validateRoomExists(hotelId ,roomId);
+        amenityReadService.validateRoomExists(hotelId, roomId);
 
         return AmenityMapper.toAmenityResponseDto(amenityRepository.save(existingAmenity));
     }
-    }
+}
 

@@ -15,9 +15,9 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Room
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.InvalidRatingInputException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EntityLayer.interfaces.IHotelWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.HotelRepository;
-import shabalin_zaitsau.hotel_reservation_system.backend.Utils.JsonPatch;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,7 +31,6 @@ public class HotelWriteService implements IHotelWriteService {
     private final HotelRepository hotelRepository;
     private final HotelReadService hotelReadService;
     private final HotelMapper hotelMapper;
-    private final JsonPatch jsonPatch;
 
     @Override
     public ViewHotelDto addHotel(IHotelCreate hotelToCreate) {
@@ -43,18 +42,21 @@ public class HotelWriteService implements IHotelWriteService {
     }
 
     @Override
-    public ViewHotelDto editHotel(UUID hotelId, IHotelUpdate hotelToUpdate) {
+    public ViewHotelDto editHotel(UUID hotelId, @NotNull IHotelUpdate hotelToUpdate) {
         Hotel existingHotel = hotelReadService.fetchHotelById(hotelId);
 
-        Set<ShortViewRoomDto> viewAvailableRooms =
+        Set<ShortViewRoomDto> rooms =
                 mapRoomsToViewDto(getAvailableRoomsOrDefault(existingHotel.getAvailableRooms()));
 
         double originalRating = existingHotel.getRating();
-        Hotel patchHotel = hotelMapper.toHotel(hotelToUpdate);
-        Hotel updatedHotel = jsonPatch.mergePatch(existingHotel, patchHotel, Hotel.class);
-        updatedHotel.setRating(originalRating);
+        Optional.ofNullable(hotelToUpdate.getHotelName()).ifPresent(existingHotel::setHotelName);
+        Optional.ofNullable(hotelToUpdate.getCountry()).ifPresent(existingHotel::setCountry);
+        Optional.ofNullable(hotelToUpdate.getCity()).ifPresent(existingHotel::setCity);
+        Optional.ofNullable(hotelToUpdate.getAddress()).ifPresent(existingHotel::setAddress);
+        Optional.ofNullable(hotelToUpdate.getReceptionNumber()).ifPresent(existingHotel::setReceptionNumber);
+        existingHotel.setRating(originalRating);
 
-        return HotelMapper.toHotelResponseDto(hotelRepository.save(updatedHotel), viewAvailableRooms);
+        return HotelMapper.toHotelResponseDto(hotelRepository.save(existingHotel), rooms);
     }
 
     @Override

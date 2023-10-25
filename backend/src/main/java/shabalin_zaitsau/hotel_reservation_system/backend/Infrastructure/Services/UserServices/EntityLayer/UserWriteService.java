@@ -15,14 +15,13 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.User
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.AuthConflictException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.SamePasswordException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.WrongPasswordException;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.UserConflictException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EntityLayer.interfaces.IUserWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.UserRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.UserDataValidator;
-import shabalin_zaitsau.hotel_reservation_system.backend.Utils.JsonPatch;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.SecurityUtils;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,8 +33,6 @@ public class UserWriteService implements IUserWriteService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDataValidator userValidator;
-    private final UserMapper userMapper;
-    private final JsonPatch jsonPatch;
 
     @Override
     public ViewUserDto editUser(UUID userId, IUserUpdate userToUpdate) {
@@ -48,12 +45,21 @@ public class UserWriteService implements IUserWriteService {
             throw new AccessDeniedException("You do not have permission to edit this user's details.");
         }
 
-        User patchUser = userMapper.toUser(userToUpdate);
-        User updatedUser = jsonPatch.mergePatch(existingUser, patchUser, User.class);
+        if (userToUpdate.getEmail() != null && userRepository.existsByEmail(userToUpdate.getEmail())) {
+            User userWithEmail = userRepository.findUserByEmail(userToUpdate.getEmail()).orElse(null);
+            if (userWithEmail != null && !userWithEmail.getUserId().equals(userId)) {
+                throw new UserConflictException("A user with this email already exists.");
+            }
+        }
 
-        checkConflicts(updatedUser, existingUser);
-
-        return UserMapper.toUserResponseDto(userRepository.save(updatedUser));
+        Optional.ofNullable(userToUpdate.getFirstName()).ifPresent(existingUser::setFirstName);
+        Optional.ofNullable(userToUpdate.getLastName()).ifPresent(existingUser::setLastName);
+        Optional.ofNullable(userToUpdate.getEmail()).ifPresent(existingUser::setEmail);
+        Optional.ofNullable(userToUpdate.getPhoneNumber()).ifPresent(existingUser::setPhoneNumber);
+        Optional.ofNullable(userToUpdate.getCountry()).ifPresent(existingUser::setCountry);
+        Optional.ofNullable(userToUpdate.getRegion()).ifPresent(existingUser::setRegion);
+        Optional.ofNullable(userToUpdate.getCity()).ifPresent(existingUser::setCity);
+        return UserMapper.toUserResponseDto(userRepository.save(existingUser));
     }
 
     @Override
@@ -67,23 +73,6 @@ public class UserWriteService implements IUserWriteService {
         existingUser.setPassword(passwordEncoder.encode(passwordToUpdate.getNewPassword()));
         userRepository.save(existingUser);
         return ResponseEntity.ok("Password updated successfully");
-    }
-
-    private void checkConflicts(@NotNull User updatedUser, User existingUser) {
-        if (updatedUser.getEmail() != null) {
-            String newEmail = updatedUser.getEmail();
-            if (!existingUser.getEmail().equals(newEmail)) {
-                User userWithSameEmail = null;
-                try {
-                    userWithSameEmail = userReadService.fetchUserByEmail(newEmail);
-                } catch (EntityNotFoundException e) {
-                    throw new EntityNotFoundException("User with email: " + userWithSameEmail + " not found");
-                }
-                if (userWithSameEmail != null) {
-                    throw new UserConflictException("User with Email: " + newEmail + " already exists");
-                }
-            }
-        }
     }
 
     private void validateUserPermission(UUID userId) {

@@ -8,11 +8,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.Role;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.AuthConflictException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.UserRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.AuthenticationResponseDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IAdminRegistrationRequest;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IAuthenticationRequest;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IRegistrationRequest;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Events.UserAuthenticationCheckEvent;
@@ -26,6 +29,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Va
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -53,7 +57,7 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return  AuthenticationResponseDto.builder()
+        return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }
@@ -64,9 +68,9 @@ public class AuthenticationService {
      * @param request the registration request
      * @return an {@link AuthenticationResponseDto} containing the JWT token
      */
-    public AuthenticationResponseDto registerAdmin(IRegistrationRequest request) {
+    public AuthenticationResponseDto registerAdmin(IAdminRegistrationRequest request) {
         mainValidator.validateRegistration(request);
-        var admin = User.builder()
+        var adminUser = User.builder()
                 .role(Role.ADMIN)
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -77,9 +81,14 @@ public class AuthenticationService {
                 .region(request.getRegion())
                 .city(request.getCity())
                 .build();
-        userRepository.save(admin);
-        var jwtToken = jwtService.generateToken(admin);
-        return  AuthenticationResponseDto.builder()
+        userRepository.save(adminUser);
+        var adminDetails = Admin.builder()
+                .userDetails(adminUser)
+                .adminType(request.getAdminType())
+                .build();
+        adminRepository.save(adminDetails);
+        var jwtToken = jwtService.generateToken(adminUser);
+        return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }

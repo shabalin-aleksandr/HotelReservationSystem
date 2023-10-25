@@ -7,6 +7,5 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Admi
 import java.util.UUID;
 
 public interface IAdminWriteService {
-    ViewAdminDto addAdmin(UUID userId, IAdminCreate adminToCreate);
     ViewAdminDto editAdmin(UUID userId, UUID adminId, IAdminUpdate adminToUpdate);
 }

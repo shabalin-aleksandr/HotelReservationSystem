@@ -17,7 +17,7 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-		<!-- Spring Boot -->
+		<!-- Spring Framework -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -110,12 +110,7 @@
 			<version>24.0.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<artifactId>json-patch</artifactId>
-			<groupId>com.github.fge</groupId>
-			<version>1.9</version>
-		</dependency>
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>

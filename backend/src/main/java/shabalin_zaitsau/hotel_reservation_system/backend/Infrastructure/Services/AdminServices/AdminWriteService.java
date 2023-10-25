@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.AdminMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.interfaces.IAdminCreate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.interfaces.IAdminUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.interfaces.IAdminWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
@@ -21,14 +20,6 @@ public class AdminWriteService implements IAdminWriteService {
 
     private final AdminReadService adminReadService;
     private final AdminRepository adminRepository;
-    private final AdminMapper adminMapper;
-
-    @Override
-    public ViewAdminDto addAdmin(UUID userId, IAdminCreate adminToCreate) {
-        adminReadService.validateUserExists(userId);
-        Admin admin = adminMapper.toAdmin(adminToCreate, userId);
-        return AdminMapper.toAdminResponseDto(adminRepository.save(admin));
-    }
 
     @Override
     public ViewAdminDto editAdmin(UUID userId, UUID adminId, IAdminUpdate adminToUpdate) {

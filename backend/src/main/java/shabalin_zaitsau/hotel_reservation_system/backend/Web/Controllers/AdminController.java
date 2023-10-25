@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.CreateAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.UpdateAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.AdminExternalService;
@@ -24,6 +24,7 @@ public class AdminController {
 
     private final AdminExternalService adminExternalService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get Admins",
             description = "Get all Admins in database",
@@ -49,6 +50,7 @@ public class AdminController {
         return adminExternalService.findAllAdmins();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get one Admin",
             description = "Get one Admin by his own id",
@@ -73,33 +75,7 @@ public class AdminController {
         return adminExternalService.findAdminById(adminId);
     }
 
-    @Operation(
-            summary = "Create Admin",
-            description = "Create Admin in database",
-            responses = {
-                    @ApiResponse(
-                            description = "Created",
-                            responseCode = "201",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ViewAdminDto.class
-                                    )
-                            )
-                    ),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
-            }
-    )
-    @PostMapping("/create/{userId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ViewAdminDto createAdmin(
-            @PathVariable("userId") UUID userId,
-            @RequestBody CreateAdminDto createAdminDto
-    ) {
-        return adminExternalService.addAdmin(userId, createAdminDto);
-    }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Update Admin",
             description = "Update info about Admin by user id and admin id",
@@ -128,6 +104,7 @@ public class AdminController {
         return adminExternalService.editAdmin(userId, adminId, updateAdminDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Delete Admin",
             description = "Delete Admin from database by id",
@@ -140,7 +117,7 @@ public class AdminController {
     )
     @DeleteMapping(path = "{adminId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(@PathVariable("adminId") UUID adminId) {
+    public void deleteAdminById(@PathVariable("adminId") UUID adminId) {
         adminExternalService.removeAdminById(adminId);
     }
 }

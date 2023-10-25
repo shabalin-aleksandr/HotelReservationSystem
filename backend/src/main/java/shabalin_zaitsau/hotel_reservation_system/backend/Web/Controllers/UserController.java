@@ -75,7 +75,6 @@ public class UserController {
         return userExternalService.findUserById(userId);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Update User (with Authority only)",
             description = "Update User's info by id",
@@ -94,6 +93,7 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/update/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewUserDto updateUser(
@@ -103,7 +103,6 @@ public class UserController {
         return userExternalService.editUser(userId, updateUserDto);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Update User's password (with Authority only)",
             description = "Update User's password by id",
@@ -114,6 +113,7 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{userId}/password")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> updateUserPassword(
@@ -123,10 +123,8 @@ public class UserController {
         return userExternalService.updateUserPassword(userId, passwordToUpdate);
     }
 
-
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
-            summary = "Delete User (with ADMIN Authority only)",
+            summary = "Delete User (with SUPER_ADMIN Authority only)",
             description = "Delete User from database by id",
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content),
@@ -135,13 +133,17 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasRole('ADMIN') " +
+                    "and " +
+                    "( @adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
+    )
     @DeleteMapping(path = "/delete/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@PathVariable("userId") UUID userId) {
         userExternalService.removeUserById(userId);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Delete User's own account (with Authority only)",
             description = "User can only delete his own account",
@@ -152,9 +154,10 @@ public class UserController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping(path = "/deleteAccount")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteOwnAccount() {
-        return  userExternalService.deleteAccount();
+        return userExternalService.deleteAccount();
     }
 }

@@ -76,7 +76,6 @@ public class HotelController {
         return hotelExternalService.findHotelById(hotelId);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Create hotel",
             description = "Create hotel in database",
@@ -95,13 +94,18 @@ public class HotelController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasRole('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ViewHotelDto createUser(@RequestBody CreateHotelDto createHotelDto) {
+    public ViewHotelDto createHotel(@RequestBody CreateHotelDto createHotelDto) {
         return hotelExternalService.addHotel(createHotelDto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Update hotel",
             description = "Update hotel by id",
@@ -120,13 +124,18 @@ public class HotelController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasRole('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
     @PatchMapping("/update/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewHotelDto update(@PathVariable UUID hotelId, @RequestBody UpdateHotelDto updateHotelDto) {
+    public ViewHotelDto updateHotel(@PathVariable UUID hotelId, @RequestBody UpdateHotelDto updateHotelDto) {
         return hotelExternalService.editHotel(hotelId, updateHotelDto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Delete hotel",
             description = "Delete hotel from database by id",
@@ -137,13 +146,18 @@ public class HotelController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasRole('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
     @DeleteMapping(path = "/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteHotelById(@PathVariable("hotelId") UUID hotelId) {
         hotelExternalService.removeHotelById(hotelId);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Add rating for hotel",
             description = "Rate hotel from 0 to 5",
@@ -162,6 +176,7 @@ public class HotelController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public double addRate(@PathVariable UUID hotelId,

@@ -20,6 +20,10 @@ public class JwtAuthenticationRequestMatcher implements RequestMatcher {
     private static final List<Pattern> EXCLUDED_PATHS = List.of(
             Pattern.compile("/api/auth/.*"),
             Pattern.compile("/api/users"),
+            Pattern.compile("/api/hotels"),
+            Pattern.compile("/api/rooms"),
+            Pattern.compile("/api/reservations"),
+            Pattern.compile("/api/amenities"),
             Pattern.compile("/api/users/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"),
             Pattern.compile("/swagger-ui/.*"),
             Pattern.compile("/swagger-ui/index.html/.*"),

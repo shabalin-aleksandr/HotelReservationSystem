@@ -4,18 +4,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IRegistrationRequest;
 
 /**
  * A data transfer object representing the data needed for user registration.
  * <p>
- * Contains fields for the user's name, surname, nickname, email, password, country, and city.
+ * Contains fields for the user's name, surname, email, password, phoneNumber, country, region and city.
  */
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistrationRequestDto implements IRegistrationRequest {
