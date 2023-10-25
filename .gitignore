@@ -1,0 +1,11 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+target
+
+# Ignore .env file
+.env
+frontend/.env

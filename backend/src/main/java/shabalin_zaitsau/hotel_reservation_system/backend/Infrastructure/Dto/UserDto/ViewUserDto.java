@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.Role;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 
 import java.util.Set;
@@ -18,6 +19,9 @@ public class ViewUserDto {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "c3ce9db4-0e90-4cd8-9d60-52013371334b")
     private UUID userId;
+
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "USER")
+    private Role role;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "Wick")
     private String firstName;

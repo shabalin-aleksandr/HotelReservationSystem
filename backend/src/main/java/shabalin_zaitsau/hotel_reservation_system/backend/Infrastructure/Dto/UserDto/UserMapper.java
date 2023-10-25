@@ -29,6 +29,7 @@ public class UserMapper {
     private static ViewUserDto getViewUserDto(@NotNull User user, Set<ShortViewReservationDto> viewReservations) {
         ViewUserDto viewUserDto = new ViewUserDto();
         viewUserDto.setUserId(user.getUserId());
+        viewUserDto.setRole(user.getRole());
         viewUserDto.setFirstName(user.getFirstName());
         viewUserDto.setLastName(user.getLastName());
         viewUserDto.setEmail(user.getEmail());

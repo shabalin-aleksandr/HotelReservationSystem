@@ -7,6 +7,5 @@ import java.util.UUID;
 
 public interface IUserReadService {
     List<ViewUserDto> findAllUsers();
-    ViewUserDto findUserByEmail(String email);
     ViewUserDto findUserById(UUID userId);
 }

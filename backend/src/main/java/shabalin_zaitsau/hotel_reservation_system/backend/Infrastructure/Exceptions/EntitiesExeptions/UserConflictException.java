@@ -1,4 +1,4 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions;
+package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions;
 
 /**
  * Exception thrown when there is a conflict with a user.

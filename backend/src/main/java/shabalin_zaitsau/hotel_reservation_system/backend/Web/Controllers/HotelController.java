@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.CreateHotelDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.RateRequestDto;
@@ -75,6 +76,7 @@ public class HotelController {
         return hotelExternalService.findHotelById(hotelId);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Create hotel",
             description = "Create hotel in database",
@@ -99,6 +101,7 @@ public class HotelController {
         return hotelExternalService.addHotel(createHotelDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Update hotel",
             description = "Update hotel by id",
@@ -123,6 +126,7 @@ public class HotelController {
         return hotelExternalService.editHotel(hotelId, updateHotelDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Delete hotel",
             description = "Delete hotel from database by id",
@@ -135,10 +139,11 @@ public class HotelController {
     )
     @DeleteMapping(path = "/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(@PathVariable("hotelId") UUID hotelId) {
+    public void deleteHotelById(@PathVariable("hotelId") UUID hotelId) {
         hotelExternalService.removeHotelById(hotelId);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Add rating for hotel",
             description = "Rate hotel from 0 to 5",

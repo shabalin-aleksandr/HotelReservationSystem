@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.CreateRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.UpdateRoomDto;
@@ -24,6 +25,7 @@ public class RoomController {
 
     private final RoomExternalService roomExternalService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get all rooms",
             description = "Get all rooms in database",
@@ -98,6 +100,7 @@ public class RoomController {
         return roomExternalService.findRoomById(hotelId,roomId);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Create room",
             description = "Create room in database",
@@ -124,6 +127,7 @@ public class RoomController {
         return roomExternalService.addRoom(hotelId, createRoomDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Update Room",
             description = "Update Room for particular hotel",
@@ -151,6 +155,7 @@ public class RoomController {
         return roomExternalService.editRoom(hotelId, roomId, updateRoomDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Delete room",
             description = "Delete room from database by id",

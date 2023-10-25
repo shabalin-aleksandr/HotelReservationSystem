@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.interfaces.IReservationCreate;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Constants.DateFormat;
 
 import java.util.Date;
 
@@ -17,13 +18,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class CreateReservationDto implements IReservationCreate {
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "16/10/2023")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-10-16")
+    @JsonFormat(pattern = DateFormat.PATTERN)
     @NotEmpty
     private Date reservationFrom;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "21/10/2023")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-10-21")
+    @JsonFormat(pattern = DateFormat.PATTERN)
     @NotEmpty
     private Date reservationTo;
 }

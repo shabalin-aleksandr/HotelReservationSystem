@@ -16,4 +16,5 @@ FROM openjdk:21-jdk as backend
 ARG JAR_FILE=backend/target/*.jar
 
 COPY ${JAR_FILE} app.jar
+COPY .env .
 ENTRYPOINT ["java", "-jar", "app.jar"]

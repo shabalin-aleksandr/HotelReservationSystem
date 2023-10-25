@@ -1,4 +1,4 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions;
+package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions;
 
 /**
  * Exception class representing an exception that is thrown when attempting
@@ -13,7 +13,7 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Excepti
  *
  * @see RuntimeException
  */
-public class RoomAlreadyExistsException extends RuntimeException {
+public class AmenityAlreadyExistsException extends RuntimeException {
 
     /**
      * Constructs a new {@code RoomAlreadyExistsException} with the specified
@@ -21,8 +21,7 @@ public class RoomAlreadyExistsException extends RuntimeException {
      *
      * @param message The detail message explaining the reason for the exception.
      */
-    public RoomAlreadyExistsException(String message) {
+    public AmenityAlreadyExistsException(String message) {
         super(message);
     }
 }
-
