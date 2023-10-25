@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface IUserDeleteService {
     void removeUserById(UUID userId);
-    public ResponseEntity<String> deleteAccount();
+    ResponseEntity<String> deleteAccount();
 }
