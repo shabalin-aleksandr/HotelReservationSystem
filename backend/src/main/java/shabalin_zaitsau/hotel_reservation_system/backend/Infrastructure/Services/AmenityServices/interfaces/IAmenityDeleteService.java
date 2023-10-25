@@ -3,5 +3,6 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Service
 import java.util.UUID;
 
 public interface IAmenityDeleteService {
-    void removeAmenityById(UUID amenityId);
+    void removeAmenityInRoomById(UUID hotelId, UUID roomId, UUID amenityId);
+    void removeAllAmenityForRoom(UUID hotelId ,UUID roomId);
 }

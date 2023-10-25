@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.CreateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.UpdateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityCreate;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityDeleteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.AmenityExternalService;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,9 +27,7 @@ import java.util.UUID;
 @Tag(name = "Amenities", description = "Endpoints for managing amenity")
 public class AmenityController {
 
-    private final AmenityReadService amenityReadService;
-    private final AmenityWriteService amenityWriteService;
-    private final AmenityDeleteService amenityDeleteService;
+    private final AmenityExternalService amenityExternalService;
 
     @Operation(
             summary = "Get all amenities",
@@ -50,7 +51,7 @@ public class AmenityController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ViewAmenityDto> getAmenities(){
-        return amenityReadService.findAllAmenities();
+        return amenityExternalService.findAllAmenity();
     }
 
     @Operation(
@@ -72,10 +73,12 @@ public class AmenityController {
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
             }
     )
-    @GetMapping("/{roomId}")
+    @GetMapping("/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewAmenityDto> getAllAmenitiesByRoomId(@PathVariable UUID roomId){
-        return amenityReadService.findAllAmenitiesByRoomId(roomId);
+    public List<ViewAmenityDto> getAllAmenitiesByRoomId(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId){
+        return amenityExternalService.findAllAmenityByRoomId(hotelId, roomId);
     }
 
     @Operation(
@@ -96,10 +99,13 @@ public class AmenityController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-    @GetMapping(path = "/{roomId}/{amenityId}")
+    @GetMapping(path = "/findAmenityById/{hotelId}/{roomId}/{amenityId}")
     @ResponseStatus(HttpStatus.OK)
-    public ViewAmenityDto getAmenityById(@PathVariable("roomId") UUID roomId, @PathVariable("amenityId") UUID amenityId){
-        return amenityReadService.findAmenityById(roomId,amenityId);
+    public ViewAmenityDto getAmenityById(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId,
+            @PathVariable("amenityId") UUID amenityId){
+        return amenityExternalService.findAmenityById(hotelId, roomId, amenityId);
     }
 
     @Operation(
@@ -120,12 +126,13 @@ public class AmenityController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PostMapping("/create/{roomId}")
+    @PostMapping("/create/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewAmenityDto createAmenity(
+            @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
-            @RequestBody CreateAmenityDto createAmenityDto){
-        return amenityWriteService.addAmenity(roomId, createAmenityDto);
+            @RequestBody IAmenityCreate amenityToCreate){
+        return amenityExternalService.addAmenity(hotelId,roomId, amenityToCreate);
     }
 
     @Operation(
@@ -148,10 +155,11 @@ public class AmenityController {
     )
     @PutMapping("/update/{roomId}/{amenityId}")
     public ViewAmenityDto updateAmenity(
+            @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
             @PathVariable("amenityId") UUID amenityId,
-            @RequestBody UpdateAmenityDto updateAmenityDto){
-        return amenityWriteService.editAmenity(roomId,amenityId,updateAmenityDto);
+            @RequestBody IAmenityUpdate amenityToUpdate){
+        return amenityExternalService.editAmenity(hotelId, roomId, amenityId, amenityToUpdate);
     }
 
     @Operation(
@@ -164,10 +172,31 @@ public class AmenityController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping("/{amenityId}")
+    @DeleteMapping("/DeleteAmenityById/{hotelId}/{roomId}/{amenityId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAmenityById(@PathVariable("amenityId") UUID amenityId){
-        amenityDeleteService.removeAmenityById(amenityId);
+    public void removeAmenityInRoomById(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId,
+            @PathVariable("amenityId") UUID amenityId){
+        amenityExternalService.removeAmenityInRoomById(hotelId, roomId, amenityId);
+    }
+
+    @Operation(
+            summary = "Delete all amenities from room",
+            description = "Delete amenities from database by room id",
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @DeleteMapping("/DeleteAmenitiesByRoomId/{hotelId}/{roomId}/{amenityId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void DeleteAmenitiesByRoomId(
+            @PathVariable("hotelId") UUID hotelId,
+            @PathVariable("roomId") UUID roomId){
+        amenityExternalService.removeAllAmenityForRoom(hotelId, roomId);
     }
 
 

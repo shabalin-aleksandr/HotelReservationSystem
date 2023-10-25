@@ -7,7 +7,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Amen
 import java.util.UUID;
 
 public interface IAmenityWriteService {
-   ViewAmenityDto addAmenity(UUID roomId, IAmenityCreate amenityToCreate);
-   ViewAmenityDto editAmenity(UUID roomId, UUID AmenityId, IAmenityUpdate amenityToUpdate);
+   ViewAmenityDto addAmenity(UUID hotelId ,UUID roomId, IAmenityCreate amenityToCreate);
+   ViewAmenityDto editAmenity(UUID hotelId, UUID roomId, UUID AmenityId, IAmenityUpdate amenityToUpdate);
 
 }
