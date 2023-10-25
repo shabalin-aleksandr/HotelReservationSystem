@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.CreateReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.UpdateReservationDto;
@@ -24,6 +25,7 @@ public class ReservationController {
 
     private final ReservationExternalService reservationExternalService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get all Reservations in Hotel",
             description = "Get all Reservations in particular Hotel",
@@ -49,6 +51,7 @@ public class ReservationController {
         return reservationExternalService.findAllReservationInHotel(hotelId);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get all Reservations in Room",
             description = "Get all Reservations in particular Room",
@@ -76,6 +79,7 @@ public class ReservationController {
         return reservationExternalService.findAllReservationInRoom(hotelId, roomId);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get all Reservations for User",
             description = "Get all Reservations for particular User",
