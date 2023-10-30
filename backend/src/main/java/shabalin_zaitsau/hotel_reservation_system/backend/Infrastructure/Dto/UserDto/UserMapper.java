@@ -41,6 +41,9 @@ public class UserMapper {
         return viewUserDto;
     }
 
+    /**
+     * @deprecated
+     */
     public User toUser(@NotNull IUserCreate userToCreate) {
         User user = new User();
         user.setFirstName(userToCreate.getFirstName());

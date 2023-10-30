@@ -25,7 +25,6 @@ public class RoomController {
 
     private final RoomExternalService roomExternalService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get all rooms",
             description = "Get all rooms in database",
@@ -44,6 +43,11 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
             }
+    )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -100,7 +104,6 @@ public class RoomController {
         return roomExternalService.findRoomById(hotelId,roomId);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Create room",
             description = "Create room in database",
@@ -119,6 +122,12 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
     @PostMapping("/create/{hotelId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewRoomDto createRoom(
@@ -127,7 +136,6 @@ public class RoomController {
         return roomExternalService.addRoom(hotelId, createRoomDto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Update Room",
             description = "Update Room for particular hotel",
@@ -146,6 +154,12 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
     @PutMapping("/update/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewRoomDto updateRoom(
@@ -155,7 +169,6 @@ public class RoomController {
         return roomExternalService.editRoom(hotelId, roomId, updateRoomDto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Delete room",
             description = "Delete room from database by id",
@@ -165,6 +178,12 @@ public class RoomController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
+    )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
     )
     @DeleteMapping("delete/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)

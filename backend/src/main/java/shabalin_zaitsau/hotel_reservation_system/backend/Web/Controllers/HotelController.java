@@ -95,7 +95,7 @@ public class HotelController {
             }
     )
     @PreAuthorize(
-            "hasRole('ADMIN') " +
+            "hasAuthority('ADMIN') " +
                     "and " +
                     "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
                     "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
@@ -125,7 +125,7 @@ public class HotelController {
             }
     )
     @PreAuthorize(
-            "hasRole('ADMIN') " +
+            "hasAuthority('ADMIN') " +
                     "and " +
                     "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
                     "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
@@ -147,7 +147,7 @@ public class HotelController {
             }
     )
     @PreAuthorize(
-            "hasRole('ADMIN') " +
+            "hasAuthority('ADMIN') " +
                     "and " +
                     "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
                     "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"

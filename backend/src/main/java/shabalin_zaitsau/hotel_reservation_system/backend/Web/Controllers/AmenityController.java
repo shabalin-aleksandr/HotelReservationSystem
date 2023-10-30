@@ -7,15 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.CreateAmenityDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.UpdateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityCreate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityUpdate;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityDeleteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.AmenityWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.AmenityExternalService;
 
 import java.util.List;
@@ -126,6 +122,12 @@ public class AmenityController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
     @PostMapping("/create/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewAmenityDto createAmenity(
@@ -153,7 +155,13 @@ public class AmenityController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PutMapping("/update/{roomId}/{amenityId}")
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
+    @PutMapping("/update/{hotelId}/{roomId}/{amenityId}")
     public ViewAmenityDto updateAmenity(
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
@@ -171,6 +179,12 @@ public class AmenityController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
+    )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
     )
     @DeleteMapping("/DeleteAmenityById/{hotelId}/{roomId}/{amenityId}")
     @ResponseStatus(HttpStatus.OK)
@@ -191,14 +205,17 @@ public class AmenityController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @DeleteMapping("/DeleteAmenitiesByRoomId/{hotelId}/{roomId}/{amenityId}")
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
+                    "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
+    )
+    @DeleteMapping("/DeleteAmenitiesByRoomId/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public void DeleteAmenitiesByRoomId(
+    public void deleteAmenitiesByRoomId(
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId){
         amenityExternalService.removeAllAmenityForRoom(hotelId, roomId);
     }
-
-
-
 }

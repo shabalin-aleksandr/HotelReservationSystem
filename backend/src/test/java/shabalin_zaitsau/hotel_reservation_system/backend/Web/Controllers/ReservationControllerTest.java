@@ -75,7 +75,7 @@ class ReservationControllerTest {
         expectedReservation.setTotalDays(5);
         expectedReservation.setTotalPrice(4765.80);
 
-        when(reservationExternalService.addReservation(eq(hotelId), eq(roomId), eq(userId), Mockito.any(CreateReservationDto.class)))
+        when(reservationExternalService.addReservation(eq(hotelId), eq(roomId), Mockito.any(CreateReservationDto.class)))
                 .thenReturn(expectedReservation);
     }
 

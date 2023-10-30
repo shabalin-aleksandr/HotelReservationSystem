@@ -11,6 +11,8 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Rese
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.interfaces.IReservationUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.ReservationServices.interfaces.IReservationWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.ReservationRepository;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.SecurityUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,14 +25,15 @@ public class ReservationWriteService implements IReservationWriteService {
     private final ReservationRepository reservationRepository;
     private final ReservationReadService reservationReadService;
     private final ReservationMapper reservationMapper;
+    private final PermissionValidator validator;
 
     @Override
     public ViewReservationDto addReservation(
             UUID hotelId,
             UUID roomId,
-            UUID userId,
             IReservationCreate reservationToCreate
     ) {
+        UUID userId = SecurityUtils.getCurrentUserId();
         reservationReadService.validateHotelExists(hotelId);
         reservationReadService.validateRoomExists(hotelId, roomId);
         reservationReadService.validateUserExists(userId);
@@ -38,17 +41,17 @@ public class ReservationWriteService implements IReservationWriteService {
         return ReservationMapper.toReservationResponseDto(reservationRepository.save(reservation));
     }
 
+
     @Override
     public ViewReservationDto editReservation(
             UUID hotelId,
             UUID roomId,
-            UUID userId,
             UUID reservationId,
             @NotNull IReservationUpdate reservationToUpdate
     ) {
         Reservation existingReservation = reservationReadService
                 .fetchReservationById(hotelId, roomId, reservationId);
-        reservationReadService.validateUserExists(userId);
+        validator.validateReservationPermission(hotelId, existingReservation.getUser().getUserId());
 
         Optional.ofNullable(reservationToUpdate.getReservationFrom())
                 .ifPresent(existingReservation::setReservationFrom);

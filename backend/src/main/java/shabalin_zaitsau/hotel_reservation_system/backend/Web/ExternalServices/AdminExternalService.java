@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.interfaces.IAdminUpdate;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.AdminDeleteService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.AdminReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.AdminWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer.AdminDeleteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer.AdminReadService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer.AdminWriteService;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,8 +27,8 @@ public class AdminExternalService {
         return adminReadService.findAdminById(adminId);
     }
 
-    public ViewAdminDto editAdmin(UUID userId, UUID adminId, IAdminUpdate adminToUpdate) {
-        return adminWriteService.editAdmin(userId, adminId, adminToUpdate);
+    public ViewAdminDto editAdmin(UUID adminId, IAdminUpdate adminToUpdate) {
+        return adminWriteService.editAdmin(adminId, adminToUpdate);
     }
 
     public void removeAdminById(UUID adminId) {

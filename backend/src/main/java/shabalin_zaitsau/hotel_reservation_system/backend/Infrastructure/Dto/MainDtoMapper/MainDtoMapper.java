@@ -2,11 +2,10 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Mai
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Amenity;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Reservation;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.*;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ShortViewAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ShortViewHotelDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
@@ -127,5 +126,42 @@ public class MainDtoMapper {
         shortViewUserDto.setRegion(user.getRegion());
         shortViewUserDto.setCity(user.getCity());
         return shortViewUserDto;
+    }
+
+    /**
+     * Maps an Admin entity to a ShortViewAdminDto for a concise view.
+     *
+     * @param admin The Admin entity to be mapped.
+     * @return A ShortViewAdminDto containing a subset of user information for a concise view.
+     *
+     * @throws NullPointerException if the provided admin is null.
+     */
+    @NotNull
+    public static ShortViewAdminDto mapAdminToViewDto(@NotNull Admin admin) {
+        ShortViewAdminDto shortViewAdminDto = new ShortViewAdminDto();
+        shortViewAdminDto.setAdminId(admin.getAdminId());
+        shortViewAdminDto.setAdminType(admin.getAdminType());
+        return shortViewAdminDto;
+    }
+
+    /**
+     * Maps a Hotel entity to a ShortViewHotelDto for a concise view.
+     *
+     * @param hotel The Hotel entity to be mapped.
+     * @return A ShortViewHotelDto containing a subset of user information for a concise view.
+     *
+     * @throws NullPointerException if the provided hotel is null.
+     */
+    @NotNull
+    public static ShortViewHotelDto mapHotelToViewDto(@NotNull Hotel hotel) {
+        ShortViewHotelDto shortViewHotelDto = new ShortViewHotelDto();
+        shortViewHotelDto.setHotelId(hotel.getHotelId());
+        shortViewHotelDto.setHotelName(hotel.getHotelName());
+        shortViewHotelDto.setCountry(hotel.getCountry());
+        shortViewHotelDto.setCity(hotel.getCity());
+        shortViewHotelDto.setAddress(hotel.getAddress());
+        shortViewHotelDto.setReceptionNumber(hotel.getReceptionNumber());
+        shortViewHotelDto.setRating(hotel.getRating());
+        return shortViewHotelDto;
     }
 }

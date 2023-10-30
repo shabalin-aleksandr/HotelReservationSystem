@@ -16,6 +16,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Room
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.interfaces.IRoomUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.EntityLayer.interfaces.IRoomWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.RoomRepository;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -33,10 +34,12 @@ public class RoomWriteService implements IRoomWriteService {
     private final RoomRepository roomRepository;
     private final RoomReadService roomReadService;
     private final RoomMapper roomMapper;
+    private final PermissionValidator validator;
 
     @Override
     public ViewRoomDto addRoom(UUID hotelId, @NotNull IRoomCreate roomToCreate) {
         roomReadService.validateHotelExists(hotelId);
+        validator.validateHotelManagementPermission(hotelId);
         roomReadService
                 .validateRoomDoesNotExist(
                         hotelId,
@@ -54,8 +57,9 @@ public class RoomWriteService implements IRoomWriteService {
 
     @Override
     public ViewRoomDto editRoom(UUID hotelId, UUID roomId, @NotNull IRoomUpdate roomToUpdate) {
+        roomReadService.validateHotelExists(hotelId);
         Room existingRoom = roomReadService.fetchRoomById(hotelId, roomId);
-
+        validator.validateHotelManagementPermission(hotelId);
         roomReadService.validateRoomDoesNotExist(
                 hotelId,
                 roomToUpdate.getRoomNumber(),

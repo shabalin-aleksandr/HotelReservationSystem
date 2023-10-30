@@ -134,9 +134,9 @@ public class UserController {
             }
     )
     @PreAuthorize(
-            "hasRole('ADMIN') " +
+            "hasAuthority('ADMIN') " +
                     "and " +
-                    "( @adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
     )
     @DeleteMapping(path = "/delete/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

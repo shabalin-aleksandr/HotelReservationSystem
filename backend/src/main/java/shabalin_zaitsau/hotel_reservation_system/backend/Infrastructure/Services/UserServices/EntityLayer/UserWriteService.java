@@ -18,6 +18,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptio
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.UserConflictException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EntityLayer.interfaces.IUserWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.UserRepository;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.UserDataValidator;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.SecurityUtils;
 
@@ -33,17 +34,12 @@ public class UserWriteService implements IUserWriteService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDataValidator userValidator;
+    private final PermissionValidator validator;
 
     @Override
     public ViewUserDto editUser(UUID userId, IUserUpdate userToUpdate) {
         User existingUser = userReadService.fetchUserById(userId);
-
-        UUID currentUserId = SecurityUtils.getCurrentUserId();
-        String currentUserRole = SecurityUtils.getCurrentUserRole();
-
-        if (!currentUserId.equals(userId) && !currentUserRole.equals("ADMIN")) {
-            throw new AccessDeniedException("You do not have permission to edit this user's details.");
-        }
+        validator.validateUserAccess(userId);
 
         if (userToUpdate.getEmail() != null && userRepository.existsByEmail(userToUpdate.getEmail())) {
             User userWithEmail = userRepository.findUserByEmail(userToUpdate.getEmail()).orElse(null);
@@ -103,4 +99,3 @@ public class UserWriteService implements IUserWriteService {
         }
     }
 }
-   

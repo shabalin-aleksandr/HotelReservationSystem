@@ -1,4 +1,4 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices;
+package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.A
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.AdminMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AdminDto.ViewAdminDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.interfaces.IAdminReadService;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EventLayer.UserExistCheckEvent;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer.interfaces.IAdminReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 
 import java.util.List;
@@ -48,16 +47,9 @@ public class AdminReadService implements IAdminReadService {
                 .orElseThrow(() -> new EntityNotFoundException("Admin with id: " + adminId + " doesn't exist"));
     }
 
-    protected void validateUserExists(UUID userId) {
-        UserExistCheckEvent event = new UserExistCheckEvent(userId);
-        eventPublisher.publishEvent(event);
-        if (!event.isUserExists()) {
-            throw new EntityNotFoundException("User with id: " + userId + " doesn't exist");
-        }
-    }
-
     public boolean isAdminType(User user, AdminType type) {
         Optional<Admin> adminOptional = adminRepository.findByUserDetails(user);
-        return adminOptional.isPresent() && adminOptional.get().getAdminType() == type;
+        var a = adminOptional.isPresent() && adminOptional.get().getAdminType() == type;
+        return a;
     }
 }

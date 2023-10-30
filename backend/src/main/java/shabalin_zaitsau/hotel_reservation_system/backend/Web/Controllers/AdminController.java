@@ -24,7 +24,6 @@ public class AdminController {
 
     private final AdminExternalService adminExternalService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get Admins",
             description = "Get all Admins in database",
@@ -44,13 +43,13 @@ public class AdminController {
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
             }
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ViewAdminDto> getAdmins() {
         return adminExternalService.findAllAdmins();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Get one Admin",
             description = "Get one Admin by his own id",
@@ -69,16 +68,16 @@ public class AdminController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(path= "/{adminId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewAdminDto getAdminById(@PathVariable("adminId") UUID adminId) {
         return adminExternalService.findAdminById(adminId);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Update Admin",
-            description = "Update info about Admin by user id and admin id",
+            description = "Update info about Admin by his id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -94,17 +93,20 @@ public class AdminController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
-    @PatchMapping("/update/{userId}/{adminId}")
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
+    )
+    @PatchMapping("/update/{adminId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewAdminDto updateAdmin(
-            @PathVariable("userId") UUID userId,
             @PathVariable("adminId") UUID adminId,
             @RequestBody UpdateAdminDto updateAdminDto
     ) {
-        return adminExternalService.editAdmin(userId, adminId, updateAdminDto);
+        return adminExternalService.editAdmin(adminId, updateAdminDto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Delete Admin",
             description = "Delete Admin from database by id",
@@ -115,27 +117,14 @@ public class AdminController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
             }
     )
+    @PreAuthorize(
+            "hasAuthority('ADMIN') " +
+                    "and " +
+                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
+    )
     @DeleteMapping(path = "{adminId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteAdminById(@PathVariable("adminId") UUID adminId) {
         adminExternalService.removeAdminById(adminId);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

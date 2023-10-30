@@ -1,9 +1,9 @@
-package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices;
+package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.interfaces.IAdminDeleteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EntityLayer.interfaces.IAdminDeleteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 
 import java.util.UUID;

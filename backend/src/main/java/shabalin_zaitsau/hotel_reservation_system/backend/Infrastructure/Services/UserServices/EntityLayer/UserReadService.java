@@ -42,6 +42,9 @@ public class UserReadService implements IUserReadService {
                 .orElseThrow(() -> new EntityNotFoundException("User with id: " + userId + " doesn't exist"));
     }
 
+    /**
+     * @deprecated
+     */
     protected User fetchUserByEmail(String email) {
         return userRepository
                 .findUserByEmail(email)

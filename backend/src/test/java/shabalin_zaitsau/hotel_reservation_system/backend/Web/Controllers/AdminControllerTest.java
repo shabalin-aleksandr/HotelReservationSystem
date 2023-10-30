@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,8 +18,6 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.Ad
 
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,8 +53,8 @@ class AdminControllerTest {
         expectedAdmin.setAdminType(AdminType.SUPER_ADMIN);
 
         // Mock the behavior of adminExternalService to return the expectedAdmin
-        when(adminExternalService.addAdmin(eq(userId), ArgumentMatchers.any(CreateAdminDto.class)))
-                .thenReturn(expectedAdmin);
+//        when(adminExternalService.addAdmin(eq(userId), ArgumentMatchers.any(CreateAdminDto.class)))
+//                .thenReturn(expectedAdmin);
     }
 
     @Test

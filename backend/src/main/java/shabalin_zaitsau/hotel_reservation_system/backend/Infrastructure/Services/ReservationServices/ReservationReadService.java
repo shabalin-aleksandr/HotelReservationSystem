@@ -11,8 +11,9 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptio
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EventLayer.HotelExistsCheckEvent;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.ReservationServices.interfaces.IReservationReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.EventLayer.RoomExistsCheckEvent;
-import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EventLayer.UserExistCheckEvent;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.UserServices.EventLayer.UserExistsCheckEvent;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.ReservationRepository;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,10 +26,12 @@ public class ReservationReadService implements IReservationReadService {
 
     private final ReservationRepository reservationRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final PermissionValidator validator;
 
     @Override
     public List<ViewReservationDto> findAllReservationInHotel(UUID hotelId) {
         validateHotelExists(hotelId);
+        validator.validateHotelManagementPermission(hotelId);
         return reservationRepository
                 .findAllByReservedRoom_Hotel_HotelId(hotelId)
                 .stream()
@@ -40,6 +43,7 @@ public class ReservationReadService implements IReservationReadService {
     public List<ViewReservationDto> findAllReservationInRoom(UUID hotelId, UUID roomId) {
         validateHotelExists(hotelId);
         validateRoomExists(hotelId, roomId);
+        validator.validateHotelManagementPermission(hotelId);
         return reservationRepository
                 .findByReservedRoom_Hotel_HotelIdAndReservedRoom_RoomId(hotelId, roomId)
                 .stream()
@@ -62,6 +66,7 @@ public class ReservationReadService implements IReservationReadService {
         validateHotelExists(hotelId);
         validateRoomExists(hotelId, roomId);
         Reservation reservation = fetchReservationById(hotelId, roomId, reservationId);
+        validator.validateReservationPermission(hotelId, reservation.getUser().getUserId());
         return ReservationMapper.toReservationResponseDto(reservation);
     }
 
@@ -82,7 +87,7 @@ public class ReservationReadService implements IReservationReadService {
     }
 
     protected void validateUserExists(UUID userId) {
-        UserExistCheckEvent event = new UserExistCheckEvent(userId);
+        UserExistsCheckEvent event = new UserExistsCheckEvent(userId);
         eventPublisher.publishEvent(event);
         if (!event.isUserExists()) {
             throw new EntityNotFoundException("User with id: " + userId + " doesn't exist");

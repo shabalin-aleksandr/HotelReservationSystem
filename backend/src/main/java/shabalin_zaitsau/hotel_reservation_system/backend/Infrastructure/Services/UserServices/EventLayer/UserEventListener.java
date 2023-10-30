@@ -13,7 +13,7 @@ public class UserEventListener {
     private final UserRepository userRepository;
 
     @EventListener
-    public void handleUserExistCheckEvent(@NotNull UserExistCheckEvent event) {
+    public void handleUserExistCheckEvent(@NotNull UserExistsCheckEvent event) {
         boolean exists = userRepository.existsById(event.getUserId());
         event.setUserExists(exists);
     }

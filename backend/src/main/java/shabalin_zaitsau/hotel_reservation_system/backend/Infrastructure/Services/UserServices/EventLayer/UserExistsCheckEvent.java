@@ -8,12 +8,12 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserExistCheckEvent extends ApplicationEvent {
+public class UserExistsCheckEvent extends ApplicationEvent {
 
     private final UUID userId;
     private boolean userExists;
 
-    public UserExistCheckEvent(UUID userId) {
+    public UserExistsCheckEvent(UUID userId) {
         super(userId);
         this.userId = userId;
     }

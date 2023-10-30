@@ -40,20 +40,18 @@ public class ReservationExternalService {
     public ViewReservationDto addReservation(
             UUID hotelId,
             UUID roomId,
-            UUID userId,
             IReservationCreate reservationToCreate
     ) {
-        return reservationWriteService.addReservation(hotelId, roomId, userId, reservationToCreate);
+        return reservationWriteService.addReservation(hotelId, roomId, reservationToCreate);
     }
 
     public ViewReservationDto editReservation(
             UUID hotelId,
             UUID roomId,
-            UUID userId,
             UUID reservationId,
             @NotNull IReservationUpdate reservationToUpdate
     ) {
-        return reservationWriteService.editReservation(hotelId, roomId, userId, reservationId, reservationToUpdate);
+        return reservationWriteService.editReservation(hotelId, roomId, reservationId, reservationToUpdate);
     }
     public void removeReservationInRoomById(UUID hotelId, UUID roomId, UUID reservationId) {
         reservationDeleteService.removeReservationInRoomById(hotelId, roomId, reservationId);

@@ -14,7 +14,6 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.Us
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerTest {
@@ -57,7 +56,7 @@ public class UserControllerTest {
         createUserDto.setCity("Zlin");
 
         // Mock the behavior of the userExternalService
-        when(userExternalService.addUser(createUserDto)).thenReturn(viewUserDto);
+//        when(userExternalService.addUser(createUserDto)).thenReturn(viewUserDto);
 
         // Perform the POST request to create a user
         mockMvc.perform(MockMvcRequestBuilders.post("/api/users/create")

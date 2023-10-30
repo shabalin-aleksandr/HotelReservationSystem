@@ -5,23 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.AdminType;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.HotelDto.ShortViewHotelDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ShortViewUserDto;
 
-import java.util.UUID;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewAdminDto {
-
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "c3ce9db4-0e90-4cd8-9d60-52013371334b")
-    private UUID adminId;
-
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "SUPER_ADMIN")
-    private AdminType adminType;
+public class ViewAdminDto extends ShortViewAdminDto {
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private ShortViewUserDto userDetails;
+
+    private Set<ShortViewHotelDto> hotels;
 }

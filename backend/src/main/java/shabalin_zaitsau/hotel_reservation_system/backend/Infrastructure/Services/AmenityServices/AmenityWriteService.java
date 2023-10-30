@@ -11,6 +11,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Amen
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityUpdate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AmenityServices.interfaces.IAmenityWriteService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AmenityRepository;
+import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
 
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class AmenityWriteService implements IAmenityWriteService {
     private final AmenityRepository amenityRepository;
     private final AmenityReadService amenityReadService;
     private final AmenityMapper amenityMapper;
+    private final PermissionValidator validator;
 
     @Override
     public ViewAmenityDto addAmenity(
@@ -30,6 +32,7 @@ public class AmenityWriteService implements IAmenityWriteService {
             IAmenityCreate amenityToCreate
     ) {
         amenityReadService.validateHotelExists(hotelId);
+        validator.validateHotelManagementPermission(hotelId);
         amenityReadService.validateRoomExists(hotelId, roomId);
         Amenity amenity = amenityMapper.toAmenity(amenityToCreate, roomId);
         return AmenityMapper.toAmenityResponseDto(amenityRepository.save(amenity));
@@ -43,11 +46,10 @@ public class AmenityWriteService implements IAmenityWriteService {
             UUID amenityId,
             @NotNull IAmenityUpdate amenityToUpdate
     ) {
+        validator.validateHotelManagementPermission(hotelId);
+        amenityReadService.validateRoomExists(hotelId, roomId);
         Amenity existingAmenity = amenityReadService
                 .fetchAmenityById(hotelId, roomId, amenityId);
-        amenityReadService.validateRoomExists(hotelId, roomId);
-
         return AmenityMapper.toAmenityResponseDto(amenityRepository.save(existingAmenity));
     }
 }
-

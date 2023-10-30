@@ -42,6 +42,6 @@ public class UserExternalService {
     }
 
     public ResponseEntity<String> deleteAccount() {
-        return userDeleteService.deleteAccount();
+        return userDeleteService.deleteOwnAccount();
     }
 }

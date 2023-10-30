@@ -50,16 +50,22 @@ public class Hotel {
     @Column(name = "rating", nullable = false)
     private double rating;
 
-    @Transient
+    @Column(name = "rating_count", nullable = false)
     private int count;
+
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "hotel")
     @JsonManagedReference
     private Set<Room> availableRooms;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "managed_by_admin_id")
+    @ToString.Exclude
+    private Admin managedBy;
+
     public void calculateRating(double newRating) {
-        double result = count*rating;
+        double result = count * rating;
         count++;
-        rating = (result + newRating)/count;
+        rating = (result + newRating) / count;
     }
 }

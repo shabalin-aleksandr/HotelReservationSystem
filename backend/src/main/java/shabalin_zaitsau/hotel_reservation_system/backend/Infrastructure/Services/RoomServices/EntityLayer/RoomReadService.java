@@ -4,12 +4,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Hotel;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.CategoryType;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.RoomMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.EntityNotFoundException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.RoomAlreadyExistsException;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.AdminServices.EventLayer.AdminExistsCheckEvent;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EventLayer.FetchHotelEvent;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EventLayer.HotelExistsCheckEvent;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.EntityLayer.interfaces.IRoomReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.RoomRepository;
@@ -82,5 +86,20 @@ public class RoomReadService implements IRoomReadService {
                     );
                     return new EntityNotFoundException(errorMessage);
                 });
+    }
+
+    public Hotel fetchHotelById(UUID hotelId) {
+        FetchHotelEvent fetchHotelEvent = new FetchHotelEvent(hotelId);
+        eventPublisher.publishEvent(fetchHotelEvent);
+        return fetchHotelEvent.getHotel();
+    }
+
+    public Admin validateAdminExists(UUID adminId) {
+        AdminExistsCheckEvent event = new AdminExistsCheckEvent(adminId);
+        eventPublisher.publishEvent(event);
+        if (!event.isAdminExists()) {
+            throw new EntityNotFoundException("Admin with id: " + adminId + " doesn't exist");
+        }
+        return event.getAdmin();
     }
 }

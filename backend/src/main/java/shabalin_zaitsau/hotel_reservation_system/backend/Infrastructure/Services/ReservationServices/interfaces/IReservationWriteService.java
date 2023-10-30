@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface IReservationWriteService {
     ViewReservationDto addReservation(
-            UUID hotelId, UUID roomId, UUID userId, IReservationCreate reservationToCreate);
+            UUID hotelId, UUID roomId, IReservationCreate reservationToCreate);
     ViewReservationDto editReservation(
-            UUID hotelId, UUID roomId, UUID userId, UUID reservationId, IReservationUpdate reservationToUpdate);
+            UUID hotelId, UUID roomId, UUID reservationId, IReservationUpdate reservationToUpdate);
 }

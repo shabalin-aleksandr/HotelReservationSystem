@@ -8,7 +8,9 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import java.util.Optional;
 import java.util.UUID;
 
+// TODO: Leave only one method after implementing event
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, UUID> {
     Optional<Admin> findByUserDetails(User user);
+    Optional<Admin> findByUserDetailsUserId(UUID userId);
 }
