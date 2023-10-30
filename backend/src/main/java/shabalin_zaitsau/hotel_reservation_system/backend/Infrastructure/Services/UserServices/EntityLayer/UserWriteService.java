@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Image;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.UserMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
@@ -21,7 +23,9 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.UserDataValidator;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.SecurityUtils;
+import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.ImageExternalService;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,9 +39,10 @@ public class UserWriteService implements IUserWriteService {
     private final PasswordEncoder passwordEncoder;
     private final UserDataValidator userValidator;
     private final PermissionValidator validator;
+    private final ImageExternalService imageService;
 
     @Override
-    public ViewUserDto editUser(UUID userId, IUserUpdate userToUpdate) {
+    public ViewUserDto editUser(UUID userId, @NotNull IUserUpdate userToUpdate) {
         User existingUser = userReadService.fetchUserById(userId);
         validator.validateUserAccess(userId);
 
@@ -61,7 +66,7 @@ public class UserWriteService implements IUserWriteService {
     @Override
     public ResponseEntity<String> updateUserPassword(UUID userId, IUserPasswordUpdate passwordToUpdate) {
         User existingUser = userReadService.fetchUserById(userId);
-        validateUserPermission(userId);
+        validateUserPasswordPermission(userId);
         validatePasswordFields(passwordToUpdate);
         validateOldPassword(passwordToUpdate.getOldPassword(), existingUser.getPassword());
         validateNewPassword(passwordToUpdate.getOldPassword(), passwordToUpdate.getNewPassword());
@@ -71,10 +76,52 @@ public class UserWriteService implements IUserWriteService {
         return ResponseEntity.ok("Password updated successfully");
     }
 
-    private void validateUserPermission(UUID userId) {
+    @Override
+    public ViewUserDto updateUserAvatar(UUID userId, MultipartFile avatar) {
+        User existingUser = userReadService.fetchUserById(userId);
+        validateUserAvatarPermission(userId);
+
+        Image newAvatar;
+        try {
+            newAvatar = imageService.save(avatar);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store avatar image", e);
+        }
+        Image oldAvatar = existingUser.getAvatar();
+        if (oldAvatar != null) {
+            existingUser.setAvatar(null);
+            imageService.delete(oldAvatar);
+        }
+
+        existingUser.setAvatar(newAvatar);
+        User updatedUser = userRepository.save(existingUser);
+        return UserMapper.toUserResponseDto(updatedUser);
+    }
+
+    @Override
+    public ViewUserDto removeUserAvatar(UUID userId) {
+        User existingUser = userReadService.fetchUserById(userId);
+        validateUserAvatarPermission(userId);
+        Image oldAvatar = existingUser.getAvatar();
+        if (oldAvatar != null) {
+            existingUser.setAvatar(null);
+            userRepository.save(existingUser);
+            imageService.delete(oldAvatar);
+        }
+        return  UserMapper.toUserResponseDto(existingUser);
+    }
+
+    private void validateUserPasswordPermission(UUID userId) {
         UUID currentUserId = SecurityUtils.getCurrentUserId();
         if (!currentUserId.equals(userId)) {
             throw new AccessDeniedException("You do not have permission to edit this user's password.");
+        }
+    }
+
+    private void validateUserAvatarPermission(UUID userId) {
+        UUID currentUserId = SecurityUtils.getCurrentUserId();
+        if (!currentUserId.equals(userId)) {
+            throw new AccessDeniedException("You do not have permission to edit user's avatar.");
         }
     }
 

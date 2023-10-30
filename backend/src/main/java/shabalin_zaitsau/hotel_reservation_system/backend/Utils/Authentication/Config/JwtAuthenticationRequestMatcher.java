@@ -21,6 +21,7 @@ public class JwtAuthenticationRequestMatcher implements RequestMatcher {
             Pattern.compile("/api/auth/.*"),
             Pattern.compile("/api/users"),
             Pattern.compile("/api/hotels"),
+            Pattern.compile("/api/images"),
             //Pattern.compile("/api/rooms"),
             Pattern.compile("/api/reservations"),
             Pattern.compile("/api/amenities"),

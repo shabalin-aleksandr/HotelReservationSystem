@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.UpdateUserDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.UpdateUserPasswordDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.ViewUserDto;
@@ -159,5 +160,60 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteOwnAccount() {
         return userExternalService.deleteAccount();
+    }
+
+    @Operation(
+            summary = "Update User's avatar (with Authority only)",
+            description = "Update User's avatar by id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewUserDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(path = "/{userId}/avatar")
+    @ResponseStatus(HttpStatus.OK)
+    public ViewUserDto updateUserAvatar(
+            @PathVariable("userId") UUID userId,
+            @RequestParam("avatar") MultipartFile avatar
+    ) {
+        return userExternalService.updateUserAvatar(userId, avatar);
+    }
+
+    @Operation(
+            summary = "Delete User's avatar (with Authority only)",
+            description = "Delete User's avatar by id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewUserDto.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content)
+            }
+    )
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping(path = "/{userId}/avatar/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public ViewUserDto removeUserAvatar(
+            @PathVariable("userId") UUID userId
+    ) {
+        return userExternalService.removeUserAvatar(userId);
     }
 }

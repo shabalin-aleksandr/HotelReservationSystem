@@ -3,6 +3,8 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Use
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ImageDto.ImageMapper;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ImageDto.ViewImageDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.MainDtoMapper.MainDtoMapper;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.ReservationDto.ShortViewReservationDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.UserDto.interfaces.IUserCreate;
@@ -16,19 +18,27 @@ public class UserMapper {
 
     @NotNull
     public static ViewUserDto toUserResponseDto(@NotNull User user) {
+        ViewImageDto avatarDto = user.getAvatar() != null
+                ? ImageMapper.toImageResponse(user.getAvatar())
+                : null;
         Set<ShortViewReservationDto> viewReservations = user
                 .getReservations()
                 .stream()
                 .map(MainDtoMapper::mapReservationToViewDto)
                 .collect(Collectors.toSet());
 
-        return getViewUserDto(user, viewReservations);
+        return getViewUserDto(user, viewReservations, avatarDto);
     }
 
     @NotNull
-    private static ViewUserDto getViewUserDto(@NotNull User user, Set<ShortViewReservationDto> viewReservations) {
+    private static ViewUserDto getViewUserDto(
+            @NotNull User user,
+            Set<ShortViewReservationDto> viewReservations,
+            ViewImageDto imageDto
+    ) {
         ViewUserDto viewUserDto = new ViewUserDto();
         viewUserDto.setUserId(user.getUserId());
+        viewUserDto.setAvatar(imageDto);
         viewUserDto.setRole(user.getRole());
         viewUserDto.setFirstName(user.getFirstName());
         viewUserDto.setLastName(user.getLastName());

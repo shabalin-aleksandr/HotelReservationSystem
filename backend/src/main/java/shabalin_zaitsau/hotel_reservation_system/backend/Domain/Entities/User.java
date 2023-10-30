@@ -25,6 +25,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Image avatar;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

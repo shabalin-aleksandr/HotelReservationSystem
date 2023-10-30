@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.AuthConflictException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.SamePasswordException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.UnauthorizedException;
@@ -182,6 +185,43 @@ public class GlobalExceptionHandler {
     ) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+
+    /**
+     * Handles the exception that occurs when the maximum upload size for a file is exceeded.
+     *
+     * @return A ResponseEntity containing an error message and a HTTP BAD REQUEST status code.
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, String>> handleMaxSizeException() {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Unable to upload. File is too large!");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles the exception that occurs when a required Servlet request part is missing, such as a user avatar.
+     *
+     * @return A ResponseEntity containing an error message and a HTTP CONFLICT status code.
+     */
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<Map<String, String>> handleMissingServletRequestPartException() {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Invalid value for the user avatar. The avatar can't be null");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Handles the exception that occurs when an unexpected error happens during multipart file upload.
+     *
+     * @return A ResponseEntity containing an error message and a HTTP CONFLICT status code.
+     */
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<Map<String, String>> handleMultipartException() {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Unable to upload. Unexpected error!");
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }
