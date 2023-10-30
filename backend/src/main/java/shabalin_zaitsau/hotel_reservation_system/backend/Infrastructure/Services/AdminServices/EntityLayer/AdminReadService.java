@@ -2,7 +2,6 @@ package shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Service
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 public class AdminReadService implements IAdminReadService {
 
     private final AdminRepository adminRepository;
-    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public List<ViewAdminDto> findAllAdmins() {
@@ -49,7 +47,6 @@ public class AdminReadService implements IAdminReadService {
 
     public boolean isAdminType(User user, AdminType type) {
         Optional<Admin> adminOptional = adminRepository.findByUserDetails(user);
-        var a = adminOptional.isPresent() && adminOptional.get().getAdminType() == type;
-        return a;
+        return adminOptional.isPresent() && adminOptional.get().getAdminType() == type;
     }
 }
