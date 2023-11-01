@@ -46,6 +46,7 @@ public class JwtService {
     /**
      * @deprecated
      */
+    @Deprecated
     public UUID extractUserId(String jwtToken) {
         return UUID.fromString(extractClaim(jwtToken, claims -> claims.get("id", String.class)));
     }

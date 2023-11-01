@@ -39,6 +39,7 @@ public class AdminMapper {
     /**
      * @deprecated
      */
+    @Deprecated
     @NotNull
     public static  ViewAdminDto toAdminResponseDto(
             @NotNull Admin admin,
@@ -81,6 +82,7 @@ public class AdminMapper {
      *
      * @deprecated
      */
+    @Deprecated
     @NotNull
     public Admin toAdmin(@NotNull IAdminCreate adminToCreate, UUID userId) {
         Admin admin = new Admin();

@@ -54,6 +54,7 @@ public class UserMapper {
     /**
      * @deprecated
      */
+    @Deprecated
     public User toUser(@NotNull IUserCreate userToCreate) {
         User user = new User();
         user.setFirstName(userToCreate.getFirstName());

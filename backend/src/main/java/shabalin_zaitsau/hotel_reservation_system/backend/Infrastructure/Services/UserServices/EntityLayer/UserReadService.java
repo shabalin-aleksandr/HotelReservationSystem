@@ -45,6 +45,7 @@ public class UserReadService implements IUserReadService {
     /**
      * @deprecated
      */
+    @Deprecated
     protected User fetchUserByEmail(String email) {
         return userRepository
                 .findUserByEmail(email)
