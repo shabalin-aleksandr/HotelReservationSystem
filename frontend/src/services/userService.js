@@ -54,35 +54,31 @@ export const logout = () => {
     window.location.href = MAIN_PAGE_ROUTE;
 };
 
-// Helper function to get the userId and headers
-const getUserIdAndHeaders = () => {
+const getUserIdFromToken = () => {
     const token = localStorage.getItem('token');
     if (!token) {
         throw new Error('Authentication required');
     }
 
-    let userId;
     try {
         const decoded = jwt_decode(token);
-        userId = decoded.id;
+        if (!decoded || !decoded.id) {
+            throw new Error('User ID not found');
+        }
+        localStorage.setItem('userId', decoded.id); // Store userId in localStorage
+        return decoded.id;
     } catch (error) {
         console.error('Error decoding token:', error);
         throw new Error('Invalid token');
     }
-
-    if (!userId) {
-        throw new Error('User ID not found');
-    }
-
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-    };
-
-    return { userId, headers };
 };
 
 export const getUserDetails = async () => {
-    const { userId, headers } = getUserIdAndHeaders();
+    const userId = getUserIdFromToken();
+
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
 
     try {
         const response = await api.get(`users/${userId}`, { headers });
@@ -94,12 +90,16 @@ export const getUserDetails = async () => {
     }
 };
 
+
 export const uploadAvatar = async (file) => {
-    const { userId, headers } = getUserIdAndHeaders();
+    const userId = getUserIdFromToken();
+    const token = localStorage.getItem('token');
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+    };
     const formData = new FormData();
     formData.append('avatar', file);
-
-    headers['Content-Type'] = 'multipart/form-data';
 
     try {
         const response = await api.post(`/users/${userId}/avatar`, formData, { headers });
@@ -111,9 +111,12 @@ export const uploadAvatar = async (file) => {
 };
 
 export const deleteAvatar = async () => {
-    const { userId, headers } = getUserIdAndHeaders();
-
-    headers['Content-Type'] = 'multipart/form-data';
+    const userId = getUserIdFromToken();
+    const token = localStorage.getItem('token');
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+    };
 
     try {
         const response = await api.delete(`/users/${userId}/avatar/delete`, { headers });
@@ -123,5 +126,6 @@ export const deleteAvatar = async () => {
         throw error;
     }
 };
+
 
 

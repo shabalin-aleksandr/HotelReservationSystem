@@ -24,7 +24,7 @@ import AvatarEditorWrapper from "../components/AvatarEditorWrapper";
 import { UserDetailsContext } from "../utils/UserDetailContext";
 
 const ProfilePage = () => {
-    const { nickname } = useParams();
+    const { userId } = useParams();
     const { setIsAuthenticated } = useContext(AuthContext);
     const { userDetails, setUserDetails } = useContext(UserDetailsContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ const ProfilePage = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        getUserDetails(nickname)
+        getUserDetails(userId)
             .then((response) => {
                 setUserDetails(response);
             })
@@ -48,7 +48,7 @@ const ProfilePage = () => {
                 setError(error)
             })
             .finally(() => setIsLoading(false));
-    }, [nickname, setUserDetails]);
+    }, [userId, setUserDetails]);
 
     useEffect(() => {
         if (showUpdateAlert) {

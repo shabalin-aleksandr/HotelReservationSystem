@@ -21,24 +21,24 @@ import { UserDetailsContext } from "../utils/UserDetailContext";
 
 
 export function AppHeader() {
-    const id  = localStorage.getItem('id');
+    const userId  = localStorage.getItem('userId');
     const { isAuthenticated } = useContext(AuthContext);
     const { userDetails, setUserDetails } = useContext(UserDetailsContext);
 
     useEffect(() => {
         if (isAuthenticated) {
-            getUserDetails(id)
+            getUserDetails()
                 .then((response) => {
                     setUserDetails(response);
-
                 })
                 .catch((error) => {
                     console.error('Failed to fetch user details', error);
-                })
+                });
         } else {
             setUserDetails(null);
         }
-    }, [id, isAuthenticated, setUserDetails]);
+    }, [isAuthenticated, setUserDetails]);
+
 
     return (
         <>
@@ -93,7 +93,7 @@ export function AppHeader() {
                                                 <MenuDivider />
                                                 <MenuItem
                                                     as={ReactRouterLink}
-                                                    to={`${PROFILE_ROUTE}/${userDetails.id}`}
+                                                    to={`${PROFILE_ROUTE}/${userId}`}
                                                 >
                                                     My Account
                                                 </MenuItem>
