@@ -16,6 +16,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Hote
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ShortViewRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.EntitiesExeptions.InvalidRatingInputException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.HotelServices.EntityLayer.interfaces.IHotelWriteService;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.HotelRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.PermissionValidator;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.SecurityUtils;
@@ -37,12 +38,13 @@ public class HotelWriteService implements IHotelWriteService {
     private final HotelReadService hotelReadService;
     private final HotelMapper hotelMapper;
     private final PermissionValidator validator;
+    private final AdminRepository adminRepository;
 
     @Override
     public ViewHotelDto addHotel(IHotelCreate hotelToCreate) {
         Hotel hotel = hotelMapper.toHotel(hotelToCreate);
 
-        UUID currentAdminId = SecurityUtils.getCurrentUserId();
+        UUID currentAdminId = SecurityUtils.getCurrentAdminId(adminRepository);
         Admin currentAdmin = hotelReadService.validateAdminExists(currentAdminId);
         hotel.setManagedBy(currentAdmin);
 
