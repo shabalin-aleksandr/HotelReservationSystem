@@ -12,7 +12,7 @@ public class ImageMapper {
     public static ViewImageDto toImageResponse(@NotNull Image image) {
         String downloadURL = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/public/images/")
+                .path("/api/images/")
                 .path(image.getId())
                 .toUriString();
 

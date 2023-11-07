@@ -22,6 +22,7 @@ public class JwtAuthenticationRequestMatcher implements RequestMatcher {
             Pattern.compile("/api/users"),
             Pattern.compile("/api/hotels"),
             Pattern.compile("/api/images"),
+            Pattern.compile("/api/images/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"),
             //Pattern.compile("/api/rooms"),
             Pattern.compile("/api/reservations"),
             Pattern.compile("/api/amenities"),

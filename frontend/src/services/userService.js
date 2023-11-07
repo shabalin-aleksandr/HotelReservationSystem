@@ -54,31 +54,35 @@ export const logout = () => {
     window.location.href = MAIN_PAGE_ROUTE;
 };
 
-export const getUserDetails = async () => {
+// Helper function to get the userId and headers
+const getUserIdAndHeaders = () => {
     const token = localStorage.getItem('token');
-    let userId;
-
-    if (token) {
-        try {
-            const decoded = jwt_decode(token);
-            userId = decoded.id; // Use the correct key based on your token's payload structure
-        } catch (error) {
-            console.error('Error decoding token:', error);
-            throw new Error('Invalid token');
-        }
-
-        if (!userId) {
-            console.error('User ID not found in decoded token');
-            throw new Error('User ID not found');
-        }
-    } else {
-        console.error('No token found in localStorage.');
+    if (!token) {
         throw new Error('Authentication required');
+    }
+
+    let userId;
+    try {
+        const decoded = jwt_decode(token);
+        userId = decoded.id;
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        throw new Error('Invalid token');
+    }
+
+    if (!userId) {
+        throw new Error('User ID not found');
     }
 
     const headers = {
         'Authorization': `Bearer ${token}`,
     };
+
+    return { userId, headers };
+};
+
+export const getUserDetails = async () => {
+    const { userId, headers } = getUserIdAndHeaders();
 
     try {
         const response = await api.get(`users/${userId}`, { headers });
@@ -86,20 +90,38 @@ export const getUserDetails = async () => {
         return response.data;
     } catch (error) {
         console.error('Failed to fetch user details:', error);
-
-        if (error.response) {
-            console.error('Error response:', error.response);
-            console.error('Error status:', error.response.status);
-            console.error('Error data:', error.response.data);
-        } else if (error.request) {
-            console.error('Error request:', error.request);
-        } else {
-            console.error('Error message:', error.message);
-        }
-
-        console.log('Token:', token);
-        console.log('UserID:', userId);
         throw error;
     }
 };
+
+export const uploadAvatar = async (file) => {
+    const { userId, headers } = getUserIdAndHeaders();
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    headers['Content-Type'] = 'multipart/form-data';
+
+    try {
+        const response = await api.post(`/users/${userId}/avatar`, formData, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to upload avatar:', error);
+        throw error;
+    }
+};
+
+export const deleteAvatar = async () => {
+    const { userId, headers } = getUserIdAndHeaders();
+
+    headers['Content-Type'] = 'multipart/form-data';
+
+    try {
+        const response = await api.delete(`/users/${userId}/avatar/delete`, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete avatar:', error);
+        throw error;
+    }
+};
+
 
