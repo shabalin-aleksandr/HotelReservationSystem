@@ -14,14 +14,15 @@ import {
     Tr, useToast,
     VStack
 } from "@chakra-ui/react";
-import {deleteAvatar, getUserDetails, uploadAvatar} from '../services/userService';
+import {deleteAvatar, getUserDetails, updateUserDetails, uploadAvatar} from '../services/userService';
 import {useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../components/AuthContext";
 import {LoadingSpinner} from "../components/LoadingSpinner";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import DefaultAvatar from "../images/default-avatar.png"
 import AvatarEditorWrapper from "../components/AvatarEditorWrapper";
 import { UserDetailsContext } from "../utils/UserDetailContext";
+import UpdateInformationForm from "../components/UpdateInformationForm";
 
 const ProfilePage = () => {
     const { userId } = useParams();
@@ -35,7 +36,12 @@ const ProfilePage = () => {
     const [showEditor, setShowEditor] = useState(false);
     const [showUpdateAlert, setShowUpdateAlert] = useState(false);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const toast = useToast();
+    const {
+        countries,
+        regions,
+        cities} = useLocation();
 
     useEffect(() => {
         setIsLoading(true);
@@ -155,6 +161,17 @@ const ProfilePage = () => {
         fileInputRef.current.click();
     }
 
+    const handleUpdateUserDetails = async (updates) => {
+        try {
+            const userId = localStorage.getItem('userId');
+            const updatedUser = await updateUserDetails(userId, updates);
+            setUserDetails(updatedUser);
+            setIsEditing(false);
+        } catch (error) {
+            console.error('Failed to update user details', error);
+        }
+    };
+
     if (isLoading) {
         return <LoadingSpinner />
     }
@@ -245,9 +262,22 @@ const ProfilePage = () => {
                                         width='200px'
                                         border='2px'
                                         borderColor='green.500'
+                                        onClick={() => setIsEditing(true)}
                                 >
                                     Edit Profile
                                 </Button>
+                                {isEditing && userDetails && (
+                                    <UpdateInformationForm
+                                        userId={userDetails.userId}
+                                        onClose={() => setIsEditing(false)}
+                                        onSubmit={handleUpdateUserDetails}
+                                        userDetails={userDetails}
+                                        countries={countries}
+                                        regions={regions}
+                                        cities={cities}
+                                    />
+
+                                )}
                                 <Table variant="simple" fontWeight='bold'>
                                     <Tbody>
                                         <Tr>

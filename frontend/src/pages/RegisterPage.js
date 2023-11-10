@@ -161,7 +161,6 @@ const RegisterPage = () => {
                                     value={phoneNumber}
                                     onChange={handlePhoneNumber}
                                 />
-                                {/*{errors.phoneNumber && <FormErrorMessage>Nickname is required</FormErrorMessage>}*/}
                             </FormControl>
                             <HStack>
                                 <FormControl id="country">
