@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.Room
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.ViewRoomDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Web.ExternalServices.RoomExternalService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -103,6 +105,33 @@ public class RoomController {
     public ViewRoomDto getRoomById(@PathVariable("hotelId") UUID hotelId, @PathVariable("roomId") UUID roomId) {
         return roomExternalService.findRoomById(hotelId,roomId);
     }
+
+    @Operation(
+            summary = "Get all available rooms ",
+            description = "Get all available rooms for hotel",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ViewRoomDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+            }
+    )
+            @GetMapping ("/{hotelId}/available")
+            public List<ViewRoomDto> findAvailableRoomsInHotelForDateRange(
+            @PathVariable UUID hotelId,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+        return roomExternalService.findAvailableRoomsInHotelForDateRange(hotelId, fromDate, toDate);
+    }
+
+
 
     @Operation(
             summary = "Create room",

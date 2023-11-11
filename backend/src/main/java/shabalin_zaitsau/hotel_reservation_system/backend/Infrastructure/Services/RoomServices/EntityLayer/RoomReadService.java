@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Hotel;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Reservation;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.CategoryType;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.RoomDto.RoomMapper;
@@ -18,9 +19,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.EntityLayer.interfaces.IRoomReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.RoomRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +54,34 @@ public class RoomReadService implements IRoomReadService {
         validateHotelExists(hotelId);
         Room room = fetchRoomById(hotelId, roomId);
         return RoomMapper.toRoomResponseDto(room);
+    }
+
+    public List<ViewRoomDto> findAvailableRoomsInHotelForDateRange(UUID hotelId, Date fromDate, Date toDate) {
+        validateHotelExists(hotelId);
+
+        List<Room> allRoomsInHotel = roomRepository.findByHotel_HotelId(hotelId);
+        List<Room> availableRooms = allRoomsInHotel.stream()
+                .filter(room -> isRoomAvailableForDateRange(room, fromDate, toDate))
+                .toList();
+
+        return availableRooms.stream()
+                .map(RoomMapper::toRoomResponseDto)
+                .toList();
+    }
+
+    private boolean isRoomAvailableForDateRange(Room room, Date fromDate, Date toDate) {
+        Set<Reservation> reservations = room.getReservations();
+
+        for (Reservation reservation : reservations) {
+            Date reservationFrom = reservation.getReservationFrom();
+            Date reservationTo = reservation.getReservationTo();
+
+            if (fromDate.before(reservationTo) && toDate.after(reservationFrom)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected void validateRoomDoesNotExist(UUID hotelId, String roomNumber, CategoryType category) {
@@ -102,4 +129,12 @@ public class RoomReadService implements IRoomReadService {
         }
         return event.getAdmin();
     }
+
+
+
+
+
+
+
 }
+

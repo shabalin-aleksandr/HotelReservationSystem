@@ -9,6 +9,7 @@ import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.EntityLayer.RoomReadService;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Services.RoomServices.EntityLayer.RoomWriteService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +32,9 @@ public class RoomExternalService {
     public ViewRoomDto findRoomById(UUID hotelId, UUID roomId) {
         return roomReadService.findRoomById(hotelId, roomId);
     }
-
+    public List<ViewRoomDto> findAvailableRoomsInHotelForDateRange(UUID hotelId, Date fromDate, Date toDate){
+        return roomReadService.findAvailableRoomsInHotelForDateRange(hotelId, fromDate, toDate);
+    }
     public ViewRoomDto addRoom(UUID hotelId, IRoomCreate roomToCreate) {
         return roomWriteService.addRoom(hotelId, roomToCreate);
     }
@@ -43,4 +46,6 @@ public class RoomExternalService {
     public void removeRoomById(UUID hotelId, UUID roomId) {
         roomDeleteService.removeRoomById(hotelId, roomId);
     }
+
+
 }
