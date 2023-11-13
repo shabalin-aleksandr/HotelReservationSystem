@@ -19,7 +19,7 @@ import {
     useToast, InputGroup, InputRightElement
 } from '@chakra-ui/react';
 import {UserDetailsContext} from "../utils/UserDetailContext";
-import {updateUserDetails, updateUserPassword} from "../services/userService";
+import {updateUserDetails, updateUserPassword} from "../services/UserService/userService";
 import Select from "react-select";
 import {useLocation} from "../utils/hooks/useLocation";
 

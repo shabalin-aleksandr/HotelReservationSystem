@@ -15,7 +15,7 @@ import {
     Alert,
     AlertIcon, FormHelperText,
 } from '@chakra-ui/react';
-import { register } from '../services/userService';
+import { register } from '../services/UserService/authService';
 import {useNavigate} from "react-router-dom";
 import Select from 'react-select';
 import {LOGIN_ROUTE, MAIN_PAGE_ROUTE} from "../utils/routes";

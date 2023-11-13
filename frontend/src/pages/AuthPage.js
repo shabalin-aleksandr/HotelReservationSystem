@@ -17,7 +17,7 @@ import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../components/AuthContext";
 import {MAIN_PAGE_ROUTE, REGISTRATION_ROUTE} from "../utils/routes";
-import {login} from "../services/userService";
+import {login} from '../services/UserService/authService';
 import {LoadingSpinner} from "../components/LoadingSpinner";
 
 

@@ -15,8 +15,9 @@ import {
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {LOGIN_ROUTE, MAIN_PAGE_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE} from "../utils/routes";
 import {AuthContext} from "./AuthContext";
-import {getUserDetails, logout} from "../services/userService";
-import DefaultAvatar from "../images/default-avatar.png"
+import {getUserDetails} from "../services/UserService/userAvatarService";
+import {logout} from '../services/UserService/authService';
+import DefaultAvatar from "../images/default-avatar.png";
 import { UserDetailsContext } from "../utils/UserDetailContext";
 
 

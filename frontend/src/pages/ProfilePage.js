@@ -14,7 +14,8 @@ import {
     Tr, useToast,
     VStack
 } from "@chakra-ui/react";
-import {deleteAvatar, getUserDetails, updateUserDetails, uploadAvatar} from '../services/userService';
+import {deleteAvatar, getUserDetails, uploadAvatar} from "../services/UserService/userAvatarService";
+import {updateUserDetails } from '../services/UserService/userService';
 import {useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../components/AuthContext";
 import {LoadingSpinner} from "../components/LoadingSpinner";
@@ -298,7 +299,7 @@ const ProfilePage = () => {
                         </Center>
                     </GridItem>
                     <GridItem area={'main'}>
-                        <Heading>Test</Heading>
+                        <Heading>Reservations</Heading>
                         <Text>Some text</Text>
                     </GridItem>
                 </>

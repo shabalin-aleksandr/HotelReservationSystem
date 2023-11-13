@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {fetchCities, fetchCountries, fetchRegions} from "../../services/locationService";
+import {fetchCities, fetchCountries, fetchRegions} from "../../services/LocationService/locationService";
 
 export function  useLocation() {
     const [country, setCountry] = useState("");
