@@ -1,7 +1,7 @@
-import {AuthProvider} from "./components/AuthContext";
+import {AuthProvider} from "./components/AppComponents/AuthContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {ChakraProvider} from "@chakra-ui/react";
-import {AppLayout} from "./components/AppLayout";
+import {AppLayout} from "./components/AppComponents/AppLayout";
 import {
     LOGIN_ROUTE,
     MAIN_PAGE_ROUTE,

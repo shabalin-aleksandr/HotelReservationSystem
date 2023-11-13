@@ -1,42 +1,5 @@
-import jwt_decode from "jwt-decode";
 import {api} from "../../utils/api";
-
-const getUserIdFromToken = () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        throw new Error('Authentication required');
-    }
-
-    try {
-        const decoded = jwt_decode(token);
-        if (!decoded || !decoded.id) {
-            throw new Error('User ID not found');
-        }
-        localStorage.setItem('userId', decoded.id);
-        return decoded.id;
-    } catch (error) {
-        console.error('Error decoding token:', error);
-        throw new Error('Invalid token');
-    }
-};
-
-export const getUserDetails = async () => {
-    const userId = getUserIdFromToken();
-
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    };
-
-    try {
-        const response = await api.get(`users/${userId}`, { headers });
-        console.log('User details:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch user details:', error);
-        throw error;
-    }
-};
-
+import {getUserIdFromToken} from "./userService";
 
 export const uploadAvatar = async (file) => {
     const userId = getUserIdFromToken();

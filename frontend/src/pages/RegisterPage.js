@@ -19,8 +19,8 @@ import { register } from '../services/UserService/authService';
 import {useNavigate} from "react-router-dom";
 import Select from 'react-select';
 import {LOGIN_ROUTE, MAIN_PAGE_ROUTE} from "../utils/routes";
-import {LoadingSpinner} from "../components/LoadingSpinner";
-import {AuthContext} from "../components/AuthContext";
+import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
+import {AuthContext} from "../components/AppComponents/AuthContext";
 import {useLocation} from "../utils/hooks/useLocation";
 
 const RegisterPage = () => {

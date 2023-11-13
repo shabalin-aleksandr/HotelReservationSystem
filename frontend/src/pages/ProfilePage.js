@@ -1,29 +1,40 @@
 import {
-    Alert, AlertDescription,
-    AlertIcon, AlertTitle,
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
     Avatar,
     Box,
-    Button, Center,
-    Grid, GridItem,
+    Button,
+    Center,
+    Grid,
+    GridItem,
     Heading,
-    Input, Modal, ModalBody, ModalContent, ModalOverlay,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalOverlay, SimpleGrid,
     Table,
     Tbody,
     Td,
     Text,
-    Tr, useToast,
+    Tr, useColorModeValue,
+    useToast,
     VStack
 } from "@chakra-ui/react";
-import {deleteAvatar, getUserDetails, uploadAvatar} from "../services/UserService/userAvatarService";
-import {updateUserDetails } from '../services/UserService/userService';
+import {deleteAvatar, uploadAvatar} from "../services/UserService/userAvatarService";
+import {getUserDetails, updateUserDetails} from '../services/UserService/userService';
 import {useContext, useEffect, useRef, useState} from "react";
-import {AuthContext} from "../components/AuthContext";
-import {LoadingSpinner} from "../components/LoadingSpinner";
+import {AuthContext} from "../components/AppComponents/AuthContext";
+import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
 import {useLocation, useParams} from "react-router-dom";
 import DefaultAvatar from "../images/default-avatar.png"
-import AvatarEditorWrapper from "../components/AvatarEditorWrapper";
+import AvatarEditorWrapper from "../components/ProfilePageComponents/AvatarEditorWrapper";
 import { UserDetailsContext } from "../utils/UserDetailContext";
-import UpdateInformationForm from "../components/UpdateInformationForm";
+import UpdateInformationForm from "../components/ProfilePageComponents/UpdateInformationForm";
+import {getHotelDetails} from "../services/HotelService/hotelService";
+import UserReservationCard from "../components/ProfilePageComponents/UserReservationCard";
 
 const ProfilePage = () => {
     const { userId } = useParams();
@@ -39,22 +50,38 @@ const ProfilePage = () => {
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const toast = useToast();
+    const bg = useColorModeValue('white', 'gray.800');
     const {
         countries,
         regions,
         cities} = useLocation();
 
     useEffect(() => {
-        setIsLoading(true);
-        getUserDetails(userId)
-            .then((response) => {
-                setUserDetails(response);
-            })
-            .catch((error) => {
-                console.error('Failed to fetch user details', error);
-                setError(error)
-            })
-            .finally(() => setIsLoading(false));
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const userDetailsResponse = await getUserDetails(userId);
+                setUserDetails(userDetailsResponse);
+
+                const hotelDetailsPromises = userDetailsResponse.reservations.map(reservation =>
+                    getHotelDetails(reservation.hotelId)
+                );
+                const hotels = await Promise.all(hotelDetailsPromises);
+
+                const combinedDetails = userDetailsResponse.reservations.map((reservation, index) => {
+                    return { ...reservation, hotelDetails: hotels[index] };
+                });
+
+                setUserDetails({...userDetailsResponse, reservations: combinedDetails});
+            } catch (error) {
+                console.error('Failed to fetch data', error);
+                setError(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
     }, [userId, setUserDetails]);
 
     useEffect(() => {
@@ -173,6 +200,27 @@ const ProfilePage = () => {
         }
     };
 
+    const renderReservations = () => {
+        if (userDetails.reservations && userDetails.reservations.length > 0) {
+            return (
+                <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={10}>
+                    {userDetails.reservations.map((reservation) => (
+                        <UserReservationCard key={reservation.reservationId} reservation={reservation} />
+                    ))}
+                </SimpleGrid>
+            );
+        } else {
+            return (
+                <Box textAlign="center" p={4} mt={6}>
+                    <Text fontWeight="bold" fontSize="xl">
+                        You don't have any reservations yet, reserve your first room!
+                    </Text>
+                    <Button colorScheme="green" mt={3}>Reserve</Button>
+                </Box>
+            );
+        }
+    };
+
     if (isLoading) {
         return <LoadingSpinner />
     }
@@ -194,103 +242,100 @@ const ProfilePage = () => {
                 <>
                     <GridItem area={'nav'}>
                         <Center>
-                            <VStack>
-                                <VStack >
-                                    <Box
-                                        onMouseEnter={() => setIsHovering(true)}
-                                        onMouseLeave={() => setIsHovering(false)}
-                                        position="relative"
-                                    >
-                                        <Avatar
-                                            src={userDetails.avatar ? userDetails.avatar.url : DefaultAvatar}
-                                            borderRadius='full'
-                                            boxSize='300px'
-                                            alt="User Avatar"
-                                            onClick={openFileSelectionDialog}
-                                            cursor="pointer"
-                                        />
-                                        {isHovering && (
-                                            <VStack
-                                                position="absolute"
-                                                bottom="0"
-                                                left="0"
-                                                width="100%"
-                                                align="center"
-                                                spacing={1}
+                            <VStack spacing={5}>
+                                <Box
+                                    onMouseEnter={() => setIsHovering(true)}
+                                    onMouseLeave={() => setIsHovering(false)}
+                                    position="relative"
+                                >
+                                    <Avatar
+                                        src={userDetails.avatar ? userDetails.avatar.url : DefaultAvatar}
+                                        borderRadius='full'
+                                        boxSize='300px'
+                                        alt="User Avatar"
+                                        onClick={openFileSelectionDialog}
+                                        cursor="pointer"
+                                    />
+                                    {isHovering && (
+                                        <VStack
+                                            position="absolute"
+                                            bottom="0"
+                                            left="0"
+                                            width="100%"
+                                            align="center"
+                                            spacing={1}
+                                        >
+                                            <Button
+                                                onClick={openFileSelectionDialog}
+                                                size="sm"
+                                                color="green"
                                             >
+                                                Update Avatar
+                                            </Button>
+                                            {userDetails.avatar && (
                                                 <Button
-                                                    onClick={openFileSelectionDialog}
+                                                    onClick={handleAvatarDelete}
                                                     size="sm"
-                                                    color="green"
+                                                    color="red"
                                                 >
-                                                    Update Avatar
+                                                    Delete Avatar
                                                 </Button>
-                                                {userDetails.avatar && (
-                                                    <Button
-                                                        onClick={handleAvatarDelete}
-                                                        size="sm"
-                                                        colorScheme="red"
-                                                    >
-                                                        Delete Avatar
-                                                    </Button>
-                                                )}
-                                            </VStack>
-                                        )}
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            ref={fileInputRef}
-                                            onChange={handleAvatarUpload}
-                                            style={{ display: 'none' }}
-                                        />
-                                    </Box>
-                                    <Box>
-                                        <Text fontSize='40px'
-                                              fontWeight='bold'
-                                        >
-                                            {userDetails.firstName} {userDetails.lastName}
-                                        </Text>
-                                        <Text fontSize='25px'
-                                              align="center"
-                                              color='blackAlpha.700'
-                                        >
-                                            {userDetails.email}
-                                        </Text>
-                                    </Box>
-                                </VStack>
-                                <Button size='md'
-                                        height='48px'
-                                        width='200px'
+                                            )}
+                                        </VStack>
+                                    )}
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        ref={fileInputRef}
+                                        onChange={handleAvatarUpload}
+                                        style={{ display: 'none' }}
+                                    />
+                                </Box>
+                                <Box textAlign="center">
+                                    <Text fontSize='40px' fontWeight='bold'>
+                                        {userDetails.firstName} {userDetails.lastName}
+                                    </Text>
+                                    <Text fontSize='25px' color='blackAlpha.700'>
+                                        {userDetails.email}
+                                    </Text>
+                                    <Button
+                                        size='md'
+                                        mt={4}
+                                        bg={bg}
                                         border='2px'
                                         borderColor='green.500'
+                                        _hover={{
+                                            bg: 'green.100',
+                                        }}
                                         onClick={() => setIsEditing(true)}
-                                >
-                                    Edit Profile
-                                </Button>
-                                {isEditing && userDetails && (
-                                    <UpdateInformationForm
-                                        userId={userDetails.userId}
-                                        onClose={() => setIsEditing(false)}
-                                        onSubmit={handleUpdateUserDetails}
-                                        userDetails={userDetails}
-                                        countries={countries}
-                                        regions={regions}
-                                        cities={cities}
-                                    />
+                                    >
+                                        Edit Profile
+                                    </Button>
+                                    {isEditing && userDetails && (
+                                        <UpdateInformationForm
+                                            userId={userDetails.userId}
+                                            onClose={() => setIsEditing(false)}
+                                            onSubmit={handleUpdateUserDetails}
+                                            userDetails={userDetails}
+                                            countries={countries}
+                                            regions={regions}
+                                            cities={cities}
+                                        />
 
-                                )}
-                                <Table variant="simple" fontWeight='bold'>
+                                    )}
+                                </Box>
+                                <Table variant="simple">
                                     <Tbody>
                                         <Tr>
-                                            <Td color='blackAlpha.700'>Country</Td>
+                                            <Td fontWeight='bold' color='blackAlpha.700'>Country</Td>
                                             <Td>{userDetails.country}</Td>
                                         </Tr>
                                         <Tr>
-                                            <Td color='blackAlpha.700'>Region</Td>
+                                            <Td fontWeight='bold' color='blackAlpha.700'>Region</Td>
                                             <Td>{userDetails.region}</Td>
                                         </Tr>
                                         <Tr>
-                                            <Td color='blackAlpha.700'>City</Td>
+                                            <Td fontWeight='bold' color='blackAlpha.700'>City</Td>
                                             <Td>{userDetails.city}</Td>
                                         </Tr>
                                     </Tbody>
@@ -299,8 +344,8 @@ const ProfilePage = () => {
                         </Center>
                     </GridItem>
                     <GridItem area={'main'}>
-                        <Heading>Reservations</Heading>
-                        <Text>Some text</Text>
+                        <Heading size="xl" mb={6}>Reservations</Heading>
+                        {renderReservations()}
                     </GridItem>
                 </>
             )}
