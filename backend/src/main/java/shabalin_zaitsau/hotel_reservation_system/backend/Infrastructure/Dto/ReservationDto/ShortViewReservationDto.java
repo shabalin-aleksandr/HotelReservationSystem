@@ -23,6 +23,10 @@ public class ShortViewReservationDto {
     @NotEmpty
     private UUID userId;
 
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "32d0343a-823f-11ee-b962-0242ac120002")
+    @NotEmpty
+    private UUID hotelId;
+
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "f78f08d1-8a11-4afe-952e-473bf0fc6c8a")
     @NotEmpty
     private UUID roomId;

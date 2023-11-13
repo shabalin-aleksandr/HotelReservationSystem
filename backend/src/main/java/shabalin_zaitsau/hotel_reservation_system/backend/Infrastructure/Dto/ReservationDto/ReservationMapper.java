@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Hotel;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Reservation;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Room;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
@@ -41,6 +42,9 @@ public class ReservationMapper {
         if (reservation.getUser() != null) {
             viewReservationDto.setUserId(reservation.getUser().getUserId());
         }
+        if (reservation.getHotel() != null) {
+            viewReservationDto.setHotelId(reservation.getHotel().getHotelId());
+        }
         if (reservation.getReservedRoom() != null) {
             viewReservationDto.setRoomId(reservation.getReservedRoom().getRoomId());
         }
@@ -53,10 +57,17 @@ public class ReservationMapper {
     }
 
     @NotNull
-    public Reservation toReservation(@NotNull IReservationCreate reservationToCreate, UUID userId, UUID roomId) {
+    public Reservation toReservation(
+            @NotNull IReservationCreate reservationToCreate,
+            UUID userId,
+            UUID hotelId,
+            UUID roomId
+    ) {
         Reservation reservation = new Reservation();
         User userReference = entityManager.getReference(User.class, userId);
         reservation.setUser(userReference);
+        Hotel hotelReference = entityManager.getReference(Hotel.class, hotelId);
+        reservation.setHotel(hotelReference);
         Room roomReference = entityManager.getReference(Room.class, roomId);
         reservation.setReservedRoom(roomReference);
         long daysDifference = ChronoUnit.DAYS.between(

@@ -103,7 +103,7 @@ public class RoomController {
     @GetMapping(path = "/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewRoomDto getRoomById(@PathVariable("hotelId") UUID hotelId, @PathVariable("roomId") UUID roomId) {
-        return roomExternalService.findRoomById(hotelId,roomId);
+        return roomExternalService.findRoomById(hotelId, roomId);
     }
 
     @Operation(
@@ -123,14 +123,13 @@ public class RoomController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
             }
     )
-            @GetMapping ("/{hotelId}/available")
-            public List<ViewRoomDto> findAvailableRoomsInHotelForDateRange(
+    @GetMapping("/{hotelId}/available")
+    public List<ViewRoomDto> findAvailableRoomsInHotelForDateRange(
             @PathVariable UUID hotelId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         return roomExternalService.findAvailableRoomsInHotelForDateRange(hotelId, fromDate, toDate);
     }
-
 
 
     @Operation(

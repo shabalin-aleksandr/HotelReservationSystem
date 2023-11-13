@@ -37,7 +37,7 @@ public class ReservationWriteService implements IReservationWriteService {
         reservationReadService.validateHotelExists(hotelId);
         reservationReadService.validateRoomExists(hotelId, roomId);
         reservationReadService.validateUserExists(userId);
-        Reservation reservation = reservationMapper.toReservation(reservationToCreate, userId, roomId);
+        Reservation reservation = reservationMapper.toReservation(reservationToCreate, userId, hotelId, roomId);
         return ReservationMapper.toReservationResponseDto(reservationRepository.save(reservation));
     }
 

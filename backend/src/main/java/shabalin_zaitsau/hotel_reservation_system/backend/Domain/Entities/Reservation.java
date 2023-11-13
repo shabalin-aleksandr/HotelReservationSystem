@@ -43,6 +43,10 @@ public class Reservation {
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "hotel_id", referencedColumnName = "hotel_id")
+    private Hotel hotel;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id", referencedColumnName = "room_id")
     private Room reservedRoom;
 }

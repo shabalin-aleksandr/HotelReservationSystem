@@ -49,6 +49,9 @@ public class MainDtoMapper {
         if (reservation.getUser() != null) {
             shortViewReservationDto.setUserId(reservation.getUser().getUserId());
         }
+        if (reservation.getHotel() != null) {
+            shortViewReservationDto.setHotelId(reservation.getHotel().getHotelId());
+        }
         if (reservation.getReservedRoom() != null) {
             shortViewReservationDto.setRoomId(reservation.getReservedRoom().getRoomId());
         }
