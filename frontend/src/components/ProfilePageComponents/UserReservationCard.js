@@ -26,7 +26,7 @@ const UserReservationCard = ({ reservation }) => {
         >
             <Image
                 src={DefaultHotelImage}
-                alt={`Image of ${reservation.hotelDetails.hotelName}`}
+                alt={`Image of ${reservation.hotelDetails?.hotelName}`}
                 objectFit="cover"
                 w="full"
                 h="250px"
@@ -42,13 +42,13 @@ const UserReservationCard = ({ reservation }) => {
                         textTransform="uppercase"
                         ml="2"
                     >
-                        {reservation.totalDays} {reservation.totalDays === 1 ? 'day' : 'days'} &bull; {reservation.hotelDetails.city}
+                        {reservation.totalDays} {reservation.totalDays === 1 ? 'day' : 'days'} &bull; {reservation.hotelDetails?.city}
                     </Box>
 
                 </Box>
 
                 <Box mt="1" fontWeight="semibold" as="h3" lineHeight="tight">
-                    {reservation.hotelDetails.hotelName}
+                    {reservation.hotelDetails?.hotelName}
                 </Box>
 
                 <Box>
@@ -58,7 +58,7 @@ const UserReservationCard = ({ reservation }) => {
                     </Box>
                 </Box>
                 <Box display="flex" mt="2" alignItems="center">
-                    <RatingStars rating={reservation.hotelDetails.rating} />
+                    <RatingStars rating={reservation.hotelDetails?.rating} />
                 </Box>
                 <Stack direction="row" spacing={4} mt="3">
                     <Button

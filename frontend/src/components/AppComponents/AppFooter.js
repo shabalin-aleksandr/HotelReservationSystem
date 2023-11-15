@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Divider, Text } from '@chakra-ui/react';
 
-export function AppFooter() {
+const AppFooter = () => {
     return (
         <Box
             as="footer"
@@ -19,3 +19,5 @@ export function AppFooter() {
         </Box>
     );
 }
+
+export default AppFooter;

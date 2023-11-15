@@ -31,7 +31,7 @@ import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
 import {useLocation, useParams} from "react-router-dom";
 import DefaultAvatar from "../images/default-avatar.png"
 import AvatarEditorWrapper from "../components/ProfilePageComponents/AvatarEditorWrapper";
-import { UserDetailsContext } from "../utils/UserDetailContext";
+import { UserDetailsContext } from "../utils/context/UserDetailContext";
 import UpdateInformationForm from "../components/ProfilePageComponents/UpdateInformationForm";
 import {getHotelDetails} from "../services/HotelService/hotelService";
 import UserReservationCard from "../components/ProfilePageComponents/UserReservationCard";

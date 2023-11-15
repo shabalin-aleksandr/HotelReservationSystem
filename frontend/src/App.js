@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {ChakraProvider} from "@chakra-ui/react";
 import {AppLayout} from "./components/AppComponents/AppLayout";
 import {
+    HOTEL_ROUTE,
     LOGIN_ROUTE,
     MAIN_PAGE_ROUTE,
     NOT_FOUND_ROUTE,
@@ -14,6 +15,7 @@ import AuthPage from "./pages/AuthPage";
 import MainPage from "./pages/MainPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
+import HotelPage from "./pages/HotelPage";
 
 export function App() {
     return (
@@ -27,6 +29,7 @@ export function App() {
                             <Route path={LOGIN_ROUTE} element={<AuthPage />} />
                             <Route path={REGISTRATION_ROUTE} element={<RegisterPage />} />
                             <Route path={PROFILE_ROUTE + "/:userId"} element={<ProfilePage />} />
+                            <Route path={HOTEL_ROUTE + "/:hotelId"} element={<HotelPage />} />
                         </Routes>
                     </AppLayout>
                 </ChakraProvider>
