@@ -22,7 +22,7 @@ import {UserDetailsContext} from "../../utils/context/UserDetailContext";
 import SearchContext from "../../utils/context/SearchContext";
 
 
-const AppHeader = ({ onSearch }) => {
+const AppHeader = () => {
     const userId = localStorage.getItem('userId');
     const {isAuthenticated} = useContext(AuthContext);
     const {userDetails, setUserDetails} = useContext(UserDetailsContext);
