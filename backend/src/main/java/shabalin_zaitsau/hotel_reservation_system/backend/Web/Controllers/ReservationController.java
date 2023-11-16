@@ -108,11 +108,7 @@ public class ReservationController {
                     @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
             }
     )
-    @PreAuthorize(
-            "hasAuthority('ADMIN') " +
-                    "and " +
-                    "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN'))"
-    )
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<ViewReservationDto> getAllReservationsForUser(

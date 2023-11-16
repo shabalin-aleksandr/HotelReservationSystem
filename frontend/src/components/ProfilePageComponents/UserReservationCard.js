@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Box,
     Image,
@@ -8,10 +8,29 @@ import {
 } from '@chakra-ui/react';
 import DefaultHotelImage from '../../images/default-hotel-image.png'
 import RatingStars from "./RatingStars";
+import {getRoomDetails} from "../../services/RoomService/roomService";
+import {getReservationDetails} from "../../services/ReservationService/reservationService";
+import ReservationDetailsModal from "./ReservationDetailsModal";
 
 const UserReservationCard = ({ reservation }) => {
     const bg = useColorModeValue('white', 'gray.800');
     const priceColor = useColorModeValue('gray.600', 'gray.400');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [roomDetails, setRoomDetails] = useState(null);
+    const [reservationDetails, setReservationDetails] = useState(null);
+
+    const handleDetailsClick = async () => {
+        try {
+            const roomData = await getRoomDetails(reservation.hotelId, reservation.roomId);
+            const reservationData = await
+                getReservationDetails(reservation.userId);
+            setRoomDetails(roomData);
+            setReservationDetails(reservationData);
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error('Failed to fetch details', error);
+        }
+    };
 
     return (
         <Box
@@ -62,6 +81,7 @@ const UserReservationCard = ({ reservation }) => {
                 </Box>
                 <Stack direction="row" spacing={4} mt="3">
                     <Button
+                        onClick={handleDetailsClick}
                         flex={1}
                         fontSize="sm"
                         rounded="full"
@@ -78,6 +98,12 @@ const UserReservationCard = ({ reservation }) => {
                         Details
                     </Button>
                 </Stack>
+                <ReservationDetailsModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    reservation={reservationDetails}
+                    room={roomDetails}
+                />
             </Box>
         </Box>
     );

@@ -19,7 +19,7 @@ const HotelCard = ({ hotel }) => {
             m={4}
         >
             <Image
-                src={hotel.imageUrl || DefaultHotelImage}
+                src={hotel.image ? hotel.image.url : DefaultHotelImage}
                 alt={`Image of ${hotel.hotelName}`}
                 height="200px"
                 width="100%"

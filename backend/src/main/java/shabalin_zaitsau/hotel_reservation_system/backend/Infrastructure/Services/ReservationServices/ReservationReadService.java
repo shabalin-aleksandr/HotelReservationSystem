@@ -54,6 +54,7 @@ public class ReservationReadService implements IReservationReadService {
     @Override
     public List<ViewReservationDto> finaAllReservationForUser(UUID userId) {
         validateUserExists(userId);
+        validator.validateUserAccess(userId);
         return reservationRepository
                 .findAllByUser_UserId(userId)
                 .stream()
