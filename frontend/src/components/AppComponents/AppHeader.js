@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Link as ReactRouterLink} from 'react-router-dom';
 import {
     Box,
@@ -20,6 +20,7 @@ import {logout} from '../../services/UserService/authService';
 import DefaultAvatar from "../../images/default-avatar.png";
 import {UserDetailsContext} from "../../utils/context/UserDetailContext";
 import SearchContext from "../../utils/context/SearchContext";
+import CreateHotelModal from "../MainPageComponents/CreateHotelModal";
 
 
 const AppHeader = () => {
@@ -27,9 +28,11 @@ const AppHeader = () => {
     const {isAuthenticated} = useContext(AuthContext);
     const {userDetails, setUserDetails} = useContext(UserDetailsContext);
     const { searchTerm, setSearchTerm } = useContext(SearchContext);
+    const [isCreateHotelModalOpen, setIsCreateHotelModalOpen] = useState(false);
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
+    const toggleCreateHotelModal = () => setIsCreateHotelModalOpen(!isCreateHotelModalOpen);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -99,6 +102,11 @@ const AppHeader = () => {
                         <Menu>
                             {({isOpen}) => (
                                 <>
+                                    {isAuthenticated && userDetails?.role === 'ADMIN' && (
+                                        <Button colorScheme='blue' onClick={toggleCreateHotelModal}>
+                                            Create Hotel
+                                        </Button>
+                                    )}
                                     <MenuButton as={Box} borderRadius='full' cursor="pointer">
                                         <HStack spacing={0}>
                                             <Avatar src={userDetails.avatar ? userDetails.avatar.url : DefaultAvatar}
@@ -127,6 +135,7 @@ const AppHeader = () => {
                                                 onClick={logout}>Log Out</MenuItem>
                                         </MenuGroup>
                                     </MenuList>
+                                    <CreateHotelModal isOpen={isCreateHotelModalOpen} onClose={toggleCreateHotelModal} />
                                 </>
                             )}
                         </Menu>

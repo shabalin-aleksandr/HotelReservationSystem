@@ -57,7 +57,8 @@ public class PermissionValidator {
 
         if (currentAdmin.getAdminType() == AdminType.SUPER_ADMIN) {
             return;
-        } else if (currentAdmin.getAdminType() == AdminType.HOTEL_MANAGER) {
+        }
+        if (currentAdmin.getAdminType() == AdminType.HOTEL_MANAGER) {
             if (hotel.getManagedBy().getAdminId() == null ||
                     !hotel.getManagedBy().getAdminId().equals(currentAdmin.getAdminId())) {
                 throw new AccessDeniedException("HOTEL_MANAGER can't manage a hotel that they didn't create.");

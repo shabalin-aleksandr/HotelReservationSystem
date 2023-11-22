@@ -137,7 +137,6 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
         await handleDeleteAccount();
     };
 
-
     useEffect(() => {
         if (showAlert) {
             toast({

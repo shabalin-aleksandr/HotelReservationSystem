@@ -10,7 +10,10 @@ import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.Role;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 
 import java.security.Key;
 import java.util.Date;
@@ -32,6 +35,7 @@ public class JwtService {
      */
     private static final Dotenv dotenv = Dotenv.load();
     private final String SECRET_KEY = dotenv.get("JWT_SECRET_KEY");
+    private AdminRepository adminRepository;
 
     /**
      * Extracts the user email from the provided JWT token.
@@ -85,7 +89,14 @@ public class JwtService {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", user.getEmail());
-        claims.put("id", user.getUserId().toString());
+        claims.put("userId", user.getUserId().toString());
+
+        if (user.getRole() == Role.ADMIN) {
+            Admin admin = adminRepository.findAdminByUserDetails(user);
+            if (admin != null) {
+                claims.put("adminId", admin.getAdminId().toString());
+            }
+        }
 
         return Jwts
                 .builder()

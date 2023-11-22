@@ -11,9 +11,9 @@ import {
     InputGroup,
     InputRightElement,
     Alert,
-    AlertIcon
+    AlertIcon, Text, useColorModeValue
 } from '@chakra-ui/react';
-import {useContext, useState} from "react";
+import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../components/AppComponents/AuthContext";
 import {MAIN_PAGE_ROUTE, REGISTRATION_ROUTE} from "../utils/routes";
@@ -30,6 +30,8 @@ const AuthPage = () => {
     const navigate = useNavigate();
     const [show, setShow] = useState(false)
     const { setIsAuthenticated } = useContext(AuthContext);
+    const linkColor = useColorModeValue('blue.600', 'blue.200');
+    const hoverColor = useColorModeValue('blue.800', 'blue.300');
     const handleClick = () => setShow(!show)
     const handleEmail = (event) => setEmail(event.target.value);
     const handlePassword = (event) => setPassword(event.target.value);
@@ -98,10 +100,15 @@ const AuthPage = () => {
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Don't have an account yet?</FormLabel>
-                                <Box mx={2}></Box>
-                                <Link href={REGISTRATION_ROUTE} color="#2faff5">
+                                <Text
+                                    as={Link}
+                                    href={REGISTRATION_ROUTE}
+                                    fontWeight="semibold"
+                                    color={linkColor}
+                                    _hover={{ color: hoverColor, textDecoration: 'underline' }}
+                                >
                                     Register now
-                                </Link>
+                                </Text>
                             </FormControl>
                             <Button
                                 type="submit"

@@ -1,5 +1,6 @@
 package shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Service;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,16 +11,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.Admin;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.User;
+import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.AdminType;
 import shabalin_zaitsau.hotel_reservation_system.backend.Domain.Entities.enums.Role;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Exceptions.AuthExceptions.AuthConflictException;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.AdminRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Storages.UserRepository;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.AuthenticationResponseDto;
-import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IAdminRegistrationRequest;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IAuthenticationRequest;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.interfaces.IRegistrationRequest;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Events.UserAuthenticationCheckEvent;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Validation.MainValidator;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Service class responsible for user authentication and registration.
@@ -35,6 +39,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final ApplicationEventPublisher eventPublisher;
     private final MainValidator mainValidator;
+    private final Dotenv dotenv = Dotenv.load();
 
     /**
      * Registers a new user.
@@ -68,8 +73,13 @@ public class AuthenticationService {
      * @param request the registration request
      * @return an {@link AuthenticationResponseDto} containing the JWT token
      */
-    public AuthenticationResponseDto registerAdmin(IAdminRegistrationRequest request) {
+    public AuthenticationResponseDto registerAdmin(IRegistrationRequest request) {
         mainValidator.validateRegistration(request);
+        String[] superAdminUsers = Objects
+                .requireNonNull(dotenv.get("SUPER_ADMIN_USERS"))
+                .split(",");
+        AdminType adminType = Arrays.asList(superAdminUsers)
+                .contains(request.getEmail()) ? AdminType.SUPER_ADMIN : AdminType.HOTEL_MANAGER;
         var adminUser = User.builder()
                 .role(Role.ADMIN)
                 .firstName(request.getFirstName())
@@ -84,7 +94,7 @@ public class AuthenticationService {
         userRepository.save(adminUser);
         var adminDetails = Admin.builder()
                 .userDetails(adminUser)
-                .adminType(request.getAdminType())
+                .adminType(adminType)
                 .build();
         adminRepository.save(adminDetails);
         var jwtToken = jwtService.generateToken(adminUser);
@@ -128,5 +138,4 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
-
 }

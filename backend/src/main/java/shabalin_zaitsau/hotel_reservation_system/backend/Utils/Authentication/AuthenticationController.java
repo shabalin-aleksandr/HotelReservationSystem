@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.AdminRegistrationRequestDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.AuthenticationRequestDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.AuthenticationResponseDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Utils.Authentication.Dto.RegistrationRequestDto;
@@ -88,7 +87,7 @@ public class AuthenticationController {
     @PostMapping("/admin/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AuthenticationResponseDto> registerAdmin(
-            @RequestBody AdminRegistrationRequestDto request
+            @RequestBody RegistrationRequestDto request
     ) {
         return ResponseEntity.ok(service.registerAdmin(request));
     }

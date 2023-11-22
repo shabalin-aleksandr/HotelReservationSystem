@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.CreateAmenityDto;
+import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.UpdateAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.ViewAmenityDto;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityCreate;
 import shabalin_zaitsau.hotel_reservation_system.backend.Infrastructure.Dto.AmenityDto.interfaces.IAmenityUpdate;
@@ -133,7 +135,7 @@ public class AmenityController {
     public ViewAmenityDto createAmenity(
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
-            @RequestBody IAmenityCreate amenityToCreate){
+            @RequestBody CreateAmenityDto amenityToCreate){
         return amenityExternalService.addAmenity(hotelId,roomId, amenityToCreate);
     }
 
@@ -166,7 +168,7 @@ public class AmenityController {
             @PathVariable("hotelId") UUID hotelId,
             @PathVariable("roomId") UUID roomId,
             @PathVariable("amenityId") UUID amenityId,
-            @RequestBody IAmenityUpdate amenityToUpdate){
+            @RequestBody UpdateAmenityDto amenityToUpdate){
         return amenityExternalService.editAmenity(hotelId, roomId, amenityId, amenityToUpdate);
     }
 

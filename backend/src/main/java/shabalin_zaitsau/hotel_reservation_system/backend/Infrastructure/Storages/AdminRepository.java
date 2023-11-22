@@ -12,5 +12,6 @@ import java.util.UUID;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, UUID> {
     Optional<Admin> findByUserDetails(User user);
+    Admin findAdminByUserDetails(User user);
     Optional<Admin> findByUserDetailsUserId(UUID userId);
 }

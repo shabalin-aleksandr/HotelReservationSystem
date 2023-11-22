@@ -1,12 +1,12 @@
 import {api} from "../../utils/api";
 
 export const getRoomDetails = async (hotelId, roomId) => {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    };
+    // const headers = {
+    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    // };
 
     try {
-        const response = await api.get(`/rooms/${hotelId}/${roomId}`, { headers });
+        const response = await api.get(`/rooms/${hotelId}/${roomId}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -15,16 +15,15 @@ export const getRoomDetails = async (hotelId, roomId) => {
     }
 };
 export const findAvailableRoomsInHotelForDateRange = async (hotelId, fromDate, toDate) => {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    };
+    // const headers = {
+    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    // };
 
     try {
         const response = await api.get(`/rooms/${hotelId}/available`, {
-            headers,
             params: {
-                fromDate: fromDate.toISOString().split('T')[0], // Format date as yyyy-MM-dd
-                toDate: toDate.toISOString().split('T')[0],   // Format date as yyyy-MM-dd
+                fromDate: fromDate.toISOString().split('T')[0],
+                toDate: toDate.toISOString().split('T')[0],
             },
         });
 
@@ -36,12 +35,12 @@ export const findAvailableRoomsInHotelForDateRange = async (hotelId, fromDate, t
     }
 };
 export const getAllRoomsByHotelId = async (hotelId) => {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    };
+    // const headers = {
+    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    // };
 
     try {
-        const response = await api.get(`/rooms/${hotelId}`, { headers });
+        const response = await api.get(`/rooms/${hotelId}`);
         console.log(response.data);
         return response.data;
     } catch (error) {

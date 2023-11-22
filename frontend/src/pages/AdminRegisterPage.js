@@ -1,30 +1,26 @@
-import React, {useContext, useState} from 'react';
 import {
-    Box,
-    FormControl,
+    Alert, AlertIcon,
+    Box, Button,
+    FormControl, FormErrorMessage, FormHelperText,
     FormLabel,
-    Input,
-    Stack,
-    Button,
     Heading,
-    Link,
-    FormErrorMessage,
-    InputGroup,
-    InputRightElement,
     HStack,
-    Alert,
+    Input,
+    InputGroup, InputLeftAddon, InputRightElement, Link,
+    Stack,
     Text,
-    AlertIcon, FormHelperText, InputLeftAddon, VStack, useColorModeValue,
-} from '@chakra-ui/react';
-import { register } from '../services/UserService/authService';
-import {useNavigate} from "react-router-dom";
-import Select from 'react-select';
-import {ADMIN_REGISTRATION_ROUTE, LOGIN_ROUTE, MAIN_PAGE_ROUTE} from "../utils/routes";
-import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
-import {AuthContext} from "../components/AppComponents/AuthContext";
+    useColorModeValue, VStack
+} from "@chakra-ui/react";
+import React, {useContext, useState} from "react";
 import {useLocation} from "../utils/hooks/useLocation";
+import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../components/AppComponents/AuthContext";
+import {registerAdmin} from "../services/UserService/authService";
+import {LOGIN_ROUTE, MAIN_PAGE_ROUTE} from "../utils/routes";
+import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
+import Select from "react-select";
 
-const RegisterPage = () => {
+const AdminRegisterPage = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -71,7 +67,7 @@ const RegisterPage = () => {
         setIsLoading(true);
 
         try {
-            const user = await register(firstName,
+            const user = await registerAdmin(firstName,
                 lastName,
                 email,
                 password,
@@ -131,7 +127,7 @@ const RegisterPage = () => {
         <Box display="flex" justifyContent="center" alignItems="center" minH="100vh">
             <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
                 <Stack align="center">
-                    <Heading>Registration</Heading>
+                    <Heading>Register Manager Account</Heading>
                 </Stack>
                 <Box rounded="lg" bg="white" boxShadow="lg" p={8}>
                     <form onSubmit={handleRegistration}>
@@ -256,18 +252,6 @@ const RegisterPage = () => {
                                         Sign In
                                     </Text>
                                 </FormControl>
-                                <FormControl>
-                                    <FormLabel>Do you want to manage your own hotels?</FormLabel>
-                                    <Text
-                                        as={Link}
-                                        href={ADMIN_REGISTRATION_ROUTE}
-                                        fontWeight="semibold"
-                                        color={linkColor}
-                                        _hover={{ color: hoverColor, textDecoration: 'underline' }}
-                                    >
-                                        Register as a Hotel Manager
-                                    </Text>
-                                </FormControl>
                             </VStack>
                             <Button
                                 type="submit"
@@ -292,4 +276,4 @@ const RegisterPage = () => {
     );
 }
 
-export default RegisterPage;
+export default AdminRegisterPage;
