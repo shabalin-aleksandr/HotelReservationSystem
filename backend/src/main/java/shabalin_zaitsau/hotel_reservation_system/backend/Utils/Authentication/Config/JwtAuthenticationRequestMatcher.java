@@ -28,6 +28,7 @@ public class JwtAuthenticationRequestMatcher implements RequestMatcher {
             Pattern.compile("/api/amenities"),
             Pattern.compile("/api/users/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"),
             Pattern.compile("/api/rooms/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"),
+            Pattern.compile("/api/rooms/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/available"),
             Pattern.compile("/swagger-ui/.*"),
             Pattern.compile("/swagger-ui/index.html/.*"),
             Pattern.compile("/api-docs/.*"),
