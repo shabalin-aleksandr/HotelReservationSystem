@@ -65,3 +65,17 @@ export const updateUserPassword = async (userId, oldPassword, newPassword) => {
     }
 };
 
+export const deleteOwnAccount = async () => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+    try {
+        const response = await api.delete(`/users/deleteAccount`, { headers });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete account', error);
+        throw error;
+    }
+}
+

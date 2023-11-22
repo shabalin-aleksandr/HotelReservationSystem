@@ -16,12 +16,16 @@ import {
     Stack,
     Alert,
     AlertIcon,
-    useToast, InputGroup, InputRightElement
+    useToast,
+    InputGroup,
+    InputRightElement
 } from '@chakra-ui/react';
 import {UserDetailsContext} from "../../utils/context/UserDetailContext";
-import {updateUserDetails, updateUserPassword} from "../../services/UserService/userService";
+import {deleteOwnAccount, updateUserDetails, updateUserPassword} from "../../services/UserService/userService";
 import Select from "react-select";
 import {useLocation} from "../../utils/hooks/useLocation";
+import {MAIN_PAGE_ROUTE} from "../../utils/routes";
+import {logout} from "../../services/UserService/authService";
 
 const UpdateInformationForm = ({ onClose, onSubmit }) => {
     const { userDetails, setUserDetails } = useContext(UserDetailsContext);
@@ -36,6 +40,9 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
     const navigate = useNavigate();
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const openConfirmModal = () => setIsConfirmModalOpen(true);
+    const closeConfirmModal = () => setIsConfirmModalOpen(false);
     const handleClickShowOldPassword = () => setShowOldPassword(!showOldPassword);
     const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
     const { country,
@@ -107,6 +114,29 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
             });
         }
     };
+
+    const handleDeleteAccount = async () => {
+        try {
+            await deleteOwnAccount();
+            logout();
+            navigate(MAIN_PAGE_ROUTE);
+        } catch (error) {
+            console.error('Failed to delete account', error);
+            toast({
+                title: "Failed to delete account.",
+                description: error.message || "An error occurred. Please try again.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
+
+    const handleDeleteAccountConfirmed = async () => {
+        closeConfirmModal();
+        await handleDeleteAccount();
+    };
+
 
     useEffect(() => {
         if (showAlert) {
@@ -237,6 +267,13 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
                     </ModalBody>
                     <ModalFooter>
                         <Button
+                            colorScheme='red'
+                            onClick={openConfirmModal}
+                            m={3}
+                        >
+                            Delete Account
+                        </Button>
+                        <Button
                             type="submit"
                             colorScheme='green'
                             mr={3}
@@ -252,6 +289,24 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
                             Cancel
                         </Button>
                     </ModalFooter>
+                    <Modal isOpen={isConfirmModalOpen} onClose={closeConfirmModal}>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Confirm Account Deletion</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                Are you sure you want to delete your account? This action cannot be undone.
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button colorScheme='red' mr={3} onClick={handleDeleteAccountConfirmed}>
+                                    Confirm Delete
+                                </Button>
+                                <Button variant='outline' onClick={closeConfirmModal}>
+                                    Cancel
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
                 </ModalContent>
             </Modal>
         </>

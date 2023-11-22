@@ -13,7 +13,7 @@ import {
     InputRightElement,
     HStack,
     Alert,
-    AlertIcon, FormHelperText,
+    AlertIcon, FormHelperText, InputLeftAddon,
 } from '@chakra-ui/react';
 import { register } from '../services/UserService/authService';
 import {useNavigate} from "react-router-dom";
@@ -101,7 +101,7 @@ const RegisterPage = () => {
         if (/\d/.test(password)) {
             strength++;
         }
-        if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)) {
+        if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(password)) {
             strength++;
         }
         handlePassword(e);
@@ -155,12 +155,16 @@ const RegisterPage = () => {
                             </HStack>
                             <FormControl id="phoneNumber" isInvalid={errors.phoneNumber} isRequired>
                                 <FormLabel>Phone number</FormLabel>
-                                <Input
-                                    type="phoneNumber"
-                                    placeholder="Your phone number"
-                                    value={phoneNumber}
-                                    onChange={handlePhoneNumber}
-                                />
+                                <InputGroup>
+                                    <InputLeftAddon children='🇨🇿 +420' />
+                                    <Input
+                                        type="phoneNumber"
+                                        placeholder="Your phone number"
+                                        value={phoneNumber}
+                                        onChange={handlePhoneNumber}
+                                    />
+                                </InputGroup>
+
                             </FormControl>
                             <HStack>
                                 <FormControl id="country">
