@@ -28,13 +28,14 @@ import {getUserDetails, updateUserDetails} from '../services/UserService/userSer
 import {useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../components/AppComponents/AuthContext";
 import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
-import {useLocation, useParams} from "react-router-dom";
+import {Link as ReactRouterLink, useLocation, useParams} from "react-router-dom";
 import DefaultAvatar from "../images/default-avatar.png"
 import AvatarEditorWrapper from "../components/ProfilePageComponents/AvatarEditorWrapper";
 import { UserDetailsContext } from "../utils/context/UserDetailContext";
 import UpdateInformationForm from "../components/ProfilePageComponents/UpdateInformationForm";
 import {getHotelDetails} from "../services/HotelService/hotelService";
 import UserReservationCard from "../components/ProfilePageComponents/UserReservationCard";
+import {MAIN_PAGE_ROUTE} from "../utils/routes";
 
 const ProfilePage = () => {
     const { userId } = useParams();
@@ -215,7 +216,14 @@ const ProfilePage = () => {
                     <Text fontWeight="bold" fontSize="xl">
                         You don't have any reservations yet, reserve your first room!
                     </Text>
-                    <Button colorScheme="green" mt={3}>Reserve</Button>
+                    <Button
+                        as={ReactRouterLink}
+                        to={MAIN_PAGE_ROUTE}
+                        colorScheme="green"
+                        mt={3}
+                    >
+                        Reserve
+                    </Button>
                 </Box>
             );
         }

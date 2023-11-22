@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Image, Text, Flex, Heading, useColorModeValue, Button, Stack } from '@chakra-ui/react';
+import { Image, Text, Flex, Heading, useColorModeValue, Button, Stack } from '@chakra-ui/react';
 import DefaultHotelImage from '../../images/room.png';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { HOTEL_ROUTE } from "../../utils/routes";

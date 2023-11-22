@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getHotelDetails } from '../services/HotelService/hotelService';
-import { Box, Heading, SimpleGrid, Flex, Button } from '@chakra-ui/react';
+import {Box, Heading, SimpleGrid, Flex, Button, Text} from '@chakra-ui/react';
 import HotelCard from "../components/HotelPageComponents/PhotoOfHotel";
 import { getAllRoomsByHotelId, findAvailableRoomsInHotelForDateRange } from '../services/RoomService/roomService';
 import RoomCards from "../components/HotelPageComponents/RoomCards";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
     const [hotel, setHotel] = useState(null);
     const [rooms, setRooms] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const [selectedFromDate, setSelectedFromDate] = useState(null);
     const [selectedToDate, setSelectedToDate] = useState(null);
     const [availableRooms, setAvailableRooms] = useState([]);
     const [showAvailableRooms, setShowAvailableRooms] = useState(false);
 
     useEffect(() => {
-        async function fetchHotel() {
+        const fetchHotel = async () => {
+            setIsLoading(true);
             try {
                 const hotelData = await getHotelDetails(hotelId);
                 setHotel(hotelData);
@@ -28,6 +32,9 @@ const HotelPage = () => {
                 setRooms(roomsData);
             } catch (error) {
                 console.error('Error fetching hotel or rooms:', error);
+                setError(error);
+            } finally {
+                setIsLoading(false);
             }
         }
         fetchHotel();
@@ -60,17 +67,25 @@ const HotelPage = () => {
         }
     };
 
-    if (!hotel) {
-        return <div>Loading...</div>;
+    if (isLoading) {
+        return <LoadingSpinner />
+    }
+
+    if (error) {
+        return <Text>{error.message}</Text>
     }
 
     return (
         <Flex padding="4">
             <Box width="30%">
-                <Box p="6">
-                    <Heading size="2xl" mb="2">{hotel.hotelName}</Heading>
-                </Box>
-                <HotelCard key={hotel.hotelId} hotel={hotel} />
+                {hotel && (
+                    <>
+                        <Box p="6">
+                            <Heading size="2xl" mb="2">{hotel.hotelName}</Heading>
+                        </Box>
+                        <HotelCard key={hotel.hotelId} hotel={hotel} />
+                    </>
+                )}
                 <Flex flexDirection="column" mb="4">
                     <Box mb="2">
                         <DatePicker
@@ -106,10 +121,9 @@ const HotelPage = () => {
                 <Box p="6">
                     <Heading size="2xl" mb="2"> Rooms </Heading>
                 </Box>
-
                 <SimpleGrid columns={[1, 2]} spacing="4">
                     {(showAvailableRooms ? availableRooms : rooms).map((room) => (
-                        <Flex key={room.roomid} width="100%">
+                        <Flex key={room.roomId} width="100%">
                             <RoomCards room={room} />
                         </Flex>
                     ))}
@@ -118,7 +132,5 @@ const HotelPage = () => {
         </Flex>
     );
 };
-
-
 
 export default HotelPage;

@@ -68,7 +68,7 @@ const AppHeader = () => {
                                 placeholder="Search hotels..."
                                 value={searchTerm}
                                 onChange={handleSearchChange}
-                                pr="2.5rem" // Adjust padding to fit the icon
+                                pr="2.5rem"
                             />
                             <InputRightElement>
                                 <SearchIcon color="gray.500" />
