@@ -20,41 +20,41 @@ const PhotoOfHotel = ({ hotel }) => {
     return (
         <Box>
             <Center>
-            <Image
-                src={photos[currentPhotoIndex]}
-                height="300px"
-                width="200%"
-                objectFit="contain"
-            />
+                <Image
+                    src={photos[currentPhotoIndex]}
+                    height="300px"
+                    width="200%"
+                    objectFit="contain"
+                />
             </Center>
             <Center>
-            <Stack direction="row" spacing={4} mt="3">
-            <ButtonGroup
-                disableElevation
-                variant="contained"
-                aria-label="Disabled elevation buttons"
-            >
+                <Stack direction="row" spacing={4} mt="3">
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
 
 
-                <Button
-                    onClick={handleBeforeClick}
-                    size="sm"
-                    color="green"
-                >
-                    Before Photo
-                </Button>
+                        <Button
+                            onClick={handleBeforeClick}
+                            size="sm"
+                            color="green"
+                        >
+                            Before Photo
+                        </Button>
 
-                <Button
-                    onClick={handleNextClick}
-                    size="sm"
-                    color="green"
-                >
-                    Next Photo
+                        <Button
+                            onClick={handleNextClick}
+                            size="sm"
+                            color="green"
+                        >
+                            Next Photo
 
-                </Button>
+                        </Button>
 
-            </ButtonGroup>
-            </Stack>
+                    </ButtonGroup>
+                </Stack>
             </Center>
 
             <Box p="6">

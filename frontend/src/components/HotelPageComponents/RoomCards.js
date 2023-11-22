@@ -16,7 +16,7 @@ const RoomCards = ({ room }) => {
             bg={bg}
             boxShadow="lg"
             m={4}
-            width="100%" // Make the card stretch to the full width
+            width="100%"
         >
             <Image
                 src={room.image ? room.image.url : DefaultHotelImage}

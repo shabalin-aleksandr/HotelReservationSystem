@@ -49,3 +49,5 @@ export const getAllRoomsByHotelId = async (hotelId) => {
         throw error;
     }
 };
+
+
