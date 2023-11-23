@@ -43,3 +43,18 @@ export const createHotel = async (hotelName, country, city, address, receptionNu
         throw error;
     }
 };
+
+export const deleteHotel = async (hotelId) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    try {
+        const response = await api.delete(`/hotels/delete/${hotelId}`, { headers });
+        console.log('Hotel deleted:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete hotel:', error);
+        throw error;
+    }
+}

@@ -76,7 +76,6 @@ const ProfilePage = () => {
                 const combinedDetails = userDetailsResponse.reservations.map((reservation, index) => {
                     return { ...reservation, hotelDetails: hotels[index] };
                 });
-
                 setUserDetails({...userDetailsResponse, reservations: combinedDetails});
             } catch (error) {
                 console.error('Failed to fetch data', error);
@@ -85,7 +84,6 @@ const ProfilePage = () => {
                 setIsLoading(false);
             }
         };
-
         fetchData();
     }, [userId, setUserDetails]);
 
@@ -457,7 +455,8 @@ const ProfilePage = () => {
                                 bg: 'red.600',
                             }}
                             mr={3}
-                            onClick={handleDeleteAccountConfirmed}>
+                            onClick={handleDeleteAccountConfirmed}
+                        >
                             Confirm Delete
                         </Button>
                         <Button

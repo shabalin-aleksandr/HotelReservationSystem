@@ -1,10 +1,6 @@
 import {api} from "../../utils/api";
 
 export const getAmenityByRoomId_HotelId = async (hotelId,roomId) => {
-    // const headers = {
-    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    // };
-
     try {
         const response = await api.get(`/amenities/${hotelId}/${roomId}`);
         console.log(response.data);

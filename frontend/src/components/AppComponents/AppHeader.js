@@ -11,6 +11,7 @@ import {
     MenuGroup,
     MenuItem,
     Image,
+    Text,
     MenuDivider, Divider, Avatar, Input, Flex, InputRightElement, InputGroup, useColorModeValue
 } from "@chakra-ui/react";
 import {ChevronDownIcon, SearchIcon} from "@chakra-ui/icons"
@@ -29,6 +30,10 @@ import {UserDetailsContext} from "../../utils/context/UserDetailContext";
 import SearchContext from "../../utils/context/SearchContext";
 import CreateHotelModal from "../MainPageComponents/CreateHotelModal";
 import HotelIcon from "../../images/header-icon.png";
+import ProfileIcon from "../../images/profile-icon.png";
+import LogoutIcon from "../../images/logout-icon.png";
+import DashboardIcon from "../../images/dashboard-icon.png";
+import HelloIcon from "../../images/hello-icon.png"
 
 
 const AppHeader = () => {
@@ -176,12 +181,22 @@ const AppHeader = () => {
                                         </HStack>
                                     </MenuButton>
                                     <MenuList>
-                                        <MenuGroup title={userDetails.email} fontSize='20px'>
+                                        <MenuGroup>
+                                            <Flex alignItems="center" px={4} py={2}>
+                                                <Image src={HelloIcon} alt="Profile Icon" boxSize="20px" mr={2} />
+                                                <Text fontSize="20px" fontWeight="bold">Hi, {userDetails.email}</Text>
+                                            </Flex>
                                             <MenuDivider/>
                                             <MenuItem
                                                 as={ReactRouterLink}
                                                 to={`${PROFILE_ROUTE}/${userId}`}
                                             >
+                                                <Image
+                                                    src={ProfileIcon}
+                                                    alt="Profile Icon"
+                                                    boxSize="20px"
+                                                    mr="2"
+                                                />
                                                 My Account
                                             </MenuItem>
                                             {isAuthenticated && userDetails?.role === 'ADMIN' && (
@@ -189,6 +204,12 @@ const AppHeader = () => {
                                                     as={ReactRouterLink}
                                                     to={`${ADMIN_DASHBOARD_ROUTE}/${adminId}`}
                                                 >
+                                                    <Image
+                                                        src={DashboardIcon}
+                                                        alt="Dashboard Icon"
+                                                        boxSize="20px"
+                                                        mr="2"
+                                                    />
                                                     Admin Dashboard
                                                 </MenuItem>
                                             )}
@@ -197,7 +218,16 @@ const AppHeader = () => {
                                         <MenuGroup>
                                             <MenuItem
                                                 color="red"
-                                                onClick={logout}>Log Out</MenuItem>
+                                                onClick={logout}
+                                            >
+                                                <Image
+                                                    src={LogoutIcon}
+                                                    alt="Logout Icon"
+                                                    boxSize="20px"
+                                                    mr="2"
+                                                />
+                                                Log Out
+                                            </MenuItem>
                                         </MenuGroup>
                                     </MenuList>
                                     <CreateHotelModal isOpen={isCreateHotelModalOpen} onClose={toggleCreateHotelModal} />

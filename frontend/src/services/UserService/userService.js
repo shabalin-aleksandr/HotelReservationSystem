@@ -20,25 +20,6 @@ export const getUserIdFromToken = () => {
     }
 };
 
-export const getAdminIdFromToken = () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        throw new Error('Authentication required');
-    }
-
-    try {
-        const decoded = jwt_decode(token);
-        if (!decoded || !decoded.adminId) {
-            throw new Error('AdminId ID not found');
-        }
-        localStorage.setItem('userId', decoded.adminId);
-        return decoded.adminId;
-    } catch (error) {
-        console.error('Error decoding token:', error);
-        throw new Error('Invalid token');
-    }
-}
-
 export const getUserDetails = async () => {
     const userId = getUserIdFromToken();
 
@@ -47,7 +28,7 @@ export const getUserDetails = async () => {
     };
 
     try {
-        const response = await api.get(`users/${userId}`, { headers });
+        const response = await api.get(`/users/${userId}`, { headers });
         console.log('User details:', response.data);
         return response.data;
     } catch (error) {

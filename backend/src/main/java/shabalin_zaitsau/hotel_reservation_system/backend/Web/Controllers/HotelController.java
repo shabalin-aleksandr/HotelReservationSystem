@@ -152,9 +152,9 @@ public class HotelController {
                     "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
                     "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
     )
-    @DeleteMapping(path = "/{hotelId}")
+    @DeleteMapping(path = "/delete/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteHotelById(@PathVariable("hotelId") UUID hotelId) {
+    public void deleteHotelById(@PathVariable UUID hotelId) {
         hotelExternalService.removeHotelById(hotelId);
     }
 

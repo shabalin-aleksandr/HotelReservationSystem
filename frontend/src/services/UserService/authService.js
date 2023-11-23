@@ -11,6 +11,9 @@ export const login = async (email, password, setIsAuthenticated) => {
         if(decoded.adminId) {
             localStorage.setItem('adminId', decoded.adminId);
         }
+        if(decoded.adminType) {
+            localStorage.setItem('adminType', decoded.adminType);
+        }
         setIsAuthenticated(true);
         return decoded;
     } catch (error) {

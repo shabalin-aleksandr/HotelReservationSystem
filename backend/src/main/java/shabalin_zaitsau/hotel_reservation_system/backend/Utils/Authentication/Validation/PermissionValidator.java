@@ -25,6 +25,7 @@ public class PermissionValidator {
         UUID currentAdminId = SecurityUtils.getCurrentAdminId(adminRepository);
         String currentUserRole = SecurityUtils.getCurrentUserRole();
         String currentAdminType = SecurityUtils.getCurrentAdminType(adminRepository);
+        System.out.println(currentAdminId);
 
         if ("ADMIN".equals(currentUserRole) && "SUPER_ADMIN".equals(currentAdminType)) {
             return;

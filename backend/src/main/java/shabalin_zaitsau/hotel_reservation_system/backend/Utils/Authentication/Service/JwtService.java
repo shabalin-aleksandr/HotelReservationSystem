@@ -95,6 +95,7 @@ public class JwtService {
             Admin admin = adminRepository.findAdminByUserDetails(user);
             if (admin != null) {
                 claims.put("adminId", admin.getAdminId().toString());
+                claims.put("adminType", admin.getAdminType().toString());
             }
         }
 
