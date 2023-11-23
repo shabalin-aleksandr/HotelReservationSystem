@@ -1,11 +1,20 @@
-import React from 'react';
-import { Image, Text, Flex, Heading, useColorModeValue, Button, Stack } from '@chakra-ui/react';
-import DefaultHotelImage from '../../images/room.png';
-import { Link as ReactRouterLink } from 'react-router-dom';
-import { HOTEL_ROUTE } from "../../utils/routes";
+import React, { useState } from 'react';
+import { Image, Text, Flex, Heading, useColorModeValue, Button, Stack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import DefaultRoomImage from '../../images/room.png';
+import ViewRoomCard from './ViewRoomCard';
+import {ButtonGroup} from "react-bootstrap"; // Import the ViewRoomCard component
 
 const RoomCards = ({ room }) => {
     const bg = useColorModeValue('white', 'gray.800');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleViewRoom = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <Flex
@@ -19,7 +28,7 @@ const RoomCards = ({ room }) => {
             width="100%"
         >
             <Image
-                src={room.image ? room.image.url : DefaultHotelImage}
+                src={room.image ? room.image.url : DefaultRoomImage}
                 alt={`Image of ${room.roomNumber}`}
                 height="200px"
                 width="35%"
@@ -33,15 +42,17 @@ const RoomCards = ({ room }) => {
                 align="center"
             >
                 <Flex direction="column" align="flex-start">
-                    <Heading size="lg" mb="2">{room.roomNumber}</Heading>
-                    <Text fontWeight="bold">{room.category}</Text>
-                    <Text mb="2">{`${room.pricePerNight}`}</Text>
-                    <Text mb="2">{`${room.amenities}`}</Text>
+                    <Heading size="lg" mb="2" ml = "7">№{room.roomNumber}</Heading>
+                    <Text fontWeight="bold">Category: {room.category}</Text>
+                    <Text mb="2">Price Per Night: {`${room.pricePerNight}`}</Text>
                 </Flex>
                 <Stack direction="row" spacing={4} mt="3">
+                    <ButtonGroup
+                        disableelevation="true"
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
                     <Button
-                        as={ReactRouterLink}
-                        to={`${HOTEL_ROUTE}/${room.roomid}`}
                         flex={1}
                         fontSize="sm"
                         rounded="full"
@@ -54,13 +65,51 @@ const RoomCards = ({ room }) => {
                         _focus={{
                             bg: 'green.500',
                         }}
+                        onClick={handleViewRoom} // Open the modal on button click
                     >
                         View Room
                     </Button>
+                        <Button
+                            flex={1}
+                            fontSize="sm"
+                            rounded="full"
+                            bg="blue.400"
+                            color="white"
+                            boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                            _hover={{
+                                bg: 'blue.500',
+                            }}
+                            _focus={{
+                                bg: 'blue.500',
+                            }}
+                            onClick={() => {
+                                // Add logic to navigate to the room details page
+                                console.log(`View details for Room #${room.roomNumber}`);
+                            }}
+                        >
+                            Reserve a room now!
+                        </Button>
+
+                    </ButtonGroup>
                 </Stack>
             </Flex>
+
+            {/* Modal for detailed room view */}
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Room Details</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <ViewRoomCard room={room} />
+                    </ModalBody>
+                    <ModalFooter>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Flex>
     );
 };
 
 export default RoomCards;
+

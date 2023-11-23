@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getHotelDetails } from '../services/HotelService/hotelService';
-import {Box, Heading, SimpleGrid, Flex, Button, Text} from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid, Flex, Button, Text } from '@chakra-ui/react';
 import HotelCard from "../components/HotelPageComponents/PhotoOfHotel";
 import { getAllRoomsByHotelId, findAvailableRoomsInHotelForDateRange } from '../services/RoomService/roomService';
 import RoomCards from "../components/HotelPageComponents/RoomCards";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
+import { LoadingSpinner } from "../components/AppComponents/LoadingSpinner";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
@@ -19,6 +19,8 @@ const HotelPage = () => {
     const [selectedToDate, setSelectedToDate] = useState(null);
     const [availableRooms, setAvailableRooms] = useState([]);
     const [showAvailableRooms, setShowAvailableRooms] = useState(false);
+    const [searchSuccess, setSearchSuccess] = useState(true);
+    const [dateSelectionError, setDateSelectionError] = useState(false);
 
     useEffect(() => {
         const fetchHotel = async () => {
@@ -42,15 +44,22 @@ const HotelPage = () => {
 
     const handleFromDateChange = (date) => {
         setSelectedFromDate(date);
+        // Reset the dateSelectionError when the user selects a date
+        setDateSelectionError(false);
     };
 
     const handleToDateChange = (date) => {
         setSelectedToDate(date);
+        // Reset the dateSelectionError when the user selects a date
+        setDateSelectionError(false);
     };
 
     const handleFindAvailableRooms = async () => {
         if (!selectedFromDate || !selectedToDate) {
-            console.error('Please select both From Date and To Date.');
+            // If dates are not selected, show an error message
+            setDateSelectionError(true);
+            setShowAvailableRooms(false);
+            setSearchSuccess(true);
             return;
         }
 
@@ -60,8 +69,14 @@ const HotelPage = () => {
                 selectedFromDate,
                 selectedToDate
             );
-            setAvailableRooms(availableRoomsData);
-            setShowAvailableRooms(true);
+
+            if (availableRoomsData.length === 0) {
+                setSearchSuccess(false);
+            } else {
+                setAvailableRooms(availableRoomsData);
+                setShowAvailableRooms(true);
+                setSearchSuccess(true);
+            }
         } catch (error) {
             console.error('Error fetching available rooms:', error);
         }
@@ -101,7 +116,6 @@ const HotelPage = () => {
                     </Box>
                     <Box mb="2" >
                         <DatePicker
-
                             selected={selectedToDate}
                             onChange={handleToDateChange}
                             selectsEnd
@@ -115,19 +129,30 @@ const HotelPage = () => {
                     <Button onClick={handleFindAvailableRooms} colorScheme="green" bgColor="green.400" color="white">
                         Find Available Rooms
                     </Button>
+                    {dateSelectionError && (
+                        <Text fontWeight="bold" fontSize="xl" color={"red"}>
+                            Please choose the start date or end date.
+                        </Text>
+                    )}
                 </Flex>
             </Box>
             <Box width="70%">
                 <Box p="6">
                     <Heading size="2xl" mb="2"> Rooms </Heading>
                 </Box>
-                <SimpleGrid columns={[1, 2]} spacing="4">
-                    {(showAvailableRooms ? availableRooms : rooms).map((room) => (
-                        <Flex key={room.roomId} width="100%">
-                            <RoomCards room={room} />
-                        </Flex>
-                    ))}
-                </SimpleGrid>
+                {searchSuccess ? (
+                    <SimpleGrid columns={[1, 2]} spacing="4">
+                        {(showAvailableRooms ? availableRooms : rooms).map((room) => (
+                            <Flex key={room.roomId} width="100%">
+                                <RoomCards room={room} />
+                            </Flex>
+                        ))}
+                    </SimpleGrid>
+                ) : (
+                    <Text fontWeight="bold" fontSize="xl" color={"red"}>
+                        No available rooms found. Please try different dates.
+                    </Text>
+                )}
             </Box>
         </Flex>
     );
