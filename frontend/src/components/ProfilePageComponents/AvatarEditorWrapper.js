@@ -65,8 +65,37 @@ const AvatarEditorWrapper = ({ onClose, onSubmit, image }) => {
 
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme='green' mr={3} onClick={handleSave}>Save</Button>
-                    <Button colorScheme='red' onClick={onClose}>Cancel</Button>
+                    <Button
+                        fontSize="sm"
+                        rounded="full"
+                        bg="green.400"
+                        color="white"
+                        _hover={{
+                            bg: 'green.500',
+                        }}
+                        _focus={{
+                            bg: 'green.500',
+                        }}
+                        mr={2}
+                        onClick={handleSave}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        fontSize="sm"
+                        rounded="full"
+                        bg="red.500"
+                        color="white"
+                        _hover={{
+                            bg: 'red.600',
+                        }}
+                        _focus={{
+                            bg: 'red.600',
+                        }}
+                        onClick={onClose}
+                    >
+                        Cancel
+                    </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

@@ -21,11 +21,9 @@ import {
     InputRightElement
 } from '@chakra-ui/react';
 import {UserDetailsContext} from "../../utils/context/UserDetailContext";
-import {deleteOwnAccount, updateUserDetails, updateUserPassword} from "../../services/UserService/userService";
+import {updateUserDetails, updateUserPassword} from "../../services/UserService/userService";
 import Select from "react-select";
 import {useLocation} from "../../utils/hooks/useLocation";
-import {MAIN_PAGE_ROUTE} from "../../utils/routes";
-import {logout} from "../../services/UserService/authService";
 
 const UpdateInformationForm = ({ onClose, onSubmit }) => {
     const { userDetails, setUserDetails } = useContext(UserDetailsContext);
@@ -40,9 +38,6 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
     const navigate = useNavigate();
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const openConfirmModal = () => setIsConfirmModalOpen(true);
-    const closeConfirmModal = () => setIsConfirmModalOpen(false);
     const handleClickShowOldPassword = () => setShowOldPassword(!showOldPassword);
     const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
     const { country,
@@ -113,28 +108,6 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
                 isClosable: true,
             });
         }
-    };
-
-    const handleDeleteAccount = async () => {
-        try {
-            await deleteOwnAccount();
-            logout();
-            navigate(MAIN_PAGE_ROUTE);
-        } catch (error) {
-            console.error('Failed to delete account', error);
-            toast({
-                title: "Failed to delete account.",
-                description: error.message || "An error occurred. Please try again.",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-    };
-
-    const handleDeleteAccountConfirmed = async () => {
-        closeConfirmModal();
-        await handleDeleteAccount();
     };
 
     useEffect(() => {
@@ -216,7 +189,24 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
                                     onChange={handleCityChange}
                                 />
                             </FormControl>
-                            <Button onClick={() => setIsChangingPassword(!isChangingPassword)} mt={4}>
+                            <Button
+                                onClick={() => setIsChangingPassword(!isChangingPassword)}
+                                mt={4}
+                                fontSize="sm"
+                                rounded="full"
+                                bg="transparent"
+                                color="gray.800"
+                                border="2px"
+                                borderColor="gray.300"
+                                _hover={{
+                                    bg: 'gray.200',
+                                    color: 'black',
+                                    borderColor: 'gray.300'
+                                }}
+                                _focus={{
+                                    bg: 'gray.200',
+                                }}
+                            >
                                 Change password
                             </Button>
                             {isChangingPassword && (
@@ -257,7 +247,24 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
                                             </InputRightElement>
                                         </InputGroup>
                                     </FormControl>
-                                    <Button mt={4} colorScheme="messenger" type="submit">
+                                    <Button
+                                        mt={4}
+                                        flex={1}
+                                        fontSize="sm"
+                                        rounded="full"
+                                        bg="transparent"
+                                        color="green.500"
+                                        border="2px"
+                                        borderColor="green.500"
+                                        _hover={{
+                                            bg: 'green.500',
+                                            color: 'white',
+                                        }}
+                                        _focus={{
+                                            boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
+                                        }}
+                                        type="submit"
+                                    >
                                         Submit New Password
                                     </Button>
                                 </form>
@@ -266,46 +273,41 @@ const UpdateInformationForm = ({ onClose, onSubmit }) => {
                     </ModalBody>
                     <ModalFooter>
                         <Button
-                            colorScheme='red'
-                            onClick={openConfirmModal}
-                            m={3}
-                        >
-                            Delete Account
-                        </Button>
-                        <Button
+                            mr={2}
                             type="submit"
-                            colorScheme='green'
-                            mr={3}
+                            fontSize="sm"
+                            rounded="full"
+                            bg="green.400"
+                            color="white"
+                            _hover={{
+                                bg: 'green.500',
+                            }}
+                            _focus={{
+                                bg: 'green.500',
+                            }}
                             onClick={handleSubmit}
                         >
                             Save
                         </Button>
                         <Button
-                            colorScheme='red'
-                            variant='outline'
+                            fontSize="sm"
+                            rounded="full"
+                            bg="transparent"
+                            color="red.500"
+                            border="2px"
+                            borderColor="red.500"
+                            _hover={{
+                                bg: 'red.500',
+                                color: 'white',
+                            }}
+                            _focus={{
+                                boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
+                            }}
                             onClick={onClose}
                         >
                             Cancel
                         </Button>
                     </ModalFooter>
-                    <Modal isOpen={isConfirmModalOpen} onClose={closeConfirmModal}>
-                        <ModalOverlay />
-                        <ModalContent>
-                            <ModalHeader>Confirm Account Deletion</ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody>
-                                Are you sure you want to delete your account? This action cannot be undone.
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button colorScheme='red' mr={3} onClick={handleDeleteAccountConfirmed}>
-                                    Confirm Delete
-                                </Button>
-                                <Button variant='outline' onClick={closeConfirmModal}>
-                                    Cancel
-                                </Button>
-                            </ModalFooter>
-                        </ModalContent>
-                    </Modal>
                 </ModalContent>
             </Modal>
         </>

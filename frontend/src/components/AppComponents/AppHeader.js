@@ -10,10 +10,17 @@ import {
     MenuList,
     MenuGroup,
     MenuItem,
-    MenuDivider, Divider, Avatar, Input, Flex, InputRightElement, InputGroup
+    Image,
+    MenuDivider, Divider, Avatar, Input, Flex, InputRightElement, InputGroup, useColorModeValue
 } from "@chakra-ui/react";
 import {ChevronDownIcon, SearchIcon} from "@chakra-ui/icons"
-import {LOGIN_ROUTE, MAIN_PAGE_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE} from "../../utils/routes";
+import {
+    ADMIN_DASHBOARD_ROUTE,
+    LOGIN_ROUTE,
+    MAIN_PAGE_ROUTE,
+    PROFILE_ROUTE,
+    REGISTRATION_ROUTE
+} from "../../utils/routes";
 import {AuthContext} from "./AuthContext";
 import {getUserDetails} from '../../services/UserService/userService';
 import {logout} from '../../services/UserService/authService';
@@ -21,14 +28,17 @@ import DefaultAvatar from "../../images/default-avatar.png";
 import {UserDetailsContext} from "../../utils/context/UserDetailContext";
 import SearchContext from "../../utils/context/SearchContext";
 import CreateHotelModal from "../MainPageComponents/CreateHotelModal";
+import HotelIcon from "../../images/header-icon.png";
 
 
 const AppHeader = () => {
     const userId = localStorage.getItem('userId');
+    const adminId = localStorage.getItem('adminId');
     const {isAuthenticated} = useContext(AuthContext);
     const {userDetails, setUserDetails} = useContext(UserDetailsContext);
     const { searchTerm, setSearchTerm } = useContext(SearchContext);
     const [isCreateHotelModalOpen, setIsCreateHotelModalOpen] = useState(false);
+    const bg = useColorModeValue('white', 'gray.800');
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -48,13 +58,12 @@ const AppHeader = () => {
         }
     }, [isAuthenticated, setUserDetails]);
 
-
     return (
         <>
             <Flex
                 as="header"
                 h="100px"
-                bg="white"
+                bg={bg}
                 align="center"
                 justify="space-between"
                 px={8}
@@ -62,7 +71,14 @@ const AppHeader = () => {
             >
                 <HStack spacing={8}>
                     <Heading color="black">
-                        <ReactRouterLink to={MAIN_PAGE_ROUTE}>🛏️ Hotel Reservation System</ReactRouterLink>
+                        <ReactRouterLink to={MAIN_PAGE_ROUTE}>
+                            <Flex align="center">
+                                <Box mr={2}>
+                                    <Image src={HotelIcon} alt="Hotel" boxSize="40px" />
+                                </Box>
+                                Hotel Reservation System
+                            </Flex>
+                        </ReactRouterLink>
                     </Heading>
                     <Box d="flex" alignItems="center">
                         <InputGroup size="md" width="auto">
@@ -85,14 +101,37 @@ const AppHeader = () => {
                             <Button
                                 as={ReactRouterLink}
                                 to={LOGIN_ROUTE}
-                                colorScheme='green'
+                                flex={1}
+                                fontSize="sm"
+                                rounded="full"
+                                bg="transparent"
+                                color="green.500"
+                                border="2px"
+                                borderColor="green.500"
+                                _hover={{
+                                    bg: 'green.500',
+                                    color: 'white',
+                                }}
+                                _focus={{
+                                    boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
+                                }}
                             >
                                 Log In
                             </Button>
                             <Button
                                 as={ReactRouterLink}
                                 to={REGISTRATION_ROUTE}
-                                colorScheme='green'
+                                flex={1}
+                                fontSize="sm"
+                                rounded="full"
+                                bg="green.400"
+                                color="white"
+                                _hover={{
+                                    bg: 'green.500',
+                                }}
+                                _focus={{
+                                    bg: 'green.500',
+                                }}
                             >
                                 Sign Up
                             </Button>
@@ -103,9 +142,27 @@ const AppHeader = () => {
                             {({isOpen}) => (
                                 <>
                                     {isAuthenticated && userDetails?.role === 'ADMIN' && (
-                                        <Button colorScheme='blue' onClick={toggleCreateHotelModal}>
+                                        <Button
+                                            flex={1}
+                                            fontSize="sm"
+                                            rounded="full"
+                                            bg="transparent"
+                                            color="gray.800"
+                                            border="2px"
+                                            borderColor="gray.200"
+                                            _hover={{
+                                                bg: 'green.500',
+                                                color: 'white',
+                                                borderColor: 'green.500'
+                                            }}
+                                            _focus={{
+                                                boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
+                                            }}
+                                            onClick={toggleCreateHotelModal}
+                                        >
                                             Create Hotel
                                         </Button>
+
                                     )}
                                     <MenuButton as={Box} borderRadius='full' cursor="pointer">
                                         <HStack spacing={0}>
@@ -127,6 +184,14 @@ const AppHeader = () => {
                                             >
                                                 My Account
                                             </MenuItem>
+                                            {isAuthenticated && userDetails?.role === 'ADMIN' && (
+                                                <MenuItem
+                                                    as={ReactRouterLink}
+                                                    to={`${ADMIN_DASHBOARD_ROUTE}/${adminId}`}
+                                                >
+                                                    Admin Dashboard
+                                                </MenuItem>
+                                            )}
                                         </MenuGroup>
                                         <MenuDivider/>
                                         <MenuGroup>

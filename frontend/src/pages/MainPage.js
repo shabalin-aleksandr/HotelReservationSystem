@@ -1,20 +1,12 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useMemo} from 'react';
 import {Box, SimpleGrid} from '@chakra-ui/react';
-import {getAllHotels} from "../services/HotelService/hotelService";
 import HotelCard from "../components/MainPageComponents/HotelCard";
 import SearchContext from "../utils/context/SearchContext";
+import {useHotels} from "../utils/context/HotelContext";
 
 const MainPage = () => {
-    const [hotels, setHotels] = useState([]);
+    const { hotels } = useHotels();
     const { searchTerm } = useContext(SearchContext);
-
-    useEffect(() => {
-        async function fetchHotels() {
-            const hotelsData = await getAllHotels();
-            setHotels(hotelsData);
-        }
-        fetchHotels();
-    }, []);
 
     const filteredAndSortedHotels = useMemo(() => {
         return searchTerm

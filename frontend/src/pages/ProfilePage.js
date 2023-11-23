@@ -12,23 +12,23 @@ import {
     Heading,
     Input,
     Modal,
-    ModalBody,
-    ModalContent,
+    ModalBody, ModalCloseButton,
+    ModalContent, ModalFooter, ModalHeader,
     ModalOverlay, SimpleGrid,
     Table,
     Tbody,
     Td,
     Text,
-    Tr, useColorModeValue,
+    Tr,
     useToast,
     VStack
 } from "@chakra-ui/react";
 import {deleteAvatar, uploadAvatar} from "../services/UserService/userAvatarService";
-import {getUserDetails, updateUserDetails} from '../services/UserService/userService';
-import {useContext, useEffect, useRef, useState} from "react";
+import {deleteOwnAccount, getUserDetails, updateUserDetails} from '../services/UserService/userService';
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../components/AppComponents/AuthContext";
 import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
-import {Link as ReactRouterLink, useLocation, useParams} from "react-router-dom";
+import {Link as ReactRouterLink, useLocation, useNavigate, useParams} from "react-router-dom";
 import DefaultAvatar from "../images/default-avatar.png"
 import AvatarEditorWrapper from "../components/ProfilePageComponents/AvatarEditorWrapper";
 import { UserDetailsContext } from "../utils/context/UserDetailContext";
@@ -36,6 +36,7 @@ import UpdateInformationForm from "../components/ProfilePageComponents/UpdateInf
 import {getHotelDetails} from "../services/HotelService/hotelService";
 import UserReservationCard from "../components/ProfilePageComponents/UserReservationCard";
 import {MAIN_PAGE_ROUTE} from "../utils/routes";
+import {logout} from "../services/UserService/authService";
 
 const ProfilePage = () => {
     const { userId } = useParams();
@@ -51,7 +52,10 @@ const ProfilePage = () => {
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const toast = useToast();
-    const bg = useColorModeValue('white', 'gray.800');
+    const navigate = useNavigate();
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const openConfirmModal = () => setIsConfirmModalOpen(true);
+    const closeConfirmModal = () => setIsConfirmModalOpen(false);
     const {
         countries,
         regions,
@@ -138,6 +142,28 @@ const ProfilePage = () => {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        try {
+            await deleteOwnAccount();
+            logout();
+            navigate(MAIN_PAGE_ROUTE);
+        } catch (error) {
+            console.error('Failed to delete account', error);
+            toast({
+                title: "Failed to delete account.",
+                description: error.message || "An error occurred. Please try again.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
+
+    const handleDeleteAccountConfirmed = async () => {
+        closeConfirmModal();
+        await handleDeleteAccount();
+    };
+
     useEffect(() => {
         if (showDeleteAlert) {
             toast({
@@ -219,7 +245,17 @@ const ProfilePage = () => {
                     <Button
                         as={ReactRouterLink}
                         to={MAIN_PAGE_ROUTE}
-                        colorScheme="green"
+                        flex={1}
+                        fontSize="sm"
+                        rounded="full"
+                        bg="green.400"
+                        color="white"
+                        _hover={{
+                            bg: 'green.500',
+                        }}
+                        _focus={{
+                            bg: 'green.500',
+                        }}
                         mt={3}
                     >
                         Reserve
@@ -275,16 +311,36 @@ const ProfilePage = () => {
                                         >
                                             <Button
                                                 onClick={openFileSelectionDialog}
-                                                size="sm"
-                                                color="green"
+                                                fontSize="sm"
+                                                rounded="full"
+                                                color="green.500"
+                                                border="2px"
+                                                borderColor="green.500"
+                                                _hover={{
+                                                    bg: 'green.500',
+                                                    color: 'white',
+                                                }}
+                                                _focus={{
+                                                    boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
+                                                }}
                                             >
                                                 Update Avatar
                                             </Button>
                                             {userDetails.avatar && (
                                                 <Button
                                                     onClick={handleAvatarDelete}
-                                                    size="sm"
-                                                    color="red"
+                                                    fontSize="sm"
+                                                    rounded="full"
+                                                    color="red.500"
+                                                    border="2px"
+                                                    borderColor="red.500"
+                                                    _hover={{
+                                                        bg: 'red.500',
+                                                        color: 'white',
+                                                    }}
+                                                    _focus={{
+                                                        boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
+                                                    }}
                                                 >
                                                     Delete Avatar
                                                 </Button>
@@ -307,13 +363,20 @@ const ProfilePage = () => {
                                         {userDetails.email}
                                     </Text>
                                     <Button
-                                        size='md'
-                                        mt={4}
-                                        bg={bg}
-                                        border='2px'
-                                        borderColor='green.500'
+                                        mt={3}
+                                        flex={1}
+                                        fontSize="sm"
+                                        rounded="full"
+                                        bg="transparent"
+                                        color="green.500"
+                                        border="2px"
+                                        borderColor="green.500"
                                         _hover={{
-                                            bg: 'green.100',
+                                            bg: 'green.500',
+                                            color: 'white',
+                                        }}
+                                        _focus={{
+                                            boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.6)',
                                         }}
                                         onClick={() => setIsEditing(true)}
                                     >
@@ -348,6 +411,22 @@ const ProfilePage = () => {
                                         </Tr>
                                     </Tbody>
                                 </Table>
+                                <Button
+                                    fontSize="sm"
+                                    rounded="full"
+                                    bg="red.500"
+                                    color="white"
+                                    _hover={{
+                                        bg: 'red.600',
+                                    }}
+                                    _focus={{
+                                        bg: 'red.600',
+                                    }}
+                                    onClick={openConfirmModal}
+                                    m={3}
+                                >
+                                    Delete Account
+                                </Button>
                             </VStack>
                         </Center>
                     </GridItem>
@@ -357,6 +436,52 @@ const ProfilePage = () => {
                     </GridItem>
                 </>
             )}
+            <Modal isOpen={isConfirmModalOpen} onClose={closeConfirmModal}>
+                <ModalOverlay backdropFilter="blur(10px)" />
+                <ModalContent>
+                    <ModalHeader>Confirm Account Deletion</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        Are you sure you want to delete your account? This action cannot be undone.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            fontSize="sm"
+                            rounded="full"
+                            bg="red.500"
+                            color="white"
+                            _hover={{
+                                bg: 'red.600',
+                            }}
+                            _focus={{
+                                bg: 'red.600',
+                            }}
+                            mr={3}
+                            onClick={handleDeleteAccountConfirmed}>
+                            Confirm Delete
+                        </Button>
+                        <Button
+                            fontSize="sm"
+                            rounded="full"
+                            bg="transparent"
+                            color="gray.800"
+                            border="2px"
+                            borderColor="gray.300"
+                            _hover={{
+                                bg: 'gray.200',
+                                color: 'black',
+                                borderColor: 'gray.300'
+                            }}
+                            _focus={{
+                                bg: 'gray.200',
+                            }}
+                            onClick={closeConfirmModal}
+                        >
+                            Cancel
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <Modal isOpen={showEditor} onClose={() => setShowEditor(false)}>
                 <ModalOverlay />
                 <ModalContent>

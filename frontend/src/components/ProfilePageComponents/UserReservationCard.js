@@ -50,7 +50,6 @@ const UserReservationCard = ({ reservation }) => {
                 w="full"
                 h="250px"
             />
-
             <Box p="6">
                 <Box display="flex" alignItems="baseline">
                     <Box
@@ -63,13 +62,10 @@ const UserReservationCard = ({ reservation }) => {
                     >
                         {reservation.totalDays} {reservation.totalDays === 1 ? 'day' : 'days'} &bull; {reservation.hotelDetails?.city}
                     </Box>
-
                 </Box>
-
                 <Box mt="1" fontWeight="semibold" as="h3" lineHeight="tight">
                     {reservation.hotelDetails?.hotelName}
                 </Box>
-
                 <Box>
                     {reservation.totalPrice}
                     <Box as="span" color={priceColor} fontSize="sm">

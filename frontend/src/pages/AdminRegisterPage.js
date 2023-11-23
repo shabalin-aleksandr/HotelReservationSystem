@@ -152,7 +152,7 @@ const AdminRegisterPage = () => {
                                     />
                                 </FormControl>
                             </HStack>
-                            <FormControl id="phoneNumber" isInvalid={errors.phoneNumber} isRequired>
+                            <FormControl id="phoneNumber" isInvalid={errors.phoneNumber}>
                                 <FormLabel>Phone number</FormLabel>
                                 <InputGroup>
                                     <InputLeftAddon children='🇨🇿 +420' />
@@ -210,7 +210,6 @@ const AdminRegisterPage = () => {
                                         placeholder='Enter password'
                                         value={password}
                                         onChange={handlePasswordChange}
-                                        // onChange={handlePassword}
                                     />
                                     <InputRightElement width='4.5rem'>
                                         <Button h='1.75rem' size='sm' onClick={handleClick}>
@@ -218,9 +217,6 @@ const AdminRegisterPage = () => {
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
-                                <FormErrorMessage>
-                                    {errors.password ? 'Password is required' : serverError}
-                                </FormErrorMessage>
                                 <Box display="flex" h="5px" mt={1} bg="gray.300">
                                     <Box
                                         bg={passwordStrength <= 2 ? "red" : passwordStrength <= 3 ? "orange" : "green"}
@@ -255,9 +251,17 @@ const AdminRegisterPage = () => {
                             </VStack>
                             <Button
                                 type="submit"
-                                colorScheme="green"
                                 size="lg"
                                 fontSize="md"
+                                rounded="full"
+                                bg="green.400"
+                                color="white"
+                                _hover={{
+                                    bg: 'green.500',
+                                }}
+                                _focus={{
+                                    bg: 'green.500',
+                                }}
                                 onClick={handleRegistration}
                             >
                                 Create Account

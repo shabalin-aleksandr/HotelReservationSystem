@@ -112,9 +112,17 @@ const AuthPage = () => {
                             </FormControl>
                             <Button
                                 type="submit"
-                                colorScheme="green"
                                 size="lg"
                                 fontSize="md"
+                                rounded="full"
+                                bg="green.400"
+                                color="white"
+                                _hover={{
+                                    bg: 'green.500',
+                                }}
+                                _focus={{
+                                    bg: 'green.500',
+                                }}
                                 loadingText="Signing in"
                                 onClick={handleAuthentication}
                             >

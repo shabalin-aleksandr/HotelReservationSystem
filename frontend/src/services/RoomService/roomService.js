@@ -1,12 +1,12 @@
 import {api} from "../../utils/api";
 
 export const getRoomDetails = async (hotelId, roomId) => {
-    // const headers = {
-    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    // };
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
 
     try {
-        const response = await api.get(`/rooms/${hotelId}/${roomId}`);
+        const response = await api.get(`/rooms/${hotelId}/${roomId}`, { headers });
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -15,10 +15,6 @@ export const getRoomDetails = async (hotelId, roomId) => {
     }
 };
 export const findAvailableRoomsInHotelForDateRange = async (hotelId, fromDate, toDate) => {
-    // const headers = {
-    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    // };
-
     try {
         const response = await api.get(`/rooms/${hotelId}/available`, {
             params: {
@@ -35,10 +31,6 @@ export const findAvailableRoomsInHotelForDateRange = async (hotelId, fromDate, t
     }
 };
 export const getAllRoomsByHotelId = async (hotelId) => {
-    // const headers = {
-    //     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    // };
-
     try {
         const response = await api.get(`/rooms/${hotelId}`);
         console.log(response.data);

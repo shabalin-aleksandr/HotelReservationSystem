@@ -8,6 +8,9 @@ export const login = async (email, password, setIsAuthenticated) => {
         const decoded = jwt_decode(data.token);
         localStorage.setItem('token', data.token)
         localStorage.setItem('userId', decoded.email);
+        if(decoded.adminId) {
+            localStorage.setItem('adminId', decoded.adminId);
+        }
         setIsAuthenticated(true);
         return decoded;
     } catch (error) {
