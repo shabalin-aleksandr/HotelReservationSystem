@@ -21,7 +21,7 @@ import {
     FormLabel,
     Input,
     VStack,
-    Select, FormErrorMessage, InputGroup, InputLeftAddon
+    Select, FormErrorMessage, InputGroup, InputLeftAddon, useDisclosure
 } from '@chakra-ui/react';
 import { HamburgerIcon, EditIcon, DeleteIcon, ViewIcon, CalendarIcon } from '@chakra-ui/icons';
 import { Link as ReactRouterLink } from 'react-router-dom';
@@ -29,9 +29,11 @@ import DefaultHotelImage from "../../images/default-hotel-image.png";
 import {deleteHotel, editHotel} from "../../services/HotelService/hotelService";
 import {useHotels} from "../../utils/context/HotelContext";
 import {addRoomToHotel} from "../../services/RoomService/roomService";
+import {HotelReservationsModal} from "./HotelReservationsModal";
 
 const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
     const [hovered, setHovered] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const { removeHotel } = useHotels();
     const [errors, setErrors] = useState({});
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -216,6 +218,7 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
                         mr={2}
                         aria-label="View Reservations"
                         _hover={{ bg: 'blue.400', color: 'white' }}
+                        onClick={onOpen}
                     />
                     <ReactRouterLink to={`/hotel/${hotel.hotelId}`}>
                         <IconButton
@@ -258,10 +261,15 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
                 />
                 <MenuList>
                     <MenuItem
+                        onClick={onOpen}
+                    >
+                        See Reservations
+                    </MenuItem>
+                    <MenuItem
                         as={ReactRouterLink}
                         to={`/hotel/${hotel.hotelId}`}
                     >
-                        See Hotel
+                        Hotel Page
                     </MenuItem>
                     <MenuItem
                         onClick={openEditModal}
@@ -276,6 +284,7 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
                     </MenuItem>
                 </MenuList>
             </Menu>
+            <HotelReservationsModal hotelId={hotel.hotelId} isOpen={isOpen} onClose={onClose} />
             <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
                 <ModalOverlay backdropFilter="blur(10px)" />
                 <ModalContent>
