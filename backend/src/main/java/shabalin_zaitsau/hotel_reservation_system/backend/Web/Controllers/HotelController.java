@@ -177,7 +177,7 @@ public class HotelController {
             }
     )
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{hotelId}")
+    @PatchMapping("/{hotelId}/rate")
     @ResponseStatus(HttpStatus.OK)
     public double addRate(@PathVariable UUID hotelId,
                           @Valid @RequestBody RateRequestDto rateRequestDto) {

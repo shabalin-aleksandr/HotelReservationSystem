@@ -31,6 +31,19 @@ const AdminDashboardPage = () => {
         fetchAdminDetails();
     }, [adminId, setAdminDetails]);
 
+
+    const updateHotelInState = (updatedHotel) => {
+        setAdminDetails(prevDetails => ({
+            ...prevDetails,
+            hotels: prevDetails.hotels.map(hotel => {
+                if (hotel.hotelId === updatedHotel.hotelId) {
+                    return updatedHotel;
+                }
+                return hotel;
+            })
+        }));
+    };
+
     const removeHotelFromState = (hotelId) => {
         setAdminDetails(prevDetails => ({
             ...prevDetails,
@@ -55,6 +68,7 @@ const AdminDashboardPage = () => {
                         key={hotel.hotelId}
                         hotel={hotel}
                         onHotelDeleted={removeHotelFromState}
+                        onHotelUpdated={updateHotelInState}
                     />
                 ))}
             </SimpleGrid>

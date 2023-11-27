@@ -33,8 +33,12 @@ export const HotelProvider = ({ children }) => {
         setHotels((prevHotels) => [...prevHotels, newHotel]);
     };
 
+    const removeHotel = (hotelId) => {
+        setHotels(prevHotels => prevHotels.filter(hotel => hotel.hotelId !== hotelId));
+    };
+
     return (
-        <HotelContext.Provider value={{ hotels, addHotel }}>
+        <HotelContext.Provider value={{ hotels, addHotel, removeHotel }}>
             {children}
         </HotelContext.Provider>
     );

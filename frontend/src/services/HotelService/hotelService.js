@@ -44,6 +44,21 @@ export const createHotel = async (hotelName, country, city, address, receptionNu
     }
 };
 
+export const editHotel = async (hotelId, updates) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    try {
+        const response = await api.patch(`/hotels/update/${hotelId}`, updates, { headers });
+        console.log('Hotel updated', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to update hotel details', error);
+        throw error;
+    }
+}
+
 export const deleteHotel = async (hotelId) => {
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,

@@ -9,12 +9,18 @@ const MainPage = () => {
     const { searchTerm } = useContext(SearchContext);
 
     const filteredAndSortedHotels = useMemo(() => {
+        const sortFunction = (a, b) => {
+            if (b.rating !== a.rating) {
+                return b.rating - a.rating;
+            }
+            return a.hotelName.localeCompare(b.hotelName);
+        };
         return searchTerm
             ? hotels
                 .filter(hotel =>
                     hotel.hotelName.toLowerCase().includes(searchTerm.toLowerCase()))
-                .sort((a, b) => b.rating - a.rating)
-            : hotels.sort((a, b) => b.rating - a.rating);
+                .sort(sortFunction)
+            : hotels.sort(sortFunction);
     }, [searchTerm, hotels]);
 
     return (

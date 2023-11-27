@@ -41,4 +41,23 @@ export const getAllRoomsByHotelId = async (hotelId) => {
     }
 };
 
+export const addRoomToHotel = async (hotelId, roomNumber, category, pricePerNight) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
 
+    const roomData = {
+        roomNumber,
+        category,
+        pricePerNight
+    };
+
+    try {
+        const response = await api.post(`/rooms/create/${hotelId}`, roomData, { headers });
+        console.log('Room created:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to create room:', error);
+        throw error;
+    }
+}

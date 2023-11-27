@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -14,9 +14,11 @@ import {
 } from '@chakra-ui/react';
 import {createHotel} from "../../services/HotelService/hotelService";
 import {useHotels} from "../../utils/context/HotelContext";
+import {AdminDetailsContext} from "../../utils/context/AdminDetailsContext";
 
 const CreateHotelModal = ({ isOpen, onClose }) => {
     const { addHotel } = useHotels();
+    const { setAdminDetails } = useContext(AdminDetailsContext);
     const initialFormState = {
         hotelName: '',
         country: '',
@@ -41,6 +43,13 @@ const CreateHotelModal = ({ isOpen, onClose }) => {
         setHotelForm(prev => ({ ...prev, [name]: value }));
     };
 
+    const addHotelToState = (newHotel) => {
+        setAdminDetails(prevDetails => ({
+            ...prevDetails,
+            hotels: [...prevDetails.hotels, newHotel].sort((a, b) => a.hotelName.localeCompare(b.hotelName))
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = validateForm();
@@ -56,6 +65,7 @@ const CreateHotelModal = ({ isOpen, onClose }) => {
                 );
                 console.log('Hotel created:', newHotel);
                 addHotel(newHotel);
+                addHotelToState(newHotel);
                 handleModalClose();
             } catch (error) {
                 console.error('Failed to create hotel:', error);
