@@ -61,3 +61,33 @@ export const addRoomToHotel = async (hotelId, roomNumber, category, pricePerNigh
         throw error;
     }
 }
+
+export const editRoomInHotel = async (hotelId, roomId, updates) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    try {
+        const response = await api.patch(`/rooms/update/${hotelId}/${roomId}`, updates, { headers });
+        console.log('Room updated', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to update room:', error);
+        throw error;
+    }
+}
+
+export const deleteRoomFromHotel = async (hotelId, roomId) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    try {
+        const response = await api.delete(`/rooms/delete/${hotelId}/${roomId}`, { headers });
+        console.log(`Room ${roomId} has been successfully deleted from hotel ${hotelId}`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete room', error);
+        throw error;
+    }
+}

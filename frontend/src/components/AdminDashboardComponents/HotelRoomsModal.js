@@ -1,47 +1,54 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from "react";
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
     Button,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    Text,
+    Center,
     IconButton,
-    useToast, TableContainer, Center
-} from '@chakra-ui/react';
-import {deleteSingleReservation, getAllReservationsInHotel} from "../../services/ReservationService/reservationService";
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent, ModalFooter,
+    ModalHeader,
+    ModalOverlay, Table,
+    TableContainer, Tbody, Td,
+    Text, Th, Thead, Tr, useToast
+} from "@chakra-ui/react";
+import {deleteRoomFromHotel, getAllRoomsByHotelId} from "../../services/RoomService/roomService";
 import {LoadingSpinner} from "../AppComponents/LoadingSpinner";
-import {DeleteIcon} from "@chakra-ui/icons";
+import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
+import EditRoomModal from "./EditRoomModal";
 
-export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
-    const [reservations, setReservations] = useState([]);
+const HotelRoomsModal = ({isOpen, onClose, hotelId}) => {
+    const [rooms, setRooms] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-    const [selectedReservation, setSelectedReservation] = useState({ id: null, roomId: null });
     const [error, setError] = useState('');
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState({id: null, hotelId: null});
     const toast = useToast();
 
-    const openDeleteConfirmation = (reservationId, roomId) => {
-        setSelectedReservation({ id: reservationId, roomId: roomId });
+    const openDeleteConfirmation = (roomId, hotelId) => {
+        setSelectedRoom({id: roomId, hotelId: hotelId});
         setIsDeleteConfirmationOpen(true);
     };
 
-    const handleDeleteReservation = async (reservationId, roomId) => {
+    const openEditModal = (room) => {
+        setSelectedRoom({
+            roomId: room.roomId,
+            hotelId: hotelId,
+            roomNumber: room.roomNumber,
+            category: room.category,
+            pricePerNight: room.pricePerNight,
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleDeleteRoom = async (roomId, hotelId) => {
         try {
-            await deleteSingleReservation(hotelId, roomId, reservationId);
-            setReservations(reservations.filter(reservation => reservation.reservationId !== reservationId));
+            await deleteRoomFromHotel(hotelId, roomId);
+            setRooms(rooms.filter(room => room.roomId !== roomId));
             toast({
-                title: "Reservation deleted.",
-                description: "The reservation has been successfully deleted.",
+                title: "Room deleted.",
+                description: "The room has been successfully deleted.",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -49,8 +56,8 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
             setIsDeleteConfirmationOpen(false);
         } catch (error) {
             toast({
-                title: "Error deleting reservation.",
-                description: error.message || "There was an error deleting the reservation.",
+                title: "Error deleting room.",
+                description: error.message || "There was an error deleting the room.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -60,20 +67,19 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
     };
 
     useEffect(() => {
-        const fetchReservations = async () => {
+        const fetchRooms = async () => {
             setIsLoading(true);
             try {
-                const data = await getAllReservationsInHotel(hotelId);
-                setReservations(data);
+                const fetchedRooms = await getAllRoomsByHotelId(hotelId);
+                setRooms(fetchedRooms);
             } catch (error) {
-                setError('Failed to fetch reservations. Please try again later.');
-                console.error(error);
+                console.error('Failed to fetch rooms:', error);
+                setError('Failed to fetch rooms. Please try again later.');
             }
             setIsLoading(false);
         };
-
-        if (isOpen) {
-            fetchReservations();
+        if (isOpen && hotelId) {
+            fetchRooms();
         }
     }, [hotelId, isOpen]);
 
@@ -81,45 +87,55 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
         <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
             <ModalOverlay backdropFilter="blur(10px)"/>
             <ModalContent>
-                <ModalHeader>Hotel Reservations</ModalHeader>
+                <ModalHeader>Hotel Rooms</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody maxH="70vh" overflowY="auto">
                     {isLoading ? (
                         <LoadingSpinner/>
                     ) : error ? (
                         <Text color="red.500">{error.message}</Text>
-                    ) : reservations.length > 0 ? (
+                    ) : rooms.length > 0 ? (
                         <TableContainer>
                             <Table variant="simple" size="sm">
                                 <Thead>
                                     <Tr>
                                         <Th textAlign="center">Room Number</Th>
                                         <Th textAlign="center">Category</Th>
-                                        <Th textAlign="center">Reservation From</Th>
-                                        <Th textAlign="center">Reservation To</Th>
-                                        <Th textAlign="center">Total Days</Th>
-                                        <Th textAlign="center">Total Price</Th>
+                                        <Th textAlign="center">Price Per Night</Th>
+                                        <Th textAlign="center" color="orange">Edit Room Details</Th>
                                         <Th textAlign="center" color="red">Delete</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {reservations.map((reservation) => (
-                                        <Tr key={reservation.reservationId}>
-                                            <Td textAlign="center">{reservation.room.roomNumber}</Td>
-                                            <Td textAlign="center">{reservation.room.category}</Td>
-                                            <Td textAlign="center">{reservation.reservationFrom}</Td>
-                                            <Td textAlign="center">{reservation.reservationTo}</Td>
-                                            <Td textAlign="center">{reservation.totalDays}</Td>
-                                            <Td textAlign="center">{reservation.totalPrice} Kč</Td>
+                                    {rooms.map((room) => (
+                                        <Tr key={room.roomId}>
+                                            <Td textAlign="center">{room.roomNumber}</Td>
+                                            <Td textAlign="center">{room.category}</Td>
+                                            <Td textAlign="center">{room.pricePerNight} Kč</Td>
+                                            <Td textAlign="center">
+                                                <IconButton
+                                                    icon={<EditIcon/>}
+                                                    isRound="true"
+                                                    aria-label="Edit room"
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    colorScheme="orange"
+                                                    onClick={() => openEditModal(room)}
+                                                    _hover={{
+                                                        background: "orange.100",
+                                                        color: "orange.500",
+                                                    }}
+                                                />
+                                            </Td>
                                             <Td textAlign="center">
                                                 <IconButton
                                                     icon={<DeleteIcon/>}
                                                     isRound="true"
-                                                    aria-label="Delete reservation"
+                                                    aria-label="Delete room"
                                                     size="sm"
                                                     variant="ghost"
                                                     colorScheme="red"
-                                                    onClick={() => openDeleteConfirmation(reservation.reservationId, reservation.room.roomId)}
+                                                    onClick={() => openDeleteConfirmation(room.roomId, room.hotelId)}
                                                     _hover={{
                                                         background: "red.100",
                                                         color: "red.500",
@@ -133,7 +149,7 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
                         </TableContainer>
                     ) : (
                         <Center>
-                            <Text>This hotel doesn't have any reservations.</Text>
+                            <Text>This hotel doesn't have any rooms.</Text>
                         </Center>
                     )}
                 </ModalBody>
@@ -160,13 +176,23 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
                     </Button>
                 </ModalFooter>
             </ModalContent>
+            isEditModalOpen && (
+            <EditRoomModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                roomDetails={selectedRoom}
+                onRoomUpdated={(updatedRoom) => {
+                    setRooms(rooms.map((room) => (room.id === updatedRoom.id ? updatedRoom : room)));
+                }}
+            />
+            );
             <Modal isOpen={isDeleteConfirmationOpen} onClose={() => setIsDeleteConfirmationOpen(false)}>
-                <ModalOverlay backdropFilter="blur(10px)" />
+                <ModalOverlay backdropFilter="blur(10px)"/>
                 <ModalContent>
                     <ModalHeader>Confirm Deletion</ModalHeader>
-                    <ModalCloseButton />
+                    <ModalCloseButton/>
                     <ModalBody>
-                        Are you sure you want to delete this reservation?
+                        Are you sure you want to delete this room?
                     </ModalBody>
                     <ModalFooter>
                         <Button
@@ -181,7 +207,7 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
                                 bg: 'red.600',
                             }}
                             mr={3}
-                            onClick={() => handleDeleteReservation(selectedReservation.id, selectedReservation.roomId)}
+                            onClick={() => handleDeleteRoom(selectedRoom.id, selectedRoom.hotelId)}
                         >
                             Delete
                         </Button>
@@ -210,3 +236,5 @@ export const HotelReservationsModal = ({hotelId, isOpen, onClose}) => {
         </Modal>
     );
 };
+
+export default HotelRoomsModal;

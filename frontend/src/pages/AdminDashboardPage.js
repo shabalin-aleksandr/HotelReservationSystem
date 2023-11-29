@@ -5,12 +5,15 @@ import {getAdminDetails} from "../services/UserService/adminService";
 import {useParams} from "react-router-dom";
 import {LoadingSpinner} from "../components/AppComponents/LoadingSpinner";
 import AdminHotelCard from "../components/AdminDashboardComponents/AdminHotelCard";
+import HotelRoomsModal from "../components/AdminDashboardComponents/HotelRoomsModal";
 
 const AdminDashboardPage = () => {
     const { adminId } = useParams();
     const { adminDetails, setAdminDetails } = useContext(AdminDetailsContext);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [selectedHotelId, setSelectedHotelId] = useState(null);
+    const [isRoomsModalOpen, setIsRoomsModalOpen] = useState(false);
     const sortedHotels = adminDetails
         ? [...adminDetails.hotels].sort((a, b) => a.hotelName.localeCompare(b.hotelName))
         : [];
@@ -31,6 +34,10 @@ const AdminDashboardPage = () => {
         fetchAdminDetails();
     }, [adminId, setAdminDetails]);
 
+    const showRoomsForHotel = (hotelId) => {
+        setSelectedHotelId(hotelId);
+        setIsRoomsModalOpen(true);
+    };
 
     const updateHotelInState = (updatedHotel) => {
         setAdminDetails(prevDetails => ({
@@ -69,9 +76,17 @@ const AdminDashboardPage = () => {
                         hotel={hotel}
                         onHotelDeleted={removeHotelFromState}
                         onHotelUpdated={updateHotelInState}
+                        onShowRooms={showRoomsForHotel}
                     />
                 ))}
             </SimpleGrid>
+            {isRoomsModalOpen && (
+                <HotelRoomsModal
+                    isOpen={isRoomsModalOpen}
+                    onClose={() => setIsRoomsModalOpen(false)}
+                    hotelId={selectedHotelId}
+                />
+            )}
         </Box>
     );
 };

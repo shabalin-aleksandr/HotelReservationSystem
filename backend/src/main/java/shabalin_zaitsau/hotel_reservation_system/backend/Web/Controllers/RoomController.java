@@ -188,7 +188,7 @@ public class RoomController {
                     "(@adminReadService.isAdminType(principal, 'SUPER_ADMIN') " +
                     "or @adminReadService.isAdminType(principal, 'HOTEL_MANAGER') )"
     )
-    @PutMapping("/update/{hotelId}/{roomId}")
+    @PatchMapping("/update/{hotelId}/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public ViewRoomDto updateRoom(
             @PathVariable("hotelId") UUID hotelId,
