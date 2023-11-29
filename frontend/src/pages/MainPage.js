@@ -5,7 +5,7 @@ import SearchContext from "../utils/context/SearchContext";
 import {useHotels} from "../utils/context/HotelContext";
 
 const MainPage = () => {
-    const { hotels } = useHotels();
+    const { hotels, removeHotel } = useHotels();
     const { searchTerm } = useContext(SearchContext);
 
     const filteredAndSortedHotels = useMemo(() => {
@@ -15,19 +15,27 @@ const MainPage = () => {
             }
             return a.hotelName.localeCompare(b.hotelName);
         };
+        if (!Array.isArray(hotels)) {
+            return [];
+        }
         return searchTerm
             ? hotels
                 .filter(hotel =>
                     hotel.hotelName.toLowerCase().includes(searchTerm.toLowerCase()))
                 .sort(sortFunction)
-            : hotels.sort(sortFunction);
+            : [...hotels].sort(sortFunction);
     }, [searchTerm, hotels]);
+
 
     return (
         <Box padding="4">
             <SimpleGrid columns={[1, 2, 3, 4]} spacing="4">
                 {filteredAndSortedHotels.map((hotel) => (
-                    <HotelCard key={hotel.hotelId} hotel={hotel} />
+                    <HotelCard
+                        key={hotel.hotelId}
+                        hotel={hotel}
+                        onHotelDeleted={removeHotel}
+                    />
                 ))}
             </SimpleGrid>
         </Box>

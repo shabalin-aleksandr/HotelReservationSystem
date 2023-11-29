@@ -44,10 +44,19 @@ const CreateHotelModal = ({ isOpen, onClose }) => {
     };
 
     const addHotelToState = (newHotel) => {
-        setAdminDetails(prevDetails => ({
-            ...prevDetails,
-            hotels: [...prevDetails.hotels, newHotel].sort((a, b) => a.hotelName.localeCompare(b.hotelName))
-        }));
+        setAdminDetails(prevDetails => {
+            // Check if prevDetails is null or undefined
+            if (!prevDetails || !prevDetails.hotels) {
+                return {
+                    ...prevDetails,
+                    hotels: [newHotel]
+                };
+            }
+            return {
+                ...prevDetails,
+                hotels: [...prevDetails.hotels, newHotel].sort((a, b) => a.hotelName.localeCompare(b.hotelName))
+            };
+        });
     };
 
     const handleSubmit = async (e) => {
