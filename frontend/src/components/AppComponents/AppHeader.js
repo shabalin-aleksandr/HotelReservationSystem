@@ -36,17 +36,22 @@ import DashboardIcon from "../../images/dashboard-icon.png";
 import HelloIcon from "../../images/hello-icon.png"
 
 
+
 const AppHeader = () => {
+    const { searchTerm, setSearchTerm } = useContext(SearchContext);
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+
     const userId = localStorage.getItem('userId');
     const adminId = localStorage.getItem('adminId');
     const {isAuthenticated} = useContext(AuthContext);
     const {userDetails, setUserDetails} = useContext(UserDetailsContext);
-    const { searchTerm, setSearchTerm } = useContext(SearchContext);
     const [isCreateHotelModalOpen, setIsCreateHotelModalOpen] = useState(false);
     const bg = useColorModeValue('white', 'gray.800');
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
+
     const toggleCreateHotelModal = () => setIsCreateHotelModalOpen(!isCreateHotelModalOpen);
 
     useEffect(() => {
@@ -74,6 +79,7 @@ const AppHeader = () => {
                 px={8}
                 boxShadow="sm"
             >
+
                 <HStack spacing={8}>
                     <Heading color="black">
                         <ReactRouterLink to={MAIN_PAGE_ROUTE}>
@@ -89,10 +95,11 @@ const AppHeader = () => {
                         <InputGroup size="md" width="auto">
                             <Input
                                 type="search"
-                                placeholder="Search hotels..."
+                                placeholder="Search hotels by Name, Country or City"
                                 value={searchTerm}
                                 onChange={handleSearchChange}
                                 pr="2.5rem"
+                                width = "350px"
                             />
                             <InputRightElement>
                                 <SearchIcon color="gray.500" />

@@ -72,4 +72,23 @@ export const deleteHotel = async (hotelId) => {
         console.error('Failed to delete hotel:', error);
         throw error;
     }
-}
+};
+
+export const addRatingToHotel = async (hotelId, rating) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    const rateData = {
+        rating,
+    };
+
+    try {
+        const response = await api.patch(`/hotels/${hotelId}/rate`, rateData, { headers });
+        console.log('Rating added successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to add rating:', error);
+        throw error;
+    }
+};

@@ -8,6 +8,7 @@ const RoomCards = ({ room }) => {
     const bg = useColorModeValue('white', 'gray.800');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+
     const handleViewRoom = () => {
         setIsModalOpen(true);
     };
@@ -15,6 +16,7 @@ const RoomCards = ({ room }) => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+
 
     return (
         <Flex
@@ -69,26 +71,6 @@ const RoomCards = ({ room }) => {
                     >
                         View Room
                     </Button>
-                        <Button
-                            flex={1}
-                            fontSize="sm"
-                            rounded="full"
-                            bg="blue.400"
-                            color="white"
-                            boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                            _hover={{
-                                bg: 'blue.500',
-                            }}
-                            _focus={{
-                                bg: 'blue.500',
-                            }}
-                            onClick={() => {
-                                // Add logic to navigate to the room details page
-                                console.log(`View details for Room #${room.roomNumber}`);
-                            }}
-                        >
-                            Reserve a room now!
-                        </Button>
 
                     </ButtonGroup>
                 </Stack>
@@ -101,9 +83,11 @@ const RoomCards = ({ room }) => {
                     <ModalHeader>Room Details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <ViewRoomCard room={room} />
+                        {/* Pass the handleCloseModal function to ViewRoomCard */}
+                        <ViewRoomCard room={room} handleCloseModal={handleCloseModal} />
                     </ModalBody>
                     <ModalFooter>
+                        {/* Add any modal footer content here */}
                     </ModalFooter>
                 </ModalContent>
             </Modal>

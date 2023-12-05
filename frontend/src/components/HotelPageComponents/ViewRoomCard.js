@@ -1,18 +1,33 @@
+
 import React, { useState, useEffect } from 'react';
-import { Box, Text, Button, Flex, Image } from '@chakra-ui/react';
+import {
+    Box,
+    Text,
+    Button,
+    Flex,
+    Image,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+} from '@chakra-ui/react';
 import DefaultRoomImage from "../../images/room.png";
+import ViewReservation from './ViewReservation'; // Import the new component
 import { getAmenityByRoomId_HotelId } from '../../services/AmenityService/amenityservice';
 
 const ViewRoomCard = ({ room }) => {
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
     const [amenities, setAmenities] = useState([]);
+    const [isReserveClicked, setReserveClicked] = useState(false);
 
     useEffect(() => {
         // Fetch amenity data when the component mounts
         const fetchAmenityData = async () => {
             try {
                 const amenityData = await getAmenityByRoomId_HotelId(room.hotelId, room.roomId);
-                // Assuming amenityData is an array of amenities
                 setAmenities(amenityData);
             } catch (error) {
                 console.error('Error fetching amenity:', error);
@@ -34,6 +49,14 @@ const ViewRoomCard = ({ room }) => {
                 (prevIndex) => (prevIndex - 1 + room.photos.length) % room.photos.length
             );
         }
+    };
+
+    const handleReserveClick = () => {
+        setReserveClicked(true);
+    };
+
+    const handleCloseModal = () => {
+        setReserveClicked(false);
     };
 
     return (
@@ -68,7 +91,7 @@ const ViewRoomCard = ({ room }) => {
                         </Button>
                     </Flex>
                 )}
-            </Flex>
+
             <Text fontSize="xl" fontWeight="bold" mb={2}>
                 Room №{room.roomNumber}
             </Text>
@@ -80,8 +103,10 @@ const ViewRoomCard = ({ room }) => {
                 </Text>
             )}
 
+
+
             <Button
-                flex={1}
+
                 fontSize="sm"
                 rounded="full"
                 bg="blue.400"
@@ -93,13 +118,27 @@ const ViewRoomCard = ({ room }) => {
                 _focus={{
                     bg: 'blue.500',
                 }}
-                onClick={() => {
-                    // Add logic to navigate to the room details page
-                    console.log(`View details for Room #${room.roomNumber}`);
-                }}
-            >
+                onClick={handleReserveClick}
+                mt={4} >
+
                 Reserve a room now!
             </Button>
+            </Flex>
+
+
+
+            <Modal isOpen={isReserveClicked} onClose={handleCloseModal}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Reservation details</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        {/* Pass room, pricePerNight, and room photos to ViewReservation */}
+                        <ViewReservation room={room} pricePerNight={room.pricePerNight} roomPhotos={room.photos} />
+                    </ModalBody>
+                    <ModalFooter></ModalFooter>
+                </ModalContent>
+            </Modal>
         </Box>
     );
 };
