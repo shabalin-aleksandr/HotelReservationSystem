@@ -4,7 +4,9 @@ import { getAllHotels } from "../../services/HotelService/hotelService";
 export const HotelContext = createContext({
     hotels: [],
     addHotel: () => {},
+    removeHotel: () => {},
 });
+
 
 export const useHotels = () => {
     const context = React.useContext(HotelContext);
@@ -34,7 +36,7 @@ export const HotelProvider = ({ children }) => {
     };
 
     const removeHotel = (hotelId) => {
-        setHotels(prevHotels => prevHotels.filter(hotel => hotel.hotelId !== hotelId));
+        setHotels((prevHotels) => prevHotels ? prevHotels.filter(hotel => hotel.hotelId !== hotelId) : []);
     };
 
     return (

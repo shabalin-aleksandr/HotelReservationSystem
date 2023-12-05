@@ -11,7 +11,7 @@ export const getAdminIdFromToken = () => {
     try {
         const decoded = jwt_decode(token);
         if (!decoded || !decoded.adminId) {
-            throw new Error('AdminId ID not found');
+            throw new Error('AdminId not found');
         }
         localStorage.setItem('userId', decoded.adminId);
         return decoded.adminId;
@@ -20,6 +20,22 @@ export const getAdminIdFromToken = () => {
         throw new Error('Invalid token');
     }
 }
+
+export const getAdminTypeFromToken = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return null;
+    }
+
+    try {
+        const decoded = jwt_decode(token);
+        return decoded.adminType;
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        throw new Error('Invalid token');
+    }
+};
+
 
 export const getAdminDetails = async () => {
     const adminId = getAdminIdFromToken();

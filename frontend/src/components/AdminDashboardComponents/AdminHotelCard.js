@@ -21,20 +21,27 @@ import {
     FormLabel,
     Input,
     VStack,
-    Select, FormErrorMessage, InputGroup, InputLeftAddon, useDisclosure
+    Select,
+    FormErrorMessage,
+    InputGroup,
+    InputLeftAddon,
+    Tooltip,
+    useDisclosure
 } from '@chakra-ui/react';
 import { HamburgerIcon, EditIcon, DeleteIcon, ViewIcon, CalendarIcon } from '@chakra-ui/icons';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import DefaultHotelImage from "../../images/default-hotel-image.png";
 import {deleteHotel, editHotel} from "../../services/HotelService/hotelService";
 import {useHotels} from "../../utils/context/HotelContext";
 import {addRoomToHotel} from "../../services/RoomService/roomService";
 import {HotelReservationsModal} from "./HotelReservationsModal";
+import {HOTEL_ROUTE} from "../../utils/routes";
 
-const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
+const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated, onShowRooms }) => {
     const [hovered, setHovered] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { removeHotel } = useHotels();
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -130,7 +137,7 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
 
     const handleSubmitNewRoom = async (e) => {
         e.preventDefault();
-
+        e.stopPropagation();
         if (!newRoomData.roomNumber || !newRoomData.category || !newRoomData.pricePerNight) {
             toast({
                 title: "Validation Error",
@@ -194,62 +201,89 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             bg="white"
+            onClick={() => navigate(`/${HOTEL_ROUTE}/${hotel.hotelId}`)}
+            cursor="pointer"
         >
-            <Image
-                src={hotel.image ? hotel.image.url : DefaultHotelImage}
-                alt={`Image of ${hotel.hotelName}`}
-                height="100px"
+            <Box
+                position="relative"
                 width="100px"
-                objectFit="cover"
+                height="100px"
                 mr={4}
-            />
-            <Box flex="1">
-                <Text fontWeight="bold" fontSize="xl">{hotel.hotelName}</Text>
-                <Text>{hotel.address}</Text>
-                <Text>{`${hotel.city}, ${hotel.country}`}</Text>
+                flexShrink={0}
+            >
+                <Image
+                    src={hotel.image ? hotel.image.url : DefaultHotelImage}
+                    alt={`Image of ${hotel.hotelName}`}
+                    objectFit="cover"
+                    boxSize="100%"
+                />
+            </Box>
+            <Box flex="1" minW={0}>
+                <Text fontWeight="bold" fontSize="xl" isTruncated>{hotel.hotelName}</Text>
+                <Text isTruncated>{hotel.address}</Text>
+                <Text isTruncated>{`${hotel.city}, ${hotel.country}`}</Text>
             </Box>
             {hovered && (
-                <Flex direction="row" mr={4}>
-                    <IconButton
-                        icon={<CalendarIcon />}
-                        isRound="true"
-                        variant="outline"
-                        colorScheme="blue"
-                        mr={2}
-                        aria-label="View Reservations"
-                        _hover={{ bg: 'blue.400', color: 'white' }}
-                        onClick={onOpen}
-                    />
-                    <ReactRouterLink to={`/hotel/${hotel.hotelId}`}>
+                <Flex direction="row" wrap="wrap" justifyContent="center" mt={[4, 0]} mr={2}>
+                    <Tooltip label="See Reservations" placement="top" hasArrow>
+                        <IconButton
+                            icon={<CalendarIcon />}
+                            isRound="true"
+                            variant="outline"
+                            colorScheme="blue"
+                            mr={2}
+                            aria-label="View Reservations"
+                            _hover={{ bg: 'blue.400', color: 'white' }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onOpen();
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip label="See Rooms" placement="top" hasArrow>
                         <IconButton
                             icon={<ViewIcon />}
                             isRound="true"
                             variant="outline"
                             colorScheme="green"
                             mr={2}
-                            aria-label="View Hotel"
+                            aria-label="See Rooms"
                             _hover={{ bg: 'green.500', color: 'white' }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onShowRooms(hotel.hotelId)
+                            }}
                         />
-                    </ReactRouterLink>
-                    <IconButton
-                        icon={<EditIcon />}
-                        isRound="true"
-                        variant="outline"
-                        colorScheme="orange"
-                        mr={2}
-                        aria-label="Edit Hotel"
-                        _hover={{ bg: 'orange.400', color: 'white' }}
-                        onClick={openEditModal}
-                    />
-                    <IconButton
-                        icon={<DeleteIcon />}
-                        isRound="true"
-                        variant="outline"
-                        colorScheme="red"
-                        aria-label="Delete Hotel"
-                        _hover={{ bg: 'red.600', color: 'white' }}
-                        onClick={openConfirmModal}
-                    />
+                    </Tooltip>
+                    <Tooltip label="Edit Hotel" placement="top" hasArrow>
+                        <IconButton
+                            icon={<EditIcon />}
+                            isRound="true"
+                            variant="outline"
+                            colorScheme="orange"
+                            mr={2}
+                            aria-label="Edit Hotel"
+                            _hover={{ bg: 'orange.400', color: 'white' }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openEditModal();
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip label="Delete Hotel" placement="top" hasArrow>
+                        <IconButton
+                            icon={<DeleteIcon />}
+                            isRound="true"
+                            variant="outline"
+                            colorScheme="red"
+                            aria-label="Delete Hotel"
+                            _hover={{ bg: 'red.600', color: 'white' }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openConfirmModal();
+                            }}
+                        />
+                    </Tooltip>
                 </Flex>
             )}
             <Menu>
@@ -258,27 +292,41 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated }) => {
                     aria-label="Options"
                     icon={<HamburgerIcon />}
                     variant="outline"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
                 />
                 <MenuList>
                     <MenuItem
-                        onClick={onOpen}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onOpen();
+                        }}
                     >
                         See Reservations
                     </MenuItem>
                     <MenuItem
-                        as={ReactRouterLink}
-                        to={`/hotel/${hotel.hotelId}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onShowRooms(hotel.hotelId);
+                        }}
                     >
-                        Hotel Page
+                        See Rooms
                     </MenuItem>
                     <MenuItem
-                        onClick={openEditModal}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openEditModal();
+                        }}
                     >
                         Edit Hotel
                     </MenuItem>
                     <MenuItem
                         color="red"
-                        onClick={openConfirmModal}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openConfirmModal();
+                        }}
                     >
                         Delete Hotel
                     </MenuItem>
