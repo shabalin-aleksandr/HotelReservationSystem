@@ -19,7 +19,7 @@ import {HOTEL_ROUTE} from "../../utils/routes";
 import {getAdminTypeFromToken} from "../../services/UserService/adminService";
 import {deleteHotel} from "../../services/HotelService/hotelService";
 
-const HotelCard = ({hotel, onHotelDeleted}) => {
+const HotelCard = ({ hotel, onHotelDeleted }) => {
     const adminType = getAdminTypeFromToken();
     const isSuperAdmin = adminType === 'SUPER_ADMIN';
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -34,7 +34,7 @@ const HotelCard = ({hotel, onHotelDeleted}) => {
     const handleDeleteHotel = async (hotelId) => {
         try {
             await deleteHotel(hotelId);
-            onHotelDeleted(hotel.hotelId);
+            onHotelDeleted(hotelId);
             setIsDeleteModalOpen(false);
         } catch (error) {
             console.error('Error deleting hotel', error);

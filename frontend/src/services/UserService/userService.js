@@ -37,6 +37,21 @@ export const getUserDetails = async () => {
     }
 };
 
+export const getAllUsersDetails = async () => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    try {
+        const response = await api.get(`/users`, { headers });
+        console.log('Users details:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch users details:', error);
+        throw error;
+    }
+}
+
 export const updateUserDetails = async (userId, updates) => {
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -79,3 +94,17 @@ export const deleteOwnAccount = async () => {
     }
 }
 
+export const deleteUser = async (userId) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    try {
+        const response = await api.delete(`/users/delete/${userId}`, { headers });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete user', error);
+        throw error;
+    }
+}

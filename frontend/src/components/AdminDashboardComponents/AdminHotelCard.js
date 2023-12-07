@@ -117,7 +117,7 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated, onShowRooms }) 
                 title: "Hotel deleted.",
                 description: `${hotel.hotelName} has been removed successfully.`,
                 status: "success",
-                duration: 9000,
+                duration: 3000,
                 isClosable: true,
             });
             onHotelDeleted(hotel.hotelId);
@@ -128,7 +128,7 @@ const AdminHotelCard = ({ hotel, onHotelDeleted, onHotelUpdated, onShowRooms }) 
                 title: "Error deleting hotel.",
                 description: error.message,
                 status: "error",
-                duration: 9000,
+                duration: 3000,
                 isClosable: true,
             });
             setIsConfirmModalOpen(false);

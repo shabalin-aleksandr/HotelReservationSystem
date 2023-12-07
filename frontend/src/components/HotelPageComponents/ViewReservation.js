@@ -17,14 +17,12 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
 
     const handleConfirmReservation = async () => {
         try {
-            // Check if the selected date range is valid
             if (!reservationFrom || !reservationTo || reservationTo <= reservationFrom) {
                 setErrorMessage('Please select a valid date range.');
                 setSuccessMessage(null);
                 return;
             }
 
-            // Check if the selected date range overlaps with existing reservations
             const existingReservations = await getAllReservationsInRoom(
                 room.hotelId,
                 room.roomId
@@ -46,41 +44,33 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
                 return;
             }
 
-            // Calculate the total number of nights
             const numberOfNights = Math.ceil((reservationTo - reservationFrom) / (1000 * 60 * 60 * 24));
 
-            // Calculate the total price
             const total = numberOfNights * pricePerNight;
             setTotalPrice(total);
 
-            // Example reservation data (modify this according to your needs)
             const createReservationDto = {
                 reservationFrom,
                 reservationTo,
                 totalPrice: total,
-                // Other reservation data as needed
             };
 
-            // Call the createReservation function
             await createReservation(room.hotelId, room.roomId, createReservationDto);
 
-            // Additional actions after successful reservation (e.g., closing the modal)
             setErrorMessage(null);
             setSuccessMessage('Reservation confirmed!');
 
             setTimeout(() => {
                 handleCloseModal();
-            }, 2000); // Close the modal after 2 seconds (adjust the duration as needed)
+            }, 2000);
         } catch (error) {
             if (
                 error.response &&
                 error.response.status === 401 &&
                 error.response.data.error === 'Token has expired'
             ) {
-                // Handle token expiration (e.g., prompt the user to reauthenticate)
                 console.log('Token has expired. Please log in again.');
             } else {
-                // Handle other reservation creation errors
                 console.error('Error creating reservation:', error);
                 setErrorMessage('Error creating reservation. Please try again.');
                 setSuccessMessage(null);
@@ -89,10 +79,8 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
     };
 
     const handleToDateChange = (date) => {
-        // Update reservationTo and recalculate total price
         setReservationTo(date);
 
-        // Check if the selected date range is valid
         if (!reservationFrom || !date || date <= reservationFrom) {
             setErrorMessage('Please select a valid date range.');
             setSuccessMessage(null);
@@ -100,20 +88,16 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
             return;
         }
 
-        // Calculate the total number of nights
         const numberOfNights = Math.ceil((date - reservationFrom) / (1000 * 60 * 60 * 24));
 
-        // Calculate the total price
         const total = numberOfNights * pricePerNight;
         setTotalPrice(total);
 
-        // Clear error message if any
         setErrorMessage(null);
     };
 
     return (
         <Flex direction="column" padding="4">
-            {/* Display the selected room photo or a default photo */}
             <Image
                 src={roomPhotos && roomPhotos.length > 0 ? roomPhotos[0].url : DefaultRoomImage}
                 alt={`Image of ${room.roomNumber}`}
@@ -145,7 +129,7 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
                 />
             </Box>
             <Text fontSize="medium" fontWeight="bold" mb={2}>
-                Total Price: ${totalPrice}
+                Total Price: {totalPrice} Kč
             </Text>
             {errorMessage && (
                 <Text color="red" mb={2}>
@@ -177,8 +161,5 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
         </Flex>
     );
 };
-
-// DefaultRoomImage should be imported or defined based on your project structure
-
 
 export default ViewReservation;

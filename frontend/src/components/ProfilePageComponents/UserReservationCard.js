@@ -69,7 +69,7 @@ const UserReservationCard = ({ reservation }) => {
                 <Box>
                     {reservation.totalPrice}
                     <Box as="span" color={priceColor} fontSize="sm">
-                        Kč
+                         Kč
                     </Box>
                 </Box>
                 <Box display="flex" mt="2" alignItems="center">

@@ -46,7 +46,7 @@ const RoomCards = ({ room }) => {
                 <Flex direction="column" align="flex-start">
                     <Heading size="lg" mb="2" ml = "7">№{room.roomNumber}</Heading>
                     <Text fontWeight="bold">Category: {room.category}</Text>
-                    <Text mb="2">Price Per Night: {`${room.pricePerNight}`}</Text>
+                    <Text mb="2">Price Per Night: {`${room.pricePerNight}`} Kč</Text>
                 </Flex>
                 <Stack direction="row" spacing={4} mt="3">
                     <ButtonGroup

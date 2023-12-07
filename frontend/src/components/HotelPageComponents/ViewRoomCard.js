@@ -96,7 +96,7 @@ const ViewRoomCard = ({ room }) => {
                 Room №{room.roomNumber}
             </Text>
             <Text fontSize="medium" fontWeight="bold" mb={2}>Category: {room.category}</Text>
-            <Text fontSize="medium" fontWeight="bold" mb={2}>Price Per Night: ${room.pricePerNight}</Text>
+            <Text fontSize="medium" fontWeight="bold" mb={2}>Price Per Night: {room.pricePerNight} Kč</Text>
             {amenities.length > 0 && (
                 <Text fontSize="medium" fontWeight="bold" mb={2}>
                     Amenities: {amenities.map((amenity) => amenity.amenityName).join(', ')}

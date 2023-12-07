@@ -83,7 +83,7 @@ const ReservationDetailsModal = ({isOpen, onClose, reservation, room}) => {
                 <ModalFooter>
                     <Button
                         as={ReactRouterLink}
-                        to={`${HOTEL_ROUTE}/${room?.hotelId}`}
+                        to={`/${HOTEL_ROUTE}/${room?.hotelId}`}
                         mr={2}
                         fontSize="sm"
                         rounded="full"
