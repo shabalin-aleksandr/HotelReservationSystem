@@ -23,9 +23,6 @@ const MainPage = () => {
             : hotels.sort(sortFunction);
     }, [searchTerm, hotels]);
 
-    // const handleHotelDelete = (hotelId) => {
-    //     setHotels(currentHotels => currentHotels.filter(hotel => hotel.hotelId !== hotelId));
-    // };
 
     return (
         <Box padding="4">
