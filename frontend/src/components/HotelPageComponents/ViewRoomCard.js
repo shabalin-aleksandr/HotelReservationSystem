@@ -1,3 +1,4 @@
+// ViewRoomCard.jsx
 import React, { useState, useEffect } from 'react';
 import {
     Box,
@@ -14,7 +15,6 @@ import {
     ModalFooter,
 } from '@chakra-ui/react';
 import DefaultRoomImage from "../../images/room.png";
-import ViewReservation from './ViewReservation';
 import { getAmenityByRoomId_HotelId } from '../../services/AmenityService/amenityservice';
 
 const ViewRoomCard = ({ room }) => {
@@ -49,17 +49,11 @@ const ViewRoomCard = ({ room }) => {
         }
     };
 
-    const handleReserveClick = () => {
-        setReserveClicked(true);
-    };
-
     const handleCloseModal = () => {
         setReserveClicked(false);
     };
 
-    const handleReservationConfirmation = () => {
-        setReserveClicked(false); // Close the modal when the reservation is confirmed
-    };
+
 
     return (
         <Box>
@@ -105,42 +99,20 @@ const ViewRoomCard = ({ room }) => {
                 </Text>
                 {amenities.length > 0 && (
                     <Text fontSize="medium" fontWeight="bold" mb={2}>
-                        Amenities: {amenities.map((amenity) => amenity.amenityName).join(', ')}
+                        Amenities: {amenities.map((amenity) => amenity.description).join(', ')}
                     </Text>
                 )}
-
-                <Button
-                    fontSize="sm"
-                    rounded="full"
-                    bg="blue.400"
-                    color="white"
-                    boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                    _hover={{
-                        bg: 'blue.500',
-                    }}
-                    _focus={{
-                        bg: 'blue.500',
-                    }}
-                    onClick={handleReserveClick}
-                    mt={4}
-                >
-                    Reserve a room now!
-                </Button>
+                {/* Button for reservation removed */}
             </Flex>
 
+            {/* Reservation Modal */}
             <Modal isOpen={isReserveClicked} onClose={handleCloseModal}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Reservation details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <ViewReservation
-                            room={room}
-                            pricePerNight={room.pricePerNight}
-                            roomPhotos={room.photos}
-                            handleCloseModal={handleCloseModal}
-                            onReservationConfirmed={handleReservationConfirmation}
-                        />
+                        {/* ... (rest of the modal content) ... */}
                     </ModalBody>
                     <ModalFooter></ModalFooter>
                 </ModalContent>
