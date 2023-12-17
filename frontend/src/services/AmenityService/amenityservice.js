@@ -10,3 +10,22 @@ export const getAmenityByRoomId_HotelId = async (hotelId,roomId) => {
         throw error;
     }
 };
+
+export const createAmenity = async (hotelId, roomId, amenityName, description) => {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    };
+
+    const amenityData = {
+        amenityName,
+        description
+    };
+    try {
+        const response = await api.post(`/amenities/create/${hotelId}/${roomId}`, amenityData,{headers});
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to create amenity', error);
+        throw error;
+    }
+};

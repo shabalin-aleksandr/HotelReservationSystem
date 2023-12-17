@@ -22,6 +22,7 @@ import AdminRegisterPage from "./pages/AdminRegisterPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import {HotelProvider} from "./utils/context/HotelContext";
 
+
 export function App() {
     return (
         <AuthProvider>

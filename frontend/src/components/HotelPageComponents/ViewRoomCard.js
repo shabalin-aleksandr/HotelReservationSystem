@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
     Box,
@@ -15,7 +14,7 @@ import {
     ModalFooter,
 } from '@chakra-ui/react';
 import DefaultRoomImage from "../../images/room.png";
-import ViewReservation from './ViewReservation'; // Import the new component
+import ViewReservation from './ViewReservation';
 import { getAmenityByRoomId_HotelId } from '../../services/AmenityService/amenityservice';
 
 const ViewRoomCard = ({ room }) => {
@@ -24,7 +23,6 @@ const ViewRoomCard = ({ room }) => {
     const [isReserveClicked, setReserveClicked] = useState(false);
 
     useEffect(() => {
-        // Fetch amenity data when the component mounts
         const fetchAmenityData = async () => {
             try {
                 const amenityData = await getAmenityByRoomId_HotelId(room.hotelId, room.roomId);
@@ -57,6 +55,10 @@ const ViewRoomCard = ({ room }) => {
 
     const handleCloseModal = () => {
         setReserveClicked(false);
+    };
+
+    const handleReservationConfirmation = () => {
+        setReserveClicked(false); // Close the modal when the reservation is confirmed
     };
 
     return (
@@ -92,40 +94,39 @@ const ViewRoomCard = ({ room }) => {
                     </Flex>
                 )}
 
-            <Text fontSize="xl" fontWeight="bold" mb={2}>
-                Room №{room.roomNumber}
-            </Text>
-            <Text fontSize="medium" fontWeight="bold" mb={2}>Category: {room.category}</Text>
-            <Text fontSize="medium" fontWeight="bold" mb={2}>Price Per Night: {room.pricePerNight} Kč</Text>
-            {amenities.length > 0 && (
-                <Text fontSize="medium" fontWeight="bold" mb={2}>
-                    Amenities: {amenities.map((amenity) => amenity.amenityName).join(', ')}
+                <Text fontSize="xl" fontWeight="bold" mb={2}>
+                    Room №{room.roomNumber}
                 </Text>
-            )}
+                <Text fontSize="medium" fontWeight="bold" mb={2}>
+                    Category: {room.category}
+                </Text>
+                <Text fontSize="medium" fontWeight="bold" mb={2}>
+                    Price Per Night: {room.pricePerNight} Kč
+                </Text>
+                {amenities.length > 0 && (
+                    <Text fontSize="medium" fontWeight="bold" mb={2}>
+                        Amenities: {amenities.map((amenity) => amenity.amenityName).join(', ')}
+                    </Text>
+                )}
 
-
-
-            <Button
-
-                fontSize="sm"
-                rounded="full"
-                bg="blue.400"
-                color="white"
-                boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                _hover={{
-                    bg: 'blue.500',
-                }}
-                _focus={{
-                    bg: 'blue.500',
-                }}
-                onClick={handleReserveClick}
-                mt={4} >
-
-                Reserve a room now!
-            </Button>
+                <Button
+                    fontSize="sm"
+                    rounded="full"
+                    bg="blue.400"
+                    color="white"
+                    boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                    _hover={{
+                        bg: 'blue.500',
+                    }}
+                    _focus={{
+                        bg: 'blue.500',
+                    }}
+                    onClick={handleReserveClick}
+                    mt={4}
+                >
+                    Reserve a room now!
+                </Button>
             </Flex>
-
-
 
             <Modal isOpen={isReserveClicked} onClose={handleCloseModal}>
                 <ModalOverlay />
@@ -133,8 +134,13 @@ const ViewRoomCard = ({ room }) => {
                     <ModalHeader>Reservation details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        {/* Pass room, pricePerNight, and room photos to ViewReservation */}
-                        <ViewReservation room={room} pricePerNight={room.pricePerNight} roomPhotos={room.photos} />
+                        <ViewReservation
+                            room={room}
+                            pricePerNight={room.pricePerNight}
+                            roomPhotos={room.photos}
+                            handleCloseModal={handleCloseModal}
+                            onReservationConfirmed={handleReservationConfirmation}
+                        />
                     </ModalBody>
                     <ModalFooter></ModalFooter>
                 </ModalContent>

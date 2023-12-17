@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
-import { Image, Text, Flex, Heading, useColorModeValue, Button, Stack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import {
+    Image,
+    Text,
+    Flex,
+    Heading,
+    useColorModeValue,
+    Button,
+    Stack,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+} from '@chakra-ui/react';
 import DefaultRoomImage from '../../images/room.png';
 import ViewRoomCard from './ViewRoomCard';
-import {ButtonGroup} from "react-bootstrap"; // Import the ViewRoomCard component
 
 const RoomCards = ({ room }) => {
     const bg = useColorModeValue('white', 'gray.800');
     const [isModalOpen, setIsModalOpen] = useState(false);
-
 
     const handleViewRoom = () => {
         setIsModalOpen(true);
@@ -16,7 +29,6 @@ const RoomCards = ({ room }) => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-
 
     return (
         <Flex
@@ -44,16 +56,13 @@ const RoomCards = ({ room }) => {
                 align="center"
             >
                 <Flex direction="column" align="flex-start">
-                    <Heading size="lg" mb="2" ml = "7">№{room.roomNumber}</Heading>
+                    <Heading size="lg" mb="2" ml="7">
+                        №{room.roomNumber}
+                    </Heading>
                     <Text fontWeight="bold">Category: {room.category}</Text>
                     <Text mb="2">Price Per Night: {`${room.pricePerNight}`} Kč</Text>
                 </Flex>
                 <Stack direction="row" spacing={4} mt="3">
-                    <ButtonGroup
-                        disableelevation="true"
-                        variant="contained"
-                        aria-label="Disabled elevation buttons"
-                    >
                     <Button
                         flex={1}
                         fontSize="sm"
@@ -71,8 +80,6 @@ const RoomCards = ({ room }) => {
                     >
                         View Room
                     </Button>
-
-                    </ButtonGroup>
                 </Stack>
             </Flex>
 
@@ -96,4 +103,3 @@ const RoomCards = ({ room }) => {
 };
 
 export default RoomCards;
-

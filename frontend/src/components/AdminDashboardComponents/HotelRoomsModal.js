@@ -14,8 +14,9 @@ import {
 } from "@chakra-ui/react";
 import {deleteRoomFromHotel, getAllRoomsByHotelId} from "../../services/RoomService/roomService";
 import {LoadingSpinner} from "../AppComponents/LoadingSpinner";
-import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
+import {AddIcon, DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import EditRoomModal from "./EditRoomModal";
+import AddAmenityModal from "./AddAmenityModal";
 
 const HotelRoomsModal = ({isOpen, onClose, hotelId}) => {
     const [rooms, setRooms] = useState([]);
@@ -40,6 +41,17 @@ const HotelRoomsModal = ({isOpen, onClose, hotelId}) => {
             pricePerNight: room.pricePerNight,
         });
         setIsEditModalOpen(true);
+    };
+
+    const [isAddAmenityModalOpen, setIsAddAmenityModalOpen] = useState(false);
+
+    const openAddAmenityModal = () => {
+        setIsAddAmenityModalOpen(true);
+    };
+
+    const handleAmenityAdded = (newAmenity) => {
+        // Handle the newly added amenity, if needed
+        console.log("New Amenity Added:", newAmenity);
     };
 
     const handleDeleteRoom = async (roomId, hotelId) => {
@@ -103,7 +115,9 @@ const HotelRoomsModal = ({isOpen, onClose, hotelId}) => {
                                         <Th textAlign="center">Category</Th>
                                         <Th textAlign="center">Price Per Night</Th>
                                         <Th textAlign="center" color="orange">Edit Room Details</Th>
+                                        <Th textAlign="center" color="green">Add Amenity</Th>
                                         <Th textAlign="center" color="red">Delete</Th>
+
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -124,6 +138,21 @@ const HotelRoomsModal = ({isOpen, onClose, hotelId}) => {
                                                     _hover={{
                                                         background: "orange.100",
                                                         color: "orange.500",
+                                                    }}
+                                                />
+                                            </Td>
+                                            <Td textAlign="center">
+                                                <IconButton
+                                                    icon={<AddIcon />}
+                                                    isRound="true"
+                                                    aria-label="add amenity"
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    colorScheme="green"
+                                                    onClick={openAddAmenityModal}
+                                                    _hover={{
+                                                        background: "green.100",
+                                                        color: "green.500",
                                                     }}
                                                 />
                                             </Td>
@@ -233,7 +262,15 @@ const HotelRoomsModal = ({isOpen, onClose, hotelId}) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <AddAmenityModal
+                isOpen={isAddAmenityModalOpen}
+                onClose={() => setIsAddAmenityModalOpen(false)}
+                hotelId={hotelId}
+                roomId={selectedRoom.id}
+                onAmenityAdded={handleAmenityAdded}
+            />
         </Modal>
+
     );
 };
 
