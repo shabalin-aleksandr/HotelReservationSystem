@@ -1,3 +1,4 @@
+// HotelPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getHotelDetails } from '../services/HotelService/hotelService';
@@ -21,6 +22,7 @@ const HotelPage = () => {
     const [showAvailableRooms, setShowAvailableRooms] = useState(false);
     const [searchSuccess, setSearchSuccess] = useState(true);
     const [dateSelectionError, setDateSelectionError] = useState(false);
+    const [hasUserPressedButton, setHasUserPressedButton] = useState(false);
 
     useEffect(() => {
         const fetchHotel = async () => {
@@ -80,14 +82,17 @@ const HotelPage = () => {
         } catch (error) {
             console.error('Error fetching available rooms:', error);
         }
+
+        // Set the flag to true after the user presses the button
+        setHasUserPressedButton(true);
     };
 
     if (isLoading) {
-        return <LoadingSpinner />
+        return <LoadingSpinner />;
     }
 
     if (error) {
-        return <Text>{error.message}</Text>
+        return <Text>{error.message}</Text>;
     }
 
     return (
@@ -131,7 +136,7 @@ const HotelPage = () => {
                     </Button>
                     {dateSelectionError && (
                         <Text fontWeight="bold" fontSize="xl" color={"red"}>
-                            Please choose the start date or end date.
+                            Please also choose the start date or end date.
                         </Text>
                     )}
                 </Flex>
@@ -139,19 +144,30 @@ const HotelPage = () => {
             <Box width="70%">
                 <Box p="6">
                     <Heading size="2xl" mb="2"> Rooms </Heading>
+                    {!selectedFromDate || !selectedToDate ? (
+                        <Text fontWeight="bold" fontSize="xl" color={"gray"}>
+                            Please select a start date and end date.
+                        </Text>
+                    ) : null}
                 </Box>
-                {searchSuccess ? (
+                {hasUserPressedButton && (
                     <SimpleGrid columns={[1, 2]} spacing="4">
-                        {(showAvailableRooms ? availableRooms : rooms).map((room) => (
-                            <Flex key={room.roomId} width="100%">
-                                <RoomCards room={room} />
-                            </Flex>
-                        ))}
+                        {searchSuccess ? (
+                            (showAvailableRooms ? availableRooms : rooms).map((room) => (
+                                <Flex key={room.roomId} width="100%">
+                                    <RoomCards
+                                        room={room}
+                                        selectedFromDate={selectedFromDate}
+                                        selectedToDate={selectedToDate}
+                                    />
+                                </Flex>
+                            ))
+                        ) : (
+                            <Text fontWeight="bold" fontSize="xl" color={"red"}>
+                                No available rooms found. Please try different dates.
+                            </Text>
+                        )}
                     </SimpleGrid>
-                ) : (
-                    <Text fontWeight="bold" fontSize="xl" color={"red"}>
-                        No available rooms found. Please try different dates.
-                    </Text>
                 )}
             </Box>
         </Flex>

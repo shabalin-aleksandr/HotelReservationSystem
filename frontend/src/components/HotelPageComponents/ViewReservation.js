@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
-import { Box, Flex, Button, Text, Image } from '@chakra-ui/react';
+// ViewReservation.jsx
+import React, { useState, useEffect } from 'react';
+import {
+    Box,
+    Text,
+    Button,
+    Flex,
+    Image,
+} from '@chakra-ui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import DefaultRoomImage from "../../images/room.png";
-import {
-    createReservation,
-    getAllReservationsInRoom,
-} from '../../services/ReservationService/reservationService';
+import { createReservation } from '../../services/ReservationService/reservationService';
 
-const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) => {
-    const [reservationFrom, setReservationFrom] = useState(null);
-    const [reservationTo, setReservationTo] = useState(null);
+const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos, selectedFromDate, selectedToDate }) => {
+    const [reservationFrom] = useState(selectedFromDate || null);
+    const [reservationTo] = useState(selectedToDate || null);
     const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
+
+    // Calculate total price when the modal is opened
+    useEffect(() => {
+        calculateTotalPrice();
+    }, []); // Empty dependency array ensures it runs only once, similar to componentDidMount
+
+    const calculateTotalPrice = () => {
+        if (reservationFrom && reservationTo) {
+            const numberOfNights = Math.ceil((reservationTo - reservationFrom) / (1000 * 60 * 60 * 24));
+            const total = numberOfNights * pricePerNight;
+            setTotalPrice(total);
+        }
+    };
 
     const handleConfirmReservation = async () => {
         try {
@@ -23,38 +40,15 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
                 return;
             }
 
-            const existingReservations = await getAllReservationsInRoom(
-                room.hotelId,
-                room.roomId
-            );
-            const isOverlap = existingReservations.some((reservation) => {
-                return (
-                    (reservationFrom >= new Date(reservation.reservationFrom) &&
-                        reservationFrom <= new Date(reservation.reservationTo)) ||
-                    (reservationTo >= new Date(reservation.reservationFrom) &&
-                        reservationTo <= new Date(reservation.reservationTo))
-                );
-            });
-
-            if (isOverlap) {
-                setErrorMessage(
-                    'The room is already reserved for the selected date range. Please choose different dates.'
-                );
-                setSuccessMessage(null);
-                return;
-            }
-
-            const numberOfNights = Math.ceil((reservationTo - reservationFrom) / (1000 * 60 * 60 * 24));
-
-            const total = numberOfNights * pricePerNight;
-            setTotalPrice(total);
+            calculateTotalPrice();
 
             const createReservationDto = {
                 reservationFrom,
                 reservationTo,
-                totalPrice: total,
+                totalPrice,
             };
 
+            // Perform reservation creation without checking for room availability
             await createReservation(room.hotelId, room.roomId, createReservationDto);
 
             setErrorMessage(null);
@@ -64,36 +58,10 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
                 handleCloseModal();
             }, 2000);
         } catch (error) {
-            if (
-                error.response &&
-                error.response.status === 401 &&
-                error.response.data.error === 'Token has expired'
-            ) {
-                console.log('Token has expired. Please log in again.');
-            } else {
-                console.error('Error creating reservation:', error);
-                setErrorMessage('Error creating reservation. Please try again.');
-                setSuccessMessage(null);
-            }
-        }
-    };
-
-    const handleToDateChange = (date) => {
-        setReservationTo(date);
-
-        if (!reservationFrom || !date || date <= reservationFrom) {
-            setErrorMessage('Please select a valid date range.');
+            console.error('Error creating reservation:', error);
+            setErrorMessage('Error creating reservation. Please try again.');
             setSuccessMessage(null);
-            setTotalPrice(0);
-            return;
         }
-
-        const numberOfNights = Math.ceil((date - reservationFrom) / (1000 * 60 * 60 * 24));
-
-        const total = numberOfNights * pricePerNight;
-        setTotalPrice(total);
-
-        setErrorMessage(null);
     };
 
     return (
@@ -104,7 +72,6 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
                 height="400px"
                 width="100%"
                 objectFit="contain"
-
                 mb="4"
             />
 
@@ -115,17 +82,17 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
             <Box mb="2">
                 <DatePicker
                     selected={reservationFrom}
-                    onChange={(date) => setReservationFrom(date)}
                     placeholderText="From Date"
                     style={{ width: '100%', border: 'none', outline: 'none' }}
+                    readOnly
                 />
             </Box>
             <Box mb="2">
                 <DatePicker
                     selected={reservationTo}
-                    onChange={handleToDateChange}
                     placeholderText="To Date"
                     style={{ width: '100%', border: 'none', outline: 'none' }}
+                    readOnly
                 />
             </Box>
             <Text fontSize="medium" fontWeight="bold" mb={2}>
@@ -155,6 +122,7 @@ const ViewReservation = ({ room, handleCloseModal, pricePerNight, roomPhotos }) 
                 }}
                 onClick={handleConfirmReservation}
                 mt={4}
+                disabled={errorMessage || successMessage}
             >
                 Confirm Reservation
             </Button>
