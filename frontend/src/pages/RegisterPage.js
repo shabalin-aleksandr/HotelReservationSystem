@@ -16,7 +16,7 @@ import {
     Text,
     AlertIcon, FormHelperText, InputLeftAddon, VStack, useColorModeValue,
 } from '@chakra-ui/react';
-import { register } from '../services/UserService/authService';
+import {register} from '../services/UserService/authService';
 import {useNavigate} from "react-router-dom";
 import Select from 'react-select';
 import {ADMIN_REGISTRATION_ROUTE, LOGIN_ROUTE, MAIN_PAGE_ROUTE} from "../utils/routes";
@@ -30,7 +30,8 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('')
-    const { country,
+    const {
+        country,
         region,
         city,
         countries,
@@ -38,14 +39,16 @@ const RegisterPage = () => {
         cities,
         setCountry,
         setRegion,
-        setCity  } = useLocation();
+        setCity
+    } = useLocation();
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({nickname: false, email: false, password: false});
     const [serverError, setServerError] = useState("");
     const navigate = useNavigate();
     const [show, setShow] = React.useState(false);
-    const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+    const {isAuthenticated, setIsAuthenticated} = useContext(AuthContext);
     const [passwordStrength, setPasswordStrength] = useState(null);
+    const [repeatedPassword, setRepeatedPassword] = useState('');
     const handleClick = () => setShow(!show)
     const handleFirstName = (event) => setFirstName(event.target.value);
     const handleLastName = (event) => setLastName(event.target.value);
@@ -60,12 +63,13 @@ const RegisterPage = () => {
         const errors = {
             email: !email,
             password: !password,
+            repeatPassword: password !== repeatedPassword,
             invalidEmail: false,
             invalidPassword: false
         };
         setErrors(errors);
 
-        if (errors.email || errors.password) {
+        if (errors.email || errors.password || errors.repeatPassword) {
             return;
         }
         setIsLoading(true);
@@ -107,8 +111,9 @@ const RegisterPage = () => {
         if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(password)) {
             strength++;
         }
-        handlePassword(e);
+        setErrors({...errors, password: false, repeatPassword: false});
         setPasswordStrength(strength);
+        handlePassword(e);
     };
 
     const handleCountryChange = (selectedOption) => {
@@ -159,7 +164,7 @@ const RegisterPage = () => {
                             <FormControl id="phoneNumber" isInvalid={errors.phoneNumber}>
                                 <FormLabel>Phone number</FormLabel>
                                 <InputGroup>
-                                    <InputLeftAddon children='🇨🇿 +420' />
+                                    <InputLeftAddon children='🇨🇿 +420'/>
                                     <Input
                                         type="phoneNumber"
                                         placeholder="Your phone number"
@@ -238,6 +243,23 @@ const RegisterPage = () => {
                                 )}
                                 {errors.password && <FormErrorMessage>Password is required</FormErrorMessage>}
                             </FormControl>
+                            <FormControl id="repeatPassword" isInvalid={errors.repeatPassword} isRequired>
+                                <FormLabel>Repeat Password</FormLabel>
+                                <InputGroup size='md'>
+                                    <Input
+                                        type={show ? 'text' : 'password'}
+                                        placeholder='Repeat password'
+                                        value={repeatedPassword}
+                                        onChange={(e) => setRepeatedPassword(e.target.value)}
+                                    />
+                                    <InputRightElement width='4.5rem'>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick}>
+                                            {show ? 'Hide' : 'Show'}
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                                {errors.repeatPassword && <FormErrorMessage>Passwords must match</FormErrorMessage>}
+                            </FormControl>
                             <VStack spacing={4}>
                                 <FormControl>
                                     <FormLabel>Already have an account?</FormLabel>
@@ -246,7 +268,7 @@ const RegisterPage = () => {
                                         href={LOGIN_ROUTE}
                                         fontWeight="semibold"
                                         color={linkColor}
-                                        _hover={{ color: hoverColor, textDecoration: 'underline' }}
+                                        _hover={{color: hoverColor, textDecoration: 'underline'}}
                                     >
                                         Sign In
                                     </Text>
@@ -258,7 +280,7 @@ const RegisterPage = () => {
                                         href={ADMIN_REGISTRATION_ROUTE}
                                         fontWeight="semibold"
                                         color={linkColor}
-                                        _hover={{ color: hoverColor, textDecoration: 'underline' }}
+                                        _hover={{color: hoverColor, textDecoration: 'underline'}}
                                     >
                                         Register as a Hotel Manager
                                     </Text>

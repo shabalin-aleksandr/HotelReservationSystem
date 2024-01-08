@@ -42,6 +42,7 @@ const AdminRegisterPage = () => {
     const [show, setShow] = React.useState(false);
     const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
     const [passwordStrength, setPasswordStrength] = useState(null);
+    const [repeatedPassword, setRepeatedPassword] = useState('');
     const handleClick = () => setShow(!show)
     const handleFirstName = (event) => setFirstName(event.target.value);
     const handleLastName = (event) => setLastName(event.target.value);
@@ -56,12 +57,13 @@ const AdminRegisterPage = () => {
         const errors = {
             email: !email,
             password: !password,
+            repeatPassword: password !== repeatedPassword,
             invalidEmail: false,
             invalidPassword: false
         };
         setErrors(errors);
 
-        if (errors.email || errors.password) {
+        if (errors.email || errors.password || errors.repeatPassword) {
             return;
         }
         setIsLoading(true);
@@ -103,8 +105,9 @@ const AdminRegisterPage = () => {
         if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(password)) {
             strength++;
         }
-        handlePassword(e);
+        setErrors({...errors, password: false, repeatPassword: false});
         setPasswordStrength(strength);
+        handlePassword(e);
     };
 
     const handleCountryChange = (selectedOption) => {
@@ -234,6 +237,23 @@ const AdminRegisterPage = () => {
                                     </FormHelperText>
                                 )}
                                 {errors.password && <FormErrorMessage>Password is required</FormErrorMessage>}
+                            </FormControl>
+                            <FormControl id="repeatPassword" isInvalid={errors.repeatPassword} isRequired>
+                                <FormLabel>Repeat Password</FormLabel>
+                                <InputGroup size='md'>
+                                    <Input
+                                        type={show ? 'text' : 'password'}
+                                        placeholder='Repeat password'
+                                        value={repeatedPassword}
+                                        onChange={(e) => setRepeatedPassword(e.target.value)}
+                                    />
+                                    <InputRightElement width='4.5rem'>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick}>
+                                            {show ? 'Hide' : 'Show'}
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                                {errors.repeatPassword && <FormErrorMessage>Passwords must match</FormErrorMessage>}
                             </FormControl>
                             <VStack spacing={4}>
                                 <FormControl>
