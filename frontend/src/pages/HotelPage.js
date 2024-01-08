@@ -1,4 +1,3 @@
-// HotelPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getHotelDetails } from '../services/HotelService/hotelService';
@@ -46,19 +45,16 @@ const HotelPage = () => {
 
     const handleFromDateChange = (date) => {
         setSelectedFromDate(date);
-        // Reset the dateSelectionError when the user selects a date
         setDateSelectionError(false);
     };
 
     const handleToDateChange = (date) => {
         setSelectedToDate(date);
-        // Reset the dateSelectionError when the user selects a date
         setDateSelectionError(false);
     };
 
     const handleFindAvailableRooms = async () => {
         if (!selectedFromDate || !selectedToDate) {
-            // If dates are not selected, show an error message
             setDateSelectionError(true);
             setShowAvailableRooms(false);
             setSearchSuccess(true);
@@ -83,7 +79,6 @@ const HotelPage = () => {
             console.error('Error fetching available rooms:', error);
         }
 
-        // Set the flag to true after the user presses the button
         setHasUserPressedButton(true);
     };
 
