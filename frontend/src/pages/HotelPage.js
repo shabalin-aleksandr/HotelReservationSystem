@@ -126,7 +126,22 @@ const HotelPage = () => {
                             style={{ width: '100%', border: 'none', outline: 'none' }}
                         />
                     </Box>
-                    <Button onClick={handleFindAvailableRooms} colorScheme="green" bgColor="green.400" color="white">
+                    <Button
+                        onClick={handleFindAvailableRooms}
+                        colorScheme="green"
+                        bgColor="green.400"
+                        color="white"
+                        fontSize="sm"
+                        rounded="full"
+                        bg="green.400"
+                        boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                        _hover={{
+                            bg: 'green.500',
+                        }}
+                        _focus={{
+                            bg: 'green.500',
+                        }}
+                    >
                         Find Available Rooms
                     </Button>
                     {dateSelectionError && (
